@@ -17,7 +17,7 @@ import horizon
 class Objectstorage(horizon.PanelGroup):
     slug = "objectstorage"
     name = _("Object Storage")
-    panels = ('administration','storagepolicies',)
+    panels = ('administration', 'storagepolicies', 'storagemonitoring')
 
 class SDSController(horizon.Dashboard):
     name = _("SDS Controller")

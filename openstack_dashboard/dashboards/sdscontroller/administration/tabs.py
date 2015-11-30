@@ -8,6 +8,8 @@ from openstack_dashboard import api
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import tables as registry_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import models as filters_models
+
+
 class RegistryTab(tabs.TableTab):
     table_classes = (registry_tables.InstancesTable,)
     name = _("Registry DSL")
@@ -30,6 +32,7 @@ class RegistryTab(tabs.TableTab):
             exceptions.handle(self.request, error_message)
 
             return []
+
 
 class TenantList(tabs.TableTab):
     table_classes = (registry_tables.InstancesTable,)
@@ -54,12 +57,12 @@ class TenantList(tabs.TableTab):
 
             return []
 
+
 class Filters(tabs.TableTab):
     table_classes = (filter_tables.FilterTable,)
     name = _("Filters")
     slug = "filters_table"
     template_name = ("horizon/common/_detail_table.html")
-
 
     def get_filters_data(self):
         #strobj call api
@@ -69,6 +72,7 @@ class Filters(tabs.TableTab):
         for inst in instances:
             ret.append(filters_models.Filter(inst['id'], inst['name'], inst['language'], inst['interface_version'], inst['dependencies'], inst['object_metadata'], inst['main'], inst['deployed']))
         return ret
+
 
 class BW(tabs.TableTab):
     table_classes = (registry_tables.InstancesTable,)
@@ -92,6 +96,7 @@ class BW(tabs.TableTab):
             exceptions.handle(self.request, error_message)
 
             return []
+
 
 class MypanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"

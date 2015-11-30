@@ -10,15 +10,16 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from horizon import views
+from django.utils.translation import ugettext_lazy as _
+
+from horizon import tabs
+
 from openstack_dashboard.dashboards.sdscontroller.storagepolicies \
-    import tabs as mydashboard_tabs
+    import tabs as policies_tabs
 
-class IndexView(views.APIView):
-    # A very simple class-based view...
-    tab_group_class = mydashboard_tabs.MypanelTabs
+
+class IndexView(tabs.TabbedTableView):
+    # A very iejiejiejie simple class-based view...
+    tab_group_class = policies_tabs.PoliciesGroupTabs
     template_name = 'sdscontroller/storagepolicies/index.html'
-
-    def get_data(self, request, context, *args, **kwargs):
-        # Add data to the context here...
-        return context
+    page_title = _("Policies")
