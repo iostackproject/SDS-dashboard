@@ -7,32 +7,35 @@ import json
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import tables as registry_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import models as filters_models
+from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import models as registry_models
 
 from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
 
 
 class RegistryTab(tabs.TableTab):
-    table_classes = (registry_tables.InstancesTable,)
+    table_classes = (registry_tables.DslFilterTable,)
     name = _("Registry DSL")
     slug = "registry_table"
     template_name = ("horizon/common/_detail_table.html")
 
-    def get_instances_data(self):
-        # try:
-        #     marker = self.request.GET.get(
-        #                 registry_tables.InstancesTable._meta.pagination_param, None)
-        #
-        #     instances, self._has_more = api.nova.server_list(
-        #         self.request,
-        #         search_opts={'marker': marker, 'paginate': True})
-        #
-        #     return instances
-        # except Exception:
-        #     self._has_more = False
-        #     error_message = _('Unable to get instances')
-        #     exceptions.handle(self.request, error_message)
+    def get_dsl_filters_data(self):
+        try:
+            response = api.dsl_get_all_filters()
+            print "CAMAMILLA dsl_filters", response.status_code, "text", response.text
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get filters.'
+                raise ValueError(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
 
-            return []
+        instances = json.loads(strobj)
+        ret = []
+        for inst in instances:
+            ret.append(registry_models.Filter(inst['identifier'], inst['name'], inst['activation_url'], inst['valid_parameters']))
+        return ret
 
 
 class TenantList(tabs.TableTab):

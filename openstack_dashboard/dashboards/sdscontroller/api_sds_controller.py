@@ -109,7 +109,7 @@ def dsl_delete_workload_metric(metric_name):
 
 
 # # Registry DSL - Filters
-def dsl_add_filter(name, activation_url, valid_parameters):
+def dsl_add_filter(name, identifier, activation_url, valid_parameters):
     headers = {}
 
     url = URL_BASIC + "/registry/filters"
@@ -117,7 +117,7 @@ def dsl_add_filter(name, activation_url, valid_parameters):
     headers["X-Auth-Token"] = str(TOKEN)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"name": str(name), "activation_url": str(activation_url), "valid_parameters": str(valid_parameters)}
+    parameters = {"name": str(name), "identifier": str(identifier), "activation_url": str(activation_url), "valid_parameters": str(valid_parameters)}
 
     r = requests.post(url, json.dumps(parameters), headers=headers)
     return r
