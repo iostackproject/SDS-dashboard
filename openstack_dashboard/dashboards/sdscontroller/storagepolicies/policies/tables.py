@@ -9,19 +9,14 @@ class CreatePolicy(tables.LinkAction):
     url = "horizon:sdscontroller:storagepolicies:policies:create_policy"
     classes = ("ajax-modal",)
     icon = "plus"
-    policy_rules = (("volume", "volume_extension:types_manage"),)
 
 
 class PoliciesTable(tables.DataTable):
 
-    id = tables.Column('id', verbose_name=_("ID"))
-    policy = tables.Column('policy', verbose_name=_("Policy"))
-
-    def get_object_display(self, policy):
-        return policy.policy
-
-    def get_object_id(self, policy):
-        return policy.id
+    id = tables.Column('id', verbose_name=_("Id"))
+    policy_description = tables.Column('policy_description', verbose_name="Policy Description")
+    policy_location = tables.Column('policy_location', verbose_name=_("Policy Location"))
+    alive = tables.Column('alive', verbose_name="Alive")
 
     class Meta:
         name = "policies"

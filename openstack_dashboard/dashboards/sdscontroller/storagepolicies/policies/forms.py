@@ -14,7 +14,7 @@
 # under the License.
 
 """
-Policies for managing volumes.
+Policies for managing policies.
 """
 from django.core.urlresolvers import reverse
 
@@ -24,30 +24,26 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 
+from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
+
 
 class CreatePolicy(forms.SelfHandlingForm):
     policy = forms.CharField(max_length=255, label=_("Policy/Rule"))
 
     def handle(self, request, data):
         try:
-            print "CAMAMILLA request", request
-            print "CAMAMILLA data", data
-            print "CAMAMILLA policy/rule to parse :=>", data["policy"]
-
-            messages.success(request,
-                             _('Successfully created policy/rule: %s')
-                             % data['policy'])
-            # TODO Control correct return
-            return data
-        except Exception as ex:
-            # TODO CAMAMILLA
-            print "CAMAMILLA Error", getattr(ex, 'code', None)
-            if getattr(ex, 'code', None) == 409:
-                msg = _('QoS Spec name "%s" already '
-                        'exists.') % data['name']
-                self._errors['name'] = self.error_class([msg])
+            response = api.create_policy(data["policy"])
+            print "CAMAMILLA response", response, response.text
+            if 200 <= response.status_code < 300:
+                messages.success(request, _('Successfully created policy/rule: %s') % data['policy'])
+                return data
             else:
-                redirect = reverse("horizon:sdscontroller:storagepolicies:index")
-                exceptions.handle(request,
-                                  _('Unable to create policy/rule.'),
-                                  redirect=redirect)
+                # FOR 4f0279da74ef4584a29dc72c835fe2c9 WHEN get_ops_tenant > 4 DO SET pepito WITH param1=2
+                print "ERROR: sdscontroller.storagepolicies.policies", response, response.text
+                raise ValueError(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:storagepolicies:index")
+            error_message = "Unable to create policy/rule.\t %s" % ex.message
+            exceptions.handle(request,
+                              _(error_message),
+                              redirect=redirect)

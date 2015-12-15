@@ -66,28 +66,21 @@ class Filters(tabs.TableTab):
     template_name = ("horizon/common/_detail_table.html")
 
     def get_filters_data(self):
-        # TODO call sds api
-
         try:
             response = api.fil_list_filters()
-            response.status_code = 201
-            print "sdscontroller.administration.filters.getdata response", response.status_code, response.text
-            if response.status_code != 200:
-                # TODO VERY BIG
-                # error_message = _('Unable to get instances')
-                # exceptions.handle(self.request, error_message)
-                print "ERROR: sdscontroller.administration.filters.getdata response.code", response.status_code
-                strobj = '[{ "name": "UOneTrace-1.0.jar", "language": "Java", "interface_version": "1.0", "object_metadata": "no", "dependencies": "", "main_class": "com.urv.storlet.uonetrace.UOneTraceStorlet", "path": "/home/vagrant/src/sds_controller/storlet/storlets_jar/UOneTrace-1.0.jar", "id": "2" }]'
-            else:
+            if 200 <= response.status_code < 300:
                 strobj = response.text
+            else:
+                error_message = 'Unable to get instances.'
+                raise ValueError(error_message)
         except Exception as e:
-            print "ERROR: sdscontroller.administration.filters.getdata exception", e
-            strobj = '[{ "name": "UOneTrace-1.0.jar", "language": "Java", "interface_version": "1.0", "object_metadata": "no", "dependencies": "", "main_class": "com.urv.storlet.uonetrace.UOneTraceStorlet", "path": "/home/vagrant/src/sds_controller/storlet/storlets_jar/UOneTrace-1.0.jar", "id": "2" }]'
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
 
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(filters_models.Filter(inst["id"], inst['name'], inst['language'], inst['interface_version'], inst['dependencies'], inst['object_metadata'], inst['main_class']))
+            ret.append(filters_models.Filter(inst["id"], inst['name'], inst['language'], inst['interface_version'], inst['dependencies'], inst['object_metadata'], inst['main']))
         return ret
 
 

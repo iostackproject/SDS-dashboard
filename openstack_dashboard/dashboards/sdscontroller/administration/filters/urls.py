@@ -15,51 +15,12 @@
 from django.conf.urls import patterns
 from django.conf.urls import url
 
-from openstack_dashboard.dashboards.project.volumes \
-    .volumes import views
-from openstack_dashboard.dashboards.project.volumes.backups \
-    import views as backup_views
+from openstack_dashboard.dashboards.sdscontroller.administration.filters import views
 
 
-VIEWS_MOD = ('openstack_dashboard.dashboards.project.volumes.volumes.views')
+VIEWS_MOD = ('openstack_dashboard.dashboards.sdscontroller.administration.filters.views')
 
 urlpatterns = patterns(
     VIEWS_MOD,
-    url(r'^create/$', views.CreateView.as_view(), name='create'),
-    url(r'^(?P<volume_id>[^/]+)/extend/$',
-        views.ExtendView.as_view(),
-        name='extend'),
-    url(r'^(?P<volume_id>[^/]+)/attach/$',
-        views.EditAttachmentsView.as_view(),
-        name='attach'),
-    url(r'^(?P<volume_id>[^/]+)/create_snapshot/$',
-        views.CreateSnapshotView.as_view(),
-        name='create_snapshot'),
-    url(r'^(?P<volume_id>[^/]+)/create_transfer/$',
-        views.CreateTransferView.as_view(),
-        name='create_transfer'),
-    url(r'^accept_transfer/$',
-        views.AcceptTransferView.as_view(),
-        name='accept_transfer'),
-    url(r'^(?P<transfer_id>[^/]+)/auth/(?P<auth_key>[^/]+)/$',
-        views.ShowTransferView.as_view(),
-        name='show_transfer'),
-    url(r'^(?P<volume_id>[^/]+)/create_backup/$',
-        backup_views.CreateBackupView.as_view(),
-        name='create_backup'),
-    url(r'^(?P<volume_id>[^/]+)/$',
-        views.DetailView.as_view(),
-        name='detail'),
-    url(r'^(?P<volume_id>[^/]+)/upload_to_image/$',
-        views.UploadToImageView.as_view(),
-        name='upload_to_image'),
-    url(r'^(?P<volume_id>[^/]+)/update/$',
-        views.UpdateView.as_view(),
-        name='update'),
-    url(r'^(?P<volume_id>[^/]+)/retype/$',
-        views.RetypeView.as_view(),
-        name='retype'),
-    url(r'^(?P<volume_id>[^/]+)/encryption_detail/$',
-        views.EncryptionDetailView.as_view(),
-        name='encryption_detail'),
+    url(r'^upload/$', views.UploadView.as_view(), name='upload'),
 )

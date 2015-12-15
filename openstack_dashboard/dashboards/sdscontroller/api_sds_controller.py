@@ -11,6 +11,31 @@ TOKEN = "85082f27a14c4db79562b0b4e6df162b"
 
 
 ############################## # Registry DSL API # ##############################
+# # Registry DSL - Policies
+def create_policy(policy):
+    headers = {}
+
+    url = URL_BASIC + "/registry/policy"
+
+    headers["X-Auth-Token"] = str(TOKEN)
+    headers['Content-Type'] = "text/plain"
+
+    r = requests.post(url, policy, headers=headers)
+    return r
+
+
+def list_policies():
+    headers = {}
+
+    url = URL_BASIC + "/registry/policy"
+
+    headers["X-Auth-Token"] = str(TOKEN)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
 # # Registry DSL - Metrics Workload
 def dsl_add_workload_metric(name, network_location, metric_type):
     headers = {}
@@ -242,19 +267,16 @@ def fil_create_filter(name, language, interface_version, main, dependencies="", 
     return r
 
 
-def fil_upload_filter_data(filter_id, filter_path):
+def fil_upload_filter_data(filter_id, in_memory_file):
     headers = {}
 
     url = URL_BASIC + "/filters/" + str(filter_id) + "/data"
 
     headers["X-Auth-Token"] = str(TOKEN)
-    headers['Content-Type'] = "multipart/form-data"
 
-    # TODO?
-    with open(filter_path, "r") as my_file:
-        data = my_file.read()
+    files = {'file': (in_memory_file.name, in_memory_file.read())}
 
-    r = requests.put(url, data=data, headers=headers)
+    r = requests.put(url, files=files, headers=headers)
     return r
 
 
