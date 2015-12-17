@@ -36,6 +36,18 @@ def list_policies():
     return r
 
 
+# TODO confirm
+def remove_policy(policy_id):
+    headers = {}
+
+    url = URL_BASIC + "/registry/policy/" + str(policy_id)
+
+    headers["X-Auth-Token"] = str(TOKEN)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
 # # Registry DSL - Metrics Workload
 def dsl_add_workload_metric(name, network_location, metric_type):
     headers = {}

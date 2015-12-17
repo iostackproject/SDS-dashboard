@@ -16,32 +16,17 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.core import validators
-from django.core.files.base import ContentFile
-from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from django.forms import ValidationError  # noqa
 from django.core.urlresolvers import reverse
 
-from horizon import exceptions, conf
+from horizon import exceptions
 from horizon import forms
 from horizon import messages
 
-import tempfile
 import json
 
 from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
-
-
-no_slash_validator = validators.RegexValidator(r'^(?u)[^/]+$',
-                                               _("Slash is not an allowed "
-                                                 "character."),
-                                               code="noslash")
-no_begin_or_end_slash = validators.RegexValidator(r'^[^\/](?u).+[^\/]$',
-                                                  _("Slash is not allowed at "
-                                                    "the beginning or end of "
-                                                    "your string."),
-                                                  code="nobeginorendslash")
 
 
 class UploadFilter(forms.SelfHandlingForm):
@@ -101,24 +86,24 @@ class UploadFilter(forms.SelfHandlingForm):
     def __init__(self, request, *args, **kwargs):
         super(UploadFilter, self).__init__(request, *args, **kwargs)
 
-    def _set_filter_path(self, data):
-        if data['path']:
-            filter_path = "/".join([data['path'].rstrip("/"), data['name']])
-        else:
-            filter_path = data['name']
-        return filter_path
+    # def _set_filter_path(self, data):
+    #     if data['path']:
+    #         filter_path = "/".join([data['path'].rstrip("/"), data['name']])
+    #     else:
+    #         filter_path = data['name']
+    #     return filter_path
 
-    def clean(self):
-        data = super(UploadFilter, self).clean()
-
-        image_file = data.get('filter_file', None)
-        image_url = data.get('image_url', None)
-
-        if not image_url and not image_file:
-            raise ValidationError(
-                _("A external file must be specified."))
-        else:
-            return data
+    # def clean(self):
+    #     data = super(UploadFilter, self).clean()
+    #
+    #     image_file = data.get('filter_file', None)
+    #     image_url = data.get('image_url', None)
+    #
+    #     if not image_url and not image_file:
+    #         raise ValidationError(
+    #             _("A external file must be specified."))
+    #     else:
+    #         return data
 
     def handle(self, request, data):
         filter_file = data['filter_file']

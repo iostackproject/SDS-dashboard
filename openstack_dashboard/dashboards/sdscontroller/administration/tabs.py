@@ -21,7 +21,6 @@ class RegistryTab(tabs.TableTab):
     def get_dsl_filters_data(self):
         try:
             response = api.dsl_get_all_filters()
-            print "CAMAMILLA dsl_filters", response.status_code, "text", response.text
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
@@ -83,7 +82,7 @@ class Filters(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(filters_models.Filter(inst["id"], inst['name'], inst['language'], inst['interface_version'], inst['dependencies'], inst['object_metadata'], inst['main']))
+            ret.append(filters_models.Filter(inst["id"], inst['name'], inst['language'], inst['dependencies'], inst['interface_version'], inst['object_metadata'], inst['main']))
         return ret
 
 

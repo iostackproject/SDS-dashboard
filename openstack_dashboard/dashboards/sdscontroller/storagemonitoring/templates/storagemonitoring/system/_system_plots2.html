@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "System Monitoring" %}{% endblock %}
+<div class="row">
+    <div class="col-sm-12">
+        <iframe src="http://10.30.235.235:3000/dashboard-solo/db/collectd-defaults?panelId=1&fullscreen&theme=light"
+                width="450" height="200" frameborder="0"></iframe>
+        <iframe src="http://10.30.235.235:3000/dashboard-solo/db/collectd-defaults?panelId=2&fullscreen&theme=light"
+                width="450" height="200" frameborder="0"></iframe>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <iframe src="http://10.30.235.235:3000/dashboard-solo/db/collectd-defaults?panelId=3&fullscreen&&theme=light"
+                width="450" height="200" frameborder="0"></iframe>
+        <iframe src="http://10.30.235.235:3000/dashboard-solo/db/collectd-defaults?panelId=4&fullscreen&theme=light"
+                width="450" height="200" frameborder="0"></iframe>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <iframe src="http://10.30.235.235:3000/dashboard-solo/db/collectd-defaults?panelId=5&fullscreen&theme=light"
+                width="450" height="200" frameborder="0"></iframe>
+        <iframe src="http://10.30.235.235:3000/dashboard-solo/db/collectd-defaults?panelId=6&fullscreen&theme=light"
+                width="450" height="200" frameborder="0"></iframe>
+    </div>
+</div>
+{% block main %}
+{% endblock %}
+
+
+

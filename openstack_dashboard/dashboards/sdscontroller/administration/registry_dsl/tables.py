@@ -1,6 +1,13 @@
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
+
+from django.core.urlresolvers import reverse
 
 from horizon import tables
+from horizon import exceptions
+from horizon import messages
+
+from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
 
 
 class MyFilterAction(tables.FilterAction):
@@ -15,6 +22,47 @@ class CreateFilter(tables.LinkAction):
     icon = "plus"
 
 
+class DeleteDslFilter(tables.DeleteAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Delete Filter",
+            u"Delete Filters",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Deleted Filter",
+            u"Deleted Filters",
+            count
+        )
+
+    name = "delete_filter"
+    success_url = "horizon:sdscontroller:administration:index"
+
+    def delete(self, request, obj_id):
+        try:
+            datum = self.table.get_object_by_id(obj_id)
+            obj_name = datum.name
+            response = api.dsl_delete_filter(obj_name)
+            if 200 <= response.status_code < 300:
+                messages.success(request, _('Successfully deleted filter: %s') % obj_id)
+            else:
+                raise ValueError(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:administration:index")
+            error_message = "Unable to remove filter.\t %s" % ex.message
+            exceptions.handle(request,
+                              _(error_message),
+                              redirect=redirect)
+
+
+class DeleteMultipleDslFilters(DeleteDslFilter):
+    name = "delete_multiple_filters"
+
+
 class DslFilterTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_("Name"))
     filter_identifier = tables.Column('filter_identifier', verbose_name=_("Filter Identifier"))
@@ -24,7 +72,7 @@ class DslFilterTable(tables.DataTable):
     class Meta:
         name = "dsl_filters"
         verbose_name = _("Filters")
-        table_actions = (MyFilterAction, CreateFilter,)
+        table_actions = (MyFilterAction, CreateFilter, DeleteMultipleDslFilters,)
 
 
 class InstancesTable(tables.DataTable):
