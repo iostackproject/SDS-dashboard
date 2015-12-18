@@ -36,6 +36,18 @@ def list_policies():
     return r
 
 
+def list_metrics():
+    headers = {}
+
+    url = URL_BASIC + "/registry/metrics"
+
+    headers["X-Auth-Token"] = str(TOKEN)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
 # TODO confirm
 def remove_policy(policy_id):
     headers = {}
