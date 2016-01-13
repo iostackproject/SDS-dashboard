@@ -16,11 +16,12 @@ from django.conf.urls import include
 from openstack_dashboard.dashboards.sdscontroller.administration import views
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import urls as filter_urls
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import urls as registry_urls
-
+from openstack_dashboard.dashboards.sdscontroller.administration.storage_policies import urls as storage_policies
 
 urlpatterns = patterns('',
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'', include(filter_urls, namespace="filters")),
     url(r'', include(registry_urls, namespace="registry_dsl")),
+    url(r'', include(storage_policies, namespace="storage_policies")),
 )
 

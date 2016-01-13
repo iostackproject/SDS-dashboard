@@ -8,7 +8,9 @@ from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl im
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import models as filters_models
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import models as registry_models
+from openstack_dashboard.dashboards.sdscontroller.administration.storage_policies import tables as storagepolicies_tables
 
+storagepolicies_tables
 from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
 
 
@@ -85,11 +87,19 @@ class Filters(tabs.TableTab):
             ret.append(filters_models.Filter(inst["id"], inst['name'], inst['language'], inst['dependencies'], inst['interface_version'], inst['object_metadata'], inst['main']))
         return ret
 
+class StoragePolicies(tabs.TableTab):
+    table_classes = (storagepolicies_tables.StoragePolicyTable,)
+    name = _("Storage Policies")
+    slug = "storagepolicies_table"
+    template_name = ("horizon/common/_detail_table.html")
+
+    def get_storagepolicies_data(self):
+        return []
 
 class BW(tabs.TableTab):
     table_classes = (registry_tables.InstancesTable,)
     name = _("BW Differentiation")
-    slug = "bw__table"
+    slug = "bw_table"
     template_name = ("horizon/common/_detail_table.html")
 
     def get_instances_data(self):
@@ -112,6 +122,6 @@ class BW(tabs.TableTab):
 
 class MypanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
-    tabs = (RegistryTab, Filters, BW, TenantList)
+    tabs = (RegistryTab, Filters, BW, TenantList, StoragePolicies)
     sticky = True
 
