@@ -8,9 +8,7 @@ from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl im
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import models as filters_models
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import models as registry_models
-from openstack_dashboard.dashboards.sdscontroller.administration.storage_policies import tables as storagepolicies_tables
 
-storagepolicies_tables
 from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
 
 
@@ -22,7 +20,7 @@ class RegistryTab(tabs.TableTab):
 
     def get_dsl_filters_data(self):
         try:
-            response = api.dsl_get_all_filters()
+            response = api.dsl_get_all_filters(self.request)
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
@@ -71,7 +69,7 @@ class Filters(tabs.TableTab):
 
     def get_filters_data(self):
         try:
-            response = api.fil_list_filters()
+            response = api.fil_list_filters(self.request)
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
@@ -86,15 +84,6 @@ class Filters(tabs.TableTab):
         for inst in instances:
             ret.append(filters_models.Filter(inst["id"], inst['name'], inst['language'], inst['dependencies'], inst['interface_version'], inst['object_metadata'], inst['main']))
         return ret
-
-class StoragePolicies(tabs.TableTab):
-    table_classes = (storagepolicies_tables.StoragePolicyTable,)
-    name = _("Storage Policies")
-    slug = "storagepolicies_table"
-    template_name = ("horizon/common/_detail_table.html")
-
-    def get_storagepolicies_data(self):
-        return []
 
 class BW(tabs.TableTab):
     table_classes = (registry_tables.InstancesTable,)
@@ -122,6 +111,6 @@ class BW(tabs.TableTab):
 
 class MypanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
-    tabs = (RegistryTab, Filters, BW, TenantList, StoragePolicies)
+    tabs = (RegistryTab, Filters, BW, TenantList)
     sticky = True
 

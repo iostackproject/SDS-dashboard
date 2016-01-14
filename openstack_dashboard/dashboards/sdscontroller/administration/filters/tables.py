@@ -44,7 +44,7 @@ class DeleteFilter(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            response = api.fil_delete_filter(obj_id)
+            response = api.fil_delete_filter(request, obj_id)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully deleted filter: %s') % obj_id)
             else:

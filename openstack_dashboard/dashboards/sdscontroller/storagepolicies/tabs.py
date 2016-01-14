@@ -22,7 +22,7 @@ class PolicyTab(tabs.TableTab):
 
     def get_policies_data(self):
         try:
-            response = api.list_policies()
+            response = api.list_policies(self.request)
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
@@ -48,7 +48,7 @@ class MetricTab(tabs.TableTab):
 
     def get_workload_metrics_data(self):
         try:
-            response = api.list_metrics()
+            response = api.list_metrics(self.request)
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:

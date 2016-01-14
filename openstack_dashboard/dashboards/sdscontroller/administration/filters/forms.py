@@ -120,11 +120,11 @@ class UploadFilter(forms.SelfHandlingForm):
         if dependencies is None or dependencies is "":
             dependencies = ""
         try:
-            response = api.fil_create_filter(name, language, interface_version, main, dependencies, object_metadata)
+            response = api.fil_create_filter(request, name, language, interface_version, main, dependencies, object_metadata)
 
             if 200 <= response.status_code < 300:
                 filter_id = json.loads(response.text)["id"]
-                response = api.fil_upload_filter_data(filter_id, filter_file)
+                response = api.fil_upload_filter_data(request, filter_id, filter_file)
 
                 if 200 <= response.status_code < 300:
                     messages.success(request, _('Successfully filter creation and upload.'))

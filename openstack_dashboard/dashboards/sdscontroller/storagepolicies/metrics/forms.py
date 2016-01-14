@@ -32,7 +32,7 @@ class CreatePolicy(forms.SelfHandlingForm):
 
     def handle(self, request, data):
         try:
-            response = api.create_policy(data["policy"])
+            response = api.create_policy(request, data["policy"])
             print "CAMAMILLA response", response, response.text
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully created policy/rule: %s') % data['policy'])

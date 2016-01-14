@@ -96,7 +96,11 @@ def _objectify(items, container_name):
 def _metadata_to_header(metadata):
     headers = {}
     public = metadata.get('is_public')
-
+    try:
+        policy_name = metadata.get("policy_name")
+        headers['X-Storage-Policy'] = policy_name
+    except:
+        None
     if public is True:
         public_container_acls = [GLOBAL_READ_ACL, LIST_CONTENTS_ACL]
         headers['x-container-read'] = ",".join(public_container_acls)

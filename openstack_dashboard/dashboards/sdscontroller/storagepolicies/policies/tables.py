@@ -40,7 +40,7 @@ class DeletePolicy(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            response = api.remove_policy(obj_id)
+            response = api.remove_policy(request, obj_id)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully deleted policy/rule: %s') % obj_id)
             else:

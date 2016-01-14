@@ -12,15 +12,20 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf.urls import patterns
-from django.conf.urls import url
+from django.utils.translation import ugettext_lazy as _
 
-from openstack_dashboard.dashboards.sdscontroller.administration.storage_policies import views
+from horizon import browsers
 
-VIEWS_MOD = ('openstack_dashboard.dashboards.sdscontroller.administration.storage_policies.views')
+from openstack_dashboard.dashboards.sdscontroller.containers import tables
 
-urlpatterns = patterns(
-    'VIEWS_MOD',
-    url(r'^create_storage_policy', views.CreateStoragePolicy.as_view(),
-        name='create_storage_policy'),
-)
+
+class ContainerBrowser(browsers.ResourceBrowser):
+    name = "swift"
+    verbose_name = _("Swift")
+    navigation_table_class = tables.ContainersTable
+    content_table_class = tables.ObjectsTable
+    navigable_item_name = _("Container")
+    navigation_kwarg_name = "container_name"
+    content_kwarg_name = "subfolder_path"
+    has_breadcrumb = True
+    breadcrumb_url = "horizon:sdscontroller:containers:index"

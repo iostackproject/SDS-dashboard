@@ -25,7 +25,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from horizon import forms
 
-from openstack_dashboard.dashboards.sdscontroller.administration.storage_policies import forms as storage_policies_forms
+from openstack_dashboard.dashboards.sdscontroller.rings_and_accounts.storage_policies import forms as storage_policies_forms
 
 
 class CreateStoragePolicy(forms.ModalFormView):
@@ -34,9 +34,21 @@ class CreateStoragePolicy(forms.ModalFormView):
 
     modal_header = _("Create a Storage Policy")
     submit_label = _("Create a Storage Policy")
-    submit_url = reverse_lazy('horizon:sdscontroller:administration:storage_policies:create_storage_policy')
-    template_name = "sdscontroller/administration/storage_policies/create_storage_policy.html"
+    submit_url = reverse_lazy('horizon:sdscontroller:rings_and_accounts:storage_policies:create_storage_policy')
+    template_name = "sdscontroller/rings_and_accounts/storage_policies/create_storage_policy.html"
     context_object_name = 'storage_policy'
-    success_url = reverse_lazy('horizon:sdscontroller:administration:index')
+    success_url = reverse_lazy('horizon:sdscontroller:rings_and_accounts:index')
     page_title = _("Create a Storage Policy")
 
+
+class CreateECStoragePolicy(forms.ModalFormView):
+    form_class = storage_policies_forms.CreateECStoragePolicy
+    form_id = "create_ec_storage_policy_form"
+
+    modal_header = _("Create a EC Storage Policy")
+    submit_label = _("Create a EC Storage Policy")
+    submit_url = reverse_lazy('horizon:sdscontroller:rings_and_accounts:storage_policies:create_ec_storage_policy')
+    template_name = "sdscontroller/rings_and_accounts/storage_policies/create_ec_storage_policy.html"
+    context_object_name = 'storage_policy'
+    success_url = reverse_lazy('horizon:sdscontroller:rings_and_accounts:index')
+    page_title = _("Create a Storage Policy")

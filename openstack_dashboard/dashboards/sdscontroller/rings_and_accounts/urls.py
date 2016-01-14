@@ -9,18 +9,18 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+
 from django.conf.urls import patterns
 from django.conf.urls import url
 from django.conf.urls import include
 
-from openstack_dashboard.dashboards.sdscontroller.administration import views
-from openstack_dashboard.dashboards.sdscontroller.administration.filters import urls as filter_urls
-from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import urls as registry_urls
+from openstack_dashboard.dashboards.sdscontroller.rings_and_accounts.views \
+    import IndexView
+from openstack_dashboard.dashboards.sdscontroller.rings_and_accounts.storage_policies import urls as storage_policies
 
 
-urlpatterns = patterns('',
-    url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'', include(filter_urls, namespace="filters")),
-    url(r'', include(registry_urls, namespace="registry_dsl")),
+urlpatterns = patterns(
+    '',
+    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'', include(storage_policies, namespace="storage_policies")),
 )
-

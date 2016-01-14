@@ -66,7 +66,7 @@ class CreateFilter(forms.SelfHandlingForm):
         string_parameters = "{"+data["valid_parameters"]+"}"
 
         try:
-            response = api.dsl_add_filter(name, filter_identifier, activation_url, string_parameters)
+            response = api.dsl_add_filter(request, name, filter_identifier, activation_url, string_parameters)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully created filter: %s') % data['name'])
                 return data

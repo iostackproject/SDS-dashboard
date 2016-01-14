@@ -13,16 +13,12 @@
 from django.utils.translation import ugettext_lazy as _
 
 import horizon
+from openstack_dashboard.dashboards.sdscontroller import dashboard
 
-class Objectstorage(horizon.PanelGroup):
-    slug = "objectstorage"
-    name = _("Object Storage")
-    panels = ('administration', 'rings_and_accounts', 'containers', 'storagepolicies', 'storagemonitoring')
+class Rings_And_Accounts(horizon.Panel):
+    name = _("Rings & Accounts")
+    slug = "rings_and_accounts"
 
-class SDSController(horizon.Dashboard):
-    name = _("SDS Controller")
-    slug = "sdscontroller"
-    panels = (Objectstorage,)  # Add your panels here.
-    default_panel = 'administration'  # Specify the slug of the default panel.
-    permissions = ('openstack.roles.admin',)
-horizon.register(SDSController)
+
+# dashboard.Sdscontroller.register(Rings_And_Accounts)
+dashboard.SDSController.register(Rings_And_Accounts)

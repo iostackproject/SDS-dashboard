@@ -3,7 +3,7 @@
 
 {% block form_id %}create_storage_policy_form{% endblock %}
 {% block form_name %}createStoragePolicy{% endblock %}
-{% block form_action %}{% url 'horizon:sdscontroller:administration:storage_policies:create_storage_policy' %}{% endblock %}
+{% block form_action %}{% url 'horizon:sdscontroller:rings_and_accounts:storage_policies:create_storage_policy' %}{% endblock %}
 {% block form_attrs %}enctype="multipart/form-data"{% endblock %}
 
 {% block modal-header %}
@@ -24,5 +24,5 @@
 
 {% block modal-footer %}
   <input class="btn btn-primary pull-right" type="submit" value="{% trans "Create Storage Policy" %}" />
-  <a href="{% url 'horizon:sdscontroller:administration:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
+  <a href="{% url 'horizon:sdscontroller:rings_and_accounts:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}

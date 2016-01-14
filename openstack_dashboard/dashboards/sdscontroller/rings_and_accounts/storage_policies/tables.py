@@ -14,12 +14,19 @@ class MyFilterAction(tables.FilterAction):
     name = "myfilter"
 
 
-class CreateStoragePolicyFilter(tables.LinkAction):
+class CreateStoragePolicy(tables.LinkAction):
     name = "create_storage_policy"
     verbose_name = _("Create new policy")
-    url = "horizon:sdscontroller:administration:storage_policies:create_storage_policy"
+    url = "horizon:sdscontroller:rings_and_accounts:storage_policies:create_storage_policy"
     classes = ("ajax-modal",)
     icon = "upload"
+
+class CreateECStoragePolicy(tables.LinkAction):
+    name = "create_ec_storage_policy"
+    verbose_name = _("Create EC Storage Policy")
+    url = "horizon:sdscontroller:rings_and_accounts:storage_policies:create_ec_storage_policy"
+    classes = ("ajax-modal",)
+    icon = "new"
 
 class StoragePolicyTable(tables.DataTable):
 
@@ -34,4 +41,4 @@ class StoragePolicyTable(tables.DataTable):
     class Meta:
         name = "storagepolicies"
         verbose_name = _("Storage Policies")
-        table_actions = (MyFilterAction, CreateStoragePolicyFilter,)
+        table_actions = (MyFilterAction, CreateStoragePolicy, CreateECStoragePolicy, )
