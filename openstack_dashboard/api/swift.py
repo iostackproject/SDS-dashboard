@@ -163,6 +163,7 @@ def swift_get_container(request, container_name, with_data=True):
     is_public = False
     public_url = None
     try:
+        print 'headers_edd', headers
         is_public = GLOBAL_READ_ACL in headers.get('x-container-read', '')
         if is_public:
             swift_endpoint = base.url_for(request,
@@ -182,6 +183,7 @@ def swift_get_container(request, container_name, with_data=True):
         'data': data,
         'is_public': is_public,
         'public_url': public_url,
+        'storage_policy': headers.get('x-storage-policy')
     }
     return Container(container_info)
 

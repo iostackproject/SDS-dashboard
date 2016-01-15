@@ -25,7 +25,7 @@ from horizon import forms
 from horizon import messages
 
 from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
-
+from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 class CreateFilter(forms.SelfHandlingForm):
     name = forms.CharField(max_length=255,
@@ -71,7 +71,7 @@ class CreateFilter(forms.SelfHandlingForm):
                 messages.success(request, _('Successfully created filter: %s') % data['name'])
                 return data
             else:
-                raise ValueError(response.text)
+                raise sdsexception.SdsException(response.text)
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:administration:index")
             error_message = "Unable to create filter.\t %s" % ex.message

@@ -27,7 +27,7 @@ from horizon import messages
 import json
 
 from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
-
+from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 class UploadFilter(forms.SelfHandlingForm):
 
@@ -130,9 +130,9 @@ class UploadFilter(forms.SelfHandlingForm):
                     messages.success(request, _('Successfully filter creation and upload.'))
                     return data
                 else:
-                    raise ValueError(response.text)
+                    raise sdsexception.SdsException(response.text)
             else:
-                raise ValueError(response.text)
+                raise sdsexception.SdsException(response.text)
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:administration:index")
             error_message = "Unable to create filter.\t %s" % ex.message

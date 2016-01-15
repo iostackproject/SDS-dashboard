@@ -8,7 +8,7 @@ from horizon import exceptions
 from horizon import messages
 
 from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
-
+from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 class MyFilterAction(tables.FilterAction):
     name = "myfilter"
@@ -50,7 +50,7 @@ class DeleteDslFilter(tables.DeleteAction):
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully deleted filter: %s') % obj_id)
             else:
-                raise ValueError(response.text)
+                raise sdsexception.SdsException(response.text)
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:administration:index")
             error_message = "Unable to remove filter.\t %s" % ex.message

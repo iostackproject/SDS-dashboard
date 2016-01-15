@@ -66,7 +66,7 @@ class PoliciesTable(tables.DataTable):
     class Meta:
         name = "policies"
         verbose_name = _("Policies")
-        table_actions = (CreatePolicy, DeleteMultiplePolicies,)
-        # table_actions = (CreatePolicy,)
+        #table_actions = (CreatePolicy, DeleteMultiplePolicies,)
+        table_actions = (CreatePolicy,)
         # row_actions = (DeletePolicy,)
 

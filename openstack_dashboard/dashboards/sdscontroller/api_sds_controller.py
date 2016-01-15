@@ -13,8 +13,26 @@ URL_BASIC = "http://10.30.103.250:18000"
 def sds_controller_api(request):
     return request.user.token.id
 
+############################## # Swift API # ##############################
+
+
+def swift_list_tenants(request):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/tenants"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
 ############################## # Registry DSL API # ##############################
 # # Registry DSL - Policies
+
+
 def create_policy(request, policy):
     token = sds_controller_api(request)
     headers = {}
@@ -225,8 +243,20 @@ def dsl_delete_filter(request, name):
 
 
 # # Registry DSL - Tenants Groups
-def dsl_create_tenants_group(request):
-    pass
+def dsl_create_tenants_group(request, name, tenants_list):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/gtenants"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    # parameters = {"name": str(name), "tenants": str(tenants_list)}
+    # r = requests.post(url, json.dumps(parameters), headers=headers)
+
+    r = requests.post(url, json.dumps(tenants_list), headers=headers)
+    return r
 
 
 def dsl_get_all_tenants_groups(request):

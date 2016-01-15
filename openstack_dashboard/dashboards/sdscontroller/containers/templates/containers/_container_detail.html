@@ -20,6 +20,8 @@
     <dd>{{ container.container_object_count }}</dd>
     <dt>{% trans "Size" %}</dt>
     <dd>{{ container.container_bytes_used|filesizeformat }}</dd>
+    <dt>{% trans "Storage Policy" %}</dt>
+    <dd>{{ container.storage_policy }}</dd>
   </dl>
 </div>
 {% endblock %}
