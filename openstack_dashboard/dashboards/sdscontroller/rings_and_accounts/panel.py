@@ -16,7 +16,7 @@ import horizon
 from openstack_dashboard.dashboards.sdscontroller import dashboard
 
 class Rings_And_Accounts(horizon.Panel):
-    name = _("Rings & Accounts")
+    name = _("Rings & Storage Policies")
     slug = "rings_and_accounts"
 
 

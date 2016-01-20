@@ -18,7 +18,7 @@ from openstack_dashboard.dashboards.sdscontroller import dashboard
 
 
 class Storagepolicies(horizon.Panel):
-    name = _("Storage Policies")
+    name = _("SDS Policies")
     slug = "storagepolicies"
 
 dashboard.SDSController.register(Storagepolicies)

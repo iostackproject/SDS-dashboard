@@ -19,14 +19,14 @@ class CreateStoragePolicy(tables.LinkAction):
     verbose_name = _("Create new policy")
     url = "horizon:sdscontroller:rings_and_accounts:storage_policies:create_storage_policy"
     classes = ("ajax-modal",)
-    icon = "upload"
+    icon = "plus"
 
 class CreateECStoragePolicy(tables.LinkAction):
     name = "create_ec_storage_policy"
     verbose_name = _("Create EC Storage Policy")
     url = "horizon:sdscontroller:rings_and_accounts:storage_policies:create_ec_storage_policy"
     classes = ("ajax-modal",)
-    icon = "new"
+    icon = "plus"
 
 class StoragePolicyTable(tables.DataTable):
 
