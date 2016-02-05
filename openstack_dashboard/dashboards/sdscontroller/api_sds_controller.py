@@ -7,7 +7,7 @@ from horizon.utils.memoized import memoized  # noqa
 
 
 # TODO: Take parameters from a config file
-URL_BASIC = "http://10.30.103.250:18000"
+URL_BASIC = "http://127.0.0.1:8000"
 
 @memoized
 def sds_controller_api(request):
@@ -85,6 +85,7 @@ def remove_policy(request, policy_id):
 
     r = requests.delete(url, headers=headers)
     return r
+
 
 # # Registry DSL - Metrics Workload
 def dsl_add_workload_metric(request, name, network_location, metric_type):
