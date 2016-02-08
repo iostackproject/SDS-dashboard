@@ -242,3 +242,36 @@ class CreateECStoragePolicy(forms.SelfHandlingForm):
         #     exceptions.handle(request,
         #                       _(error_message),
         #                       redirect=redirect)
+
+
+
+class BindStorageNode(forms.SelfHandlingForm):
+    name = forms.CharField(max_length=255,
+                           label=_("Name"),
+                           help_text=_("The name assigned to new storage node."),
+                           widget=forms.TextInput(
+                               attrs={"ng-model": "name", "not-blank": ""}
+                           ))
+    location = forms.CharField(max_length=5,
+                                label=_("Location"),
+                                help_text=_("The location from new storage node. Example: r1z1-STORAGE_NODE_MANAGEMENT_INTERFACE_IP_ADDRESS:6000/DEVICE_NAME"),
+                                widget=forms.TextInput(
+                                    attrs={"ng-model": "location", "not-blank": ""}
+                                ))
+    type = forms.CharField(max_length=255,
+                                   label=_("Type"),
+                                   help_text=_("SSD or HDD"),
+                                   widget=forms.TextInput(
+                                       attrs={"ng-model": "type", "not-blank": ""}
+                                   ))
+
+
+    def __init__(self, request, *args, **kwargs):
+        super(BindStorageNode, self).__init__(request, *args, **kwargs)
+
+
+    def handle(self, request, data):
+        print 'data', data
+
+        api.registry_storage_node(request, data)
+        return data

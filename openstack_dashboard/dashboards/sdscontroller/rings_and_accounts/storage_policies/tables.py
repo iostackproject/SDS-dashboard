@@ -28,17 +28,21 @@ class CreateECStoragePolicy(tables.LinkAction):
     classes = ("ajax-modal",)
     icon = "plus"
 
+class BindStorageNode(tables.LinkAction):
+    name = "bind_storage_node"
+    verbose_name = _("Register Storage Node")
+    url = "horizon:sdscontroller:rings_and_accounts:storage_policies:bind_storage_node"
+    classes = ("ajax-modal",)
+    icon = "plus"
+
 class StoragePolicyTable(tables.DataTable):
 
     id = tables.Column('id', verbose_name=_("ID"))
     name = tables.Column('name', verbose_name=_("Name"))
-    language = tables.Column('language', verbose_name=_("Language"))
-    interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"))
-    dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"))
-    object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"))
-    main = tables.Column('main', verbose_name=_("Main"))
+    location = tables.Column('location', verbose_name=_("Location"))
+    type = tables.Column('type', verbose_name=_("Type"))
 
     class Meta:
         name = "storagepolicies"
         verbose_name = _("Storage Policies")
-        table_actions = (MyFilterAction, CreateStoragePolicy, CreateECStoragePolicy, )
+        table_actions = (MyFilterAction, BindStorageNode, CreateStoragePolicy, CreateECStoragePolicy, )

@@ -52,3 +52,15 @@ class CreateECStoragePolicy(forms.ModalFormView):
     context_object_name = 'storage_policy'
     success_url = reverse_lazy('horizon:sdscontroller:rings_and_accounts:index')
     page_title = _("Create a Storage Policy")
+
+class BindStorageNode(forms.ModalFormView):
+    form_class = storage_policies_forms.BindStorageNode
+    form_id = "bind_storage_node_form"
+
+    modal_header = _("Registry Storage Node")
+    submit_label = _("Registry Storage Node")
+    submit_url = reverse_lazy('horizon:sdscontroller:rings_and_accounts:storage_policies:bind_storage_node')
+    template_name = "sdscontroller/rings_and_accounts/storage_policies/bind_storage_node.html"
+    context_object_name = 'storage_node'
+    success_url = reverse_lazy('horizon:sdscontroller:rings_and_accounts:index')
+    page_title = _("Registry Storage Node")

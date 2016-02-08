@@ -46,14 +46,16 @@ def tenant_create(request, tenant_name, admin_user, admin_pass):
 def registry_storage_node(request, data):
     token = sds_controller_api(request)
     headers = {}
-
+    print 'api data', data
     url = URL_BASIC + "/registry/snode"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
 
     r = requests.post(url, json.dumps(data), headers=headers)
+    print r.text
     return r
+
 
 def list_storage_nodes(request):
     token = sds_controller_api(request)
@@ -66,6 +68,7 @@ def list_storage_nodes(request):
 
     r = requests.get(url, headers=headers)
     return r
+
 
 def create_policy(request, policy):
     token = sds_controller_api(request)
