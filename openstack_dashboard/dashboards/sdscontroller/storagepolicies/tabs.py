@@ -9,7 +9,7 @@ from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies impor
 from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import tables as metrics_tables
 from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import models as metrics_models
 
-from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
+from openstack_dashboard.api import sds_controller as api
 import json
 
 

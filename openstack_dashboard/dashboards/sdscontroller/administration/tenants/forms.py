@@ -24,7 +24,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 
-from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
+from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 

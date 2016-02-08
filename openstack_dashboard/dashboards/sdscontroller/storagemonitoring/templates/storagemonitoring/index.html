@@ -1,15 +1,11 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block title %}{% trans "Monitoring" %}{% endblock %}
+{% block title %}{% trans "Storage Monitoring" %}{% endblock %}
 
 {% block page_header %}
-    {% include "horizon/common/_page_header.html" with title=_("Monitoring") %}
+    <h3>{% trans "Swift Summary" %}</h3>{% include "sdscontroller/storagemonitoring/system/_swift_plots.html" with title=_("Swift Summary") %}
+    <h3>{% trans "System Summary" %}</h3>{% include "sdscontroller/storagemonitoring/system/_system_plots.html" with title=_("System Summary") %}
 {% endblock page_header %}
 
 {% block main %}
-    <div class="row">
-        <div class="col-sm-12">
-            {{ tab_group.render }}
-        </div>
-    </div>
 {% endblock %}

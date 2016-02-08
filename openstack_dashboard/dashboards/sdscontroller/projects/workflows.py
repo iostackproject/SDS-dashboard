@@ -36,7 +36,7 @@ from openstack_dashboard.api import cinder
 from openstack_dashboard.api import keystone
 from openstack_dashboard.api import nova
 from openstack_dashboard.usage import quotas
-
+from openstack_dashboard.api import sds_controller
 INDEX_URL = "horizon:sdscontroller:projects:index"
 ADD_USER_URL = "horizon:sdscontroller:projects:create_user"
 PROJECT_GROUP_ENABLED = keystone.VERSIONS.active >= 3
@@ -180,7 +180,7 @@ class CreateProjectInfo(workflows.Step):
                    "name",
                    "description",
                    "enabled")
-    
+
 class CreateSDSProjectInfoAction(workflows.Action):
     # Hide the domain_id and domain_name by default
     name = forms.CharField(label=_("Name"),
@@ -595,7 +595,7 @@ class CreateSDSProject(workflows.Workflow):
         domain_id = data['domain_id']
         try:
             desc = data['description']
-            self.object = api.keystone.tenant_create(request,
+            self.object = sds_controller.tenant_create(request,
                                                      name=data['name'],
                                                      description=desc,
                                                      enabled=data['enabled'],

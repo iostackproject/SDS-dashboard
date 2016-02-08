@@ -29,9 +29,43 @@ def swift_list_tenants(request):
     r = requests.get(url, headers=headers)
     return r
 
+def tenant_create(request, tenant_name, admin_user, admin_pass):
+    token = sds_controller_api(request)
+    headers = {}
+    url = URL_BASIC + "/swift/tenants"
+    parameters = {"tenant_name": tenant_name, "user_name": admin_user, "user_password": admin_pass}
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+    r = request.post(url, json.dumps(parameters), headers=headers)
+    return r
+
+
 ############################## # Registry DSL API # ##############################
 # # Registry DSL - Policies
 
+def registry_storage_node(request, data):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/snode"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "text/plain"
+
+    r = requests.post(url, json.dumps(data), headers=headers)
+    return r
+
+def list_storage_nodes(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/snode"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "text/plain"
+
+    r = requests.get(url, headers=headers)
+    return r
 
 def create_policy(request, policy):
     token = sds_controller_api(request)

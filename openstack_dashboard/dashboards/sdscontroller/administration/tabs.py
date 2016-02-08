@@ -13,7 +13,7 @@ from openstack_dashboard.dashboards.sdscontroller.administration.tenants import 
 from openstack_dashboard.dashboards.sdscontroller.administration.groups import tables as group_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.groups import models as group_models
 
-from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
+from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
