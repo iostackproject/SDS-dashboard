@@ -23,9 +23,9 @@ from django.core.urlresolvers import reverse
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-import subprocess
 import json
 
+from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 from openstack_dashboard.api import sds_controller as api
 
 
@@ -97,28 +97,20 @@ class CreateStoragePolicy(forms.SelfHandlingForm):
     #         return data
 
     def handle(self, request, data):
-        name = data["name"]
-        policy_id = data["policy_id"]
-        storage_node = data["storage_node"]
-        replicas = data["replicas"]
-        partitions = data["partitions"]
-        time = data["time"]
-        print name, policy_id, storage_node, replicas, partitions, time
-        # try:
-        # Call the script (reboot
-        # Rebbot swift
-        # response = api.fil_create_filter(name, language, interface_version, main, dependencies, object_metadata)
-        ret = subprocess.call(['/etc/swift/script.sh', policy_id, name, partitions, replicas, time, storage_node])
-        print 'return script', ret
-        return data
 
-        # except Exception as ex:
-        #     redirect = reverse("horizon:sdscontroller:administration:index")
-        #     error_message = "Unable to create filter.\t %s" % ex.message
-        #     exceptions.handle(request,
-        #                       _(error_message),
-        #                       redirect=redirect)
-
+        try:
+            response = api.new_storage_policy(request, data)
+            if 200 <= response.status_code < 300:
+                messages.success(request, _('Successfully EC Storage Policy created.'))
+                return data
+            else:
+                raise sdsexception.SdsException(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
+            error_message = "Unable to EC Storage Policy.\t %s" % ex.message
+            exceptions.handle(request,
+                              _(error_message),
+                              redirect=redirect)
 
 class CreateECStoragePolicy(forms.SelfHandlingForm):
     name = forms.CharField(max_length=255,
@@ -212,36 +204,22 @@ class CreateECStoragePolicy(forms.SelfHandlingForm):
     #         return data
 
     def handle(self, request, data):
-        name = data["name"]
-        policy_id = data["policy_id"]
-        storage_node = data["storage_node"]
-        ec_type = data["ec_type"]
-        ec_num_data_fragments = data["ec_num_data_fragments"]
-        ec_num_parity_fragments = data["ec_num_parity_fragments"]
-        ec_object_segment_size = data["ec_object_segment_size"]
 
-        replicas = int(ec_num_data_fragments) + int(ec_num_parity_fragments)
+        try:
+            data['replicas'] = int(data["ec_num_data_fragments"]) + int(data["ec_num_parity_fragments"])
+            response = api.new_storage_policy(request, data)
+            if 200 <= response.status_code < 300:
+                messages.success(request, _('Successfully EC Storage Policy created.'))
+                return data
+            else:
+                raise sdsexception.SdsException(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
+            error_message = "Unable to EC Storage Policy.\t %s" % ex.message
+            exceptions.handle(request,
+                              _(error_message),
+                              redirect=redirect)
 
-        partitions = data["partitions"]
-        time = data["time"]
-        print name, policy_id, storage_node, replicas, partitions, time
-        print ec_num_data_fragments, ec_num_parity_fragments, ec_object_segment_size
-        # try:
-        # Call the script (reboot
-        # Rebbot swift
-        # response = api.fil_create_filter(name, language, interface_version, main, dependencies, object_metadata)
-        ret = subprocess.call(
-            ['/etc/swift/script.sh', policy_id, name, partitions, str(replicas), time, storage_node, ec_type,
-             ec_num_data_fragments, ec_num_parity_fragments, ec_object_segment_size])
-        print 'return script', ret
-        return data
-
-        # except Exception as ex:
-        #     redirect = reverse("horizon:sdscontroller:administration:index")
-        #     error_message = "Unable to create filter.\t %s" % ex.message
-        #     exceptions.handle(request,
-        #                       _(error_message),
-        #                       redirect=redirect)
 
 
 
@@ -271,7 +249,5 @@ class BindStorageNode(forms.SelfHandlingForm):
 
 
     def handle(self, request, data):
-        print 'data', data
-
         api.registry_storage_node(request, data)
         return data
