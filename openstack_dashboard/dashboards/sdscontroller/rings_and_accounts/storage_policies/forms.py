@@ -98,6 +98,24 @@ class CreateStoragePolicy(forms.SelfHandlingForm):
 
     def handle(self, request, data):
 
+        #TODO: After rebuild the form this code should disappear
+        try:
+            storage_nodes_response = api.list_storage_nodes(request)
+            if storage_nodes_response.text:
+                storage_nodes = json.loads(storage_nodes_response.text)
+                storage_nodes_form = data['storage_node'].split(',')
+                data["storage_nodes"] = {}
+                for i in range(0, len(storage_nodes_form), 2):
+                    location = str(storage_nodes[int(storage_nodes_form[i])]['location']])
+                    data["storage_nodes"][location] = storage_nodes_form[i+1])
+            else:
+                rise Exception
+        except Exception, e:
+            edirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
+            error_message = "Storage nodes not found"
+            exceptions.handle(request,
+                              _(error_message),
+                              redirect=redirect)
         try:
             response = api.new_storage_policy(request, data)
             if 200 <= response.status_code < 300:
@@ -205,6 +223,26 @@ class CreateECStoragePolicy(forms.SelfHandlingForm):
 
     def handle(self, request, data):
 
+        #TODO: After rebuild the form this code should disappear
+        try:
+            storage_nodes_response = api.list_storage_nodes(request)
+
+            if storage_nodes_response.text:
+                storage_nodes = json.loads(storage_nodes_response.text)
+                storage_nodes_form = data['storage_node'].split(',')
+                data["storage_nodes"] = {}
+                for i in range(0, len(storage_nodes_form), 2):
+                    location = str(storage_nodes[int(storage_nodes_form[i])]['location']])
+                    data["storage_nodes"][location] = storage_nodes_form[i+1])
+            else:
+                rise Exception
+        except Exception, e:
+            edirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
+            error_message = "Storage nodes not found"
+            exceptions.handle(request,
+                              _(error_message),
+                              redirect=redirect)
+
         try:
             data['replicas'] = int(data["ec_num_data_fragments"]) + int(data["ec_num_parity_fragments"])
             response = api.new_storage_policy(request, data)
@@ -219,9 +257,6 @@ class CreateECStoragePolicy(forms.SelfHandlingForm):
             exceptions.handle(request,
                               _(error_message),
                               redirect=redirect)
-
-
-
 
 class BindStorageNode(forms.SelfHandlingForm):
     name = forms.CharField(max_length=255,
