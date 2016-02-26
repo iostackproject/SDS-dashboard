@@ -106,12 +106,12 @@ class CreateStoragePolicy(forms.SelfHandlingForm):
                 storage_nodes_form = data['storage_node'].split(',')
                 data["storage_nodes"] = {}
                 for i in range(0, len(storage_nodes_form), 2):
-                    location = str(storage_nodes[int(storage_nodes_form[i])]['location']])
-                    data["storage_nodes"][location] = storage_nodes_form[i+1])
+                    location = str(storage_nodes[int(storage_nodes_form[i])]['location'])
+                    data["storage_nodes"][location] = storage_nodes_form[i+1]
             else:
-                rise Exception
+                raise Exception
         except Exception, e:
-            edirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
+            redirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
             error_message = "Storage nodes not found"
             exceptions.handle(request,
                               _(error_message),
@@ -232,12 +232,12 @@ class CreateECStoragePolicy(forms.SelfHandlingForm):
                 storage_nodes_form = data['storage_node'].split(',')
                 data["storage_nodes"] = {}
                 for i in range(0, len(storage_nodes_form), 2):
-                    location = str(storage_nodes[int(storage_nodes_form[i])]['location']])
-                    data["storage_nodes"][location] = storage_nodes_form[i+1])
+                    location = str(storage_nodes[int(storage_nodes_form[i])]['location'])
+                    data["storage_nodes"][location] = storage_nodes_form[i+1]
             else:
-                rise Exception
+                raise Exception
         except Exception, e:
-            edirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
+            redirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
             error_message = "Storage nodes not found"
             exceptions.handle(request,
                               _(error_message),

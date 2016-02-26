@@ -377,7 +377,7 @@ def dsl_delete_tenant_group_member(request, group_name, tenant_id):
 
 ############################## # Filters API # ##############################
 # Filters - Filters
-def fil_create_filter(request, name, language, interface_version, main, dependencies="", object_metadata="no"):
+def fil_create_filter(request, data):
     token = sds_controller_api(request)
     headers = {}
 
@@ -386,10 +386,7 @@ def fil_create_filter(request, name, language, interface_version, main, dependen
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"name": str(name), "language": str(language), "interface_version": str(interface_version),
-                  "main": str(main), "dependencies": str(dependencies), "object_metadata": str(object_metadata)}
-
-    r = requests.post(url, json.dumps(parameters), headers=headers)
+    r = requests.post(url, json.dumps(data), headers=headers)
     return r
 
 

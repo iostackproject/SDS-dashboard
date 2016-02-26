@@ -29,6 +29,7 @@ import json
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
+
 class UploadFilter(forms.SelfHandlingForm):
 
     name = forms.CharField(max_length=255,
@@ -79,6 +80,34 @@ class UploadFilter(forms.SelfHandlingForm):
                            required=False,
                            widget=forms.HiddenInput)
 
+    is_put = forms.BooleanField(required=False)
+    is_get = forms.BooleanField(required=False)
+    has_reverse = forms.BooleanField(required=False)
+
+    execution_server_default = forms.ChoiceField(
+                                label=_('Execution Server Default'),
+                                choices=[
+                                    ('proxy', _('Proxy Server')),
+                                    ('object', _('Object Storage Servers'))
+                                ],
+                                widget=forms.Select(attrs={
+                                    'class': 'switchable',
+                                    'data-slug': 'source'
+                                })
+                                )
+
+    execution_server_reverse = forms.ChoiceField(
+                                label=_('Execution Server Reverse'),
+                                choices=[
+                                    ('proxy', _('Proxy Server')),
+                                    ('object', _('Object Storage Servers'))
+                                ],
+                                widget=forms.Select(attrs={
+                                    'class': 'switchable',
+                                    'data-slug': 'source'
+                                })
+                                )
+
     filter_file = forms.FileField(label=_("File"),
                                   required=True,
                                   allow_empty_file=False)
@@ -86,41 +115,19 @@ class UploadFilter(forms.SelfHandlingForm):
     def __init__(self, request, *args, **kwargs):
         super(UploadFilter, self).__init__(request, *args, **kwargs)
 
-    # def _set_filter_path(self, data):
-    #     if data['path']:
-    #         filter_path = "/".join([data['path'].rstrip("/"), data['name']])
-    #     else:
-    #         filter_path = data['name']
-    #     return filter_path
-
-    # def clean(self):
-    #     data = super(UploadFilter, self).clean()
-    #
-    #     image_file = data.get('filter_file', None)
-    #     image_url = data.get('image_url', None)
-    #
-    #     if not image_url and not image_file:
-    #         raise ValidationError(
-    #             _("A external file must be specified."))
-    #     else:
-    #         return data
 
     def handle(self, request, data):
         filter_file = data['filter_file']
-
-        name = data["name"]
-        language = data["language"]
-        interface_version = data["interface_version"]
+        del data['filter_file']
         dependencies = data["dependencies"]
         object_metadata = data["object_metadata"]
-        main = data["main"]
 
         if object_metadata is None or object_metadata is "":
             object_metadata = "no"
         if dependencies is None or dependencies is "":
             dependencies = ""
         try:
-            response = api.fil_create_filter(request, name, language, interface_version, main, dependencies, object_metadata)
+            response = api.fil_create_filter(request, data)
 
             if 200 <= response.status_code < 300:
                 filter_id = json.loads(response.text)["id"]
