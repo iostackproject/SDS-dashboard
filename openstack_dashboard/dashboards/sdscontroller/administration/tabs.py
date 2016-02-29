@@ -7,6 +7,8 @@ import json
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import tables as registry_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import models as filters_models
+from openstack_dashboard.dashboards.sdscontroller.administration.dependencies import tables as dependency_tables
+from openstack_dashboard.dashboards.sdscontroller.administration.dependencies import models as dependency_models
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import models as registry_models
 from openstack_dashboard.dashboards.sdscontroller.administration.tenants import tables as tenant_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.tenants import models as tenant_models
@@ -98,6 +100,31 @@ class Filters(tabs.TableTab):
         return ret
 
 
+class Dependencies(tabs.TableTab):
+    table_classes = (dependency_tables.DependenciesTable,)
+    name = _("Dependencies")
+    slug = "dependencies_table"
+    template_name = ("horizon/common/_detail_table.html")
+
+    def get_dependencies_data(self):
+        try:
+            response = api.fil_list_dependencies(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get dependencies.'
+                raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        dependencies = json.loads(strobj)
+        ret = []
+        for dep in dependencies:
+            ret.append(dependency_models.Dependency(dep["id"], dep['name'], dep['version'], dep['permissions']))
+        return ret
+
+
 class BW(tabs.TableTab):
     table_classes = (registry_tables.InstancesTable,)
     name = _("BW Differentiation")
@@ -118,6 +145,7 @@ class BW(tabs.TableTab):
         #     self._has_more = False
         #     error_message = _('Unable to get instances')
         #     exceptions.handle(self.request, error_message)
+
 
             return []
 
@@ -148,6 +176,6 @@ class Groups(tabs.TableTab):
 
 class MypanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
-    tabs = (RegistryTab, Filters, BW, TenantList, Groups,)
+    tabs = (RegistryTab, Filters, Dependencies, BW, TenantList, Groups,)
     sticky = True
 
