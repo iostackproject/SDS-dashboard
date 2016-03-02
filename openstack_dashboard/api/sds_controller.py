@@ -7,7 +7,7 @@ from horizon.utils.memoized import memoized  # noqa
 
 
 # TODO: Take parameters from a config file
-URL_BASIC = "http://127.0.0.1:8000"
+URL_BASIC = "http://10.30.102.240:18000"
 
 @memoized
 def sds_controller_api(request):
@@ -501,7 +501,7 @@ def fil_list_deployed_filters(request, account_id):
 
 
 # # Filters - Dependencies
-def fil_create_dependency(request, name, version, permissions):
+def fil_create_dependency(request, data):
     token = sds_controller_api(request)
     headers = {}
 
@@ -510,27 +510,22 @@ def fil_create_dependency(request, name, version, permissions):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"name": str(name), "version": str(version), "permissions": str(permissions)}
-
-    r = requests.post(url, json.dumps(parameters), headers=headers)
+    r = requests.post(url, json.dumps(data), headers=headers)
     return r
 
 
-def fil_upload_dependency_data(request, dependency_id, filter_path):
+def fil_upload_dependency_data(request, dependency_id, in_memory_file):
     token = sds_controller_api(request)
     headers = {}
 
     url = URL_BASIC + "/filters/dependencies/" + str(dependency_id) + "/data"
 
     headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "multipart/form-data"
+    files = {'file': (in_memory_file.name, in_memory_file.read())}
 
-    # TODO?
-    with open(filter_path, "r") as my_file:
-        data = my_file.read()
-
-    r = requests.put(url, data=data, headers=headers)
+    r = requests.put(url, files=files, headers=headers)
     return r
+
 
 
 def fil_delete_dependency(request, dependecy_id):

@@ -21,6 +21,7 @@ from openstack_dashboard.dashboards.sdscontroller.administration.dependencies im
 VIEWS_MOD = ('openstack_dashboard.dashboards.sdscontroller.administration.dependencies.views')
 
 urlpatterns = patterns(
-    'VIEWS_MOD',
-    url(r'^$', views.IndexView.as_view(), name='index'),
+    VIEWS_MOD,
+    url(r'^upload/$', views.UploadView.as_view(), name='upload'),
 )
+
