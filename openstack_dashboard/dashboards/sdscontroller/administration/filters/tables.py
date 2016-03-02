@@ -70,6 +70,11 @@ class FilterTable(tables.DataTable):
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"))
     object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"))
     main = tables.Column('main', verbose_name=_("Main"))
+    is_put = tables.Column('is_put', verbose_name=_("Is Put?"))
+    is_get = tables.Column('is_get', verbose_name=_("Is Get?"))
+    has_reverse = tables.Column('has_reverse', verbose_name=_("Has Reverse?"))
+    execution_server_default = tables.Column('execution_server_default', verbose_name=_("Execution Server Default"))
+    execution_server_reverse = tables.Column('execution_server_reverse', verbose_name=_("Execution Server Reverse"))
 
     class Meta:
         name = "filters"

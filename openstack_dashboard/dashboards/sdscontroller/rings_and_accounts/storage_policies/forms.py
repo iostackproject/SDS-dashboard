@@ -111,7 +111,7 @@ class CreateStoragePolicy(forms.SelfHandlingForm):
             else:
                 raise Exception
         except Exception, e:
-            edirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
+            redirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
             error_message = "Storage nodes not found"
             exceptions.handle(request,
                               _(error_message),
@@ -237,7 +237,7 @@ class CreateECStoragePolicy(forms.SelfHandlingForm):
             else:
                 raise Exception
         except Exception, e:
-            edirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
+            redirect = reverse("horizon:sdscontroller:rings_and_accounts:index")
             error_message = "Storage nodes not found"
             exceptions.handle(request,
                               _(error_message),
