@@ -26,8 +26,12 @@ from horizon import messages
 
 import json
 
-from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
+
+def get_programming_languages():
+    programming_languages = [(u'',u'Select one')]
+    programming_languages.extend([('java', 'Java')])
+    return programming_languages
 
 class UploadFilter(forms.SelfHandlingForm):
 
@@ -38,11 +42,12 @@ class UploadFilter(forms.SelfHandlingForm):
                                attrs={"ng-model": "name", "not-blank": ""}
                            ))
 
-    language = forms.CharField(max_length=255,
-                           label=_("Program Language"),
-                           help_text=_("The written language of the filter."),
-                           widget=forms.TextInput(
-                               attrs={"ng-model": "language", "not-blank": ""}
+    language =  forms.ChoiceField(choices = get_programming_languages(),
+                                label=_("Program Language"),
+                                help_text=_("The written language of the filter."),
+                                required=True,
+                                widget=forms.Select(
+                                attrs={"ng-model": "language", "not-blank": ""}
                            ))
 
     interface_version = forms.CharField(max_length=255,
@@ -85,6 +90,7 @@ class UploadFilter(forms.SelfHandlingForm):
 
     def __init__(self, request, *args, **kwargs):
         super(UploadFilter, self).__init__(request, *args, **kwargs)
+        get_programming_languages()
 
     # def _set_filter_path(self, data):
     #     if data['path']:
