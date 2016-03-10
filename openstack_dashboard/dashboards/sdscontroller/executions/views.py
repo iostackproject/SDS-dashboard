@@ -9,17 +9,16 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+from horizon import tabs
 
-from django.utils.translation import ugettext_lazy as _
-
-import horizon
-
-from openstack_dashboard.dashboards.zoecontroller import dashboard
+from openstack_dashboard.dashboards.sdscontroller.executions \
+    import tabs as mydashboard_tabs
 
 
-class Administration(horizon.Panel):
-    name = _("Zoe Administration")
-    slug = "administration"
+class IndexView(tabs.TabbedTableView):
+    tab_group_class = mydashboard_tabs.MypanelTabs
+    template_name = 'sdscontroller/executions/index.html'
 
-
-dashboard.ZoeController.register(Administration)
+    def get_data(self, request, context, *args, **kwargs):
+        # Add data to the context here...
+        return context

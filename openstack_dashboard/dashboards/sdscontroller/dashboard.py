@@ -20,10 +20,16 @@ class Objectstorage(horizon.PanelGroup):
     panels = ('administration', 'projects', 'rings_and_accounts', 'containers', 'storagepolicies', 'storagemonitoring')
 
 
+class Zoe(horizon.PanelGroup):
+    slug = "zoe"
+    name = _("Zoe")
+    panels = ('executions',)
+
+
 class SDSController(horizon.Dashboard):
     name = _("SDS Controller")
     slug = "sdscontroller"
-    panels = (Objectstorage,)  # Add your panels here.
+    panels = (Objectstorage, Zoe)  # Add your panels here.
     default_panel = 'administration'  # Specify the slug of the default panel.
     permissions = ('openstack.roles.admin',)
 horizon.register(SDSController)

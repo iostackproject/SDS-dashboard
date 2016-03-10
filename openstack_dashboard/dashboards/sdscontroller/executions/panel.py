@@ -9,11 +9,16 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+from django.utils.translation import ugettext_lazy as _
 
-from horizon.test import helpers as test
+import horizon
+
+from openstack_dashboard.dashboards.sdscontroller import dashboard
 
 
-class MypanelTests(test.TestCase):
-    # Unit tests for administration.
-    def test_me(self):
-        self.assertTrue(1 + 1 == 2)
+class Executions(horizon.Panel):
+    name = _("Zoe Executions")
+    slug = "executions"
+
+
+dashboard.SDSController.register(Executions)
