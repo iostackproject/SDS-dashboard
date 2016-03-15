@@ -6,7 +6,8 @@ from django.core.urlresolvers import reverse
 from horizon import tables
 from horizon import exceptions
 from horizon import messages
-
+from horizon import forms
+	
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
@@ -20,7 +21,6 @@ class UploadFilter(tables.LinkAction):
     url = "horizon:sdscontroller:administration:filters:upload"
     classes = ("ajax-modal",)
     icon = "upload"
-
 
 class DeleteFilter(tables.DeleteAction):
     @staticmethod
@@ -88,4 +88,4 @@ class FilterTable(tables.DataTable):
         name = "filters"
         verbose_name = _("Filters")
         table_actions = (MyFilterAction, UploadFilter, DeleteMultipleFilters,)
-	row_actions = (UpdateFilter,)
+	row_actions = (UpdateFilter,DeleteFilter,)

@@ -21,6 +21,14 @@ class CreateFilter(tables.LinkAction):
     classes = ("ajax-modal",)
     icon = "plus"
 
+class UpdateFilter(tables.LinkAction):
+    name = "update"
+    verbose_name = _("Edit")
+    icon = "pencil"
+    classes = ("ajax-modal","btn-update",)
+    def get_link_url(self, filter):
+        base_url = reverse("horizon:sdscontroller:administration:registry_dsl:update_filter", kwargs={'name': filter.name})
+        return base_url
 
 class DeleteDslFilter(tables.DeleteAction):
     @staticmethod
@@ -73,7 +81,7 @@ class DslFilterTable(tables.DataTable):
         name = "dsl_filters"
         verbose_name = _("Filters")
         table_actions = (MyFilterAction, CreateFilter, DeleteMultipleDslFilters,)
-
+	row_actions = (UpdateFilter,DeleteDslFilter,)
 
 class InstancesTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_("Name"))

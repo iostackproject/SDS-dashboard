@@ -240,7 +240,7 @@ def dsl_get_all_filters(request):
     return r
 
 
-def dsl_update_filter(request, name, activation_url, valid_parameters):
+def dsl_update_filter(request, name, data):
     token = sds_controller_api(request)
     headers = {}
 
@@ -249,18 +249,7 @@ def dsl_update_filter(request, name, activation_url, valid_parameters):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {}
-    if name is not None:
-        parameters["name"] = str(name)
-    if activation_url is not None:
-        parameters["activation_url"] = str(activation_url)
-    if valid_parameters is not None:
-        parameters["valid_parameters"] = str(valid_parameters)
-
-    if len(parameters) == 0:
-        raise ValueError
-
-    r = requests.put(url, json.dumps(parameters), headers=headers)
+    r = requests.put(url, json.dumps(data), headers=headers)
     return r
 
 

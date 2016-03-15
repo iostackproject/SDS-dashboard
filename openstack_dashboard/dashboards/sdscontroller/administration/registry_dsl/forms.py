@@ -109,3 +109,52 @@ class CreateFilter(forms.SelfHandlingForm):
             redirect = reverse("horizon:sdscontroller:administration:index")
             error_message = "Unable to create filter.\t %s" % ex.message
             exceptions.handle(request, _(error_message), redirect=redirect)
+
+class UpdateFilter(forms.SelfHandlingForm):
+    filter_list = []
+
+    name = forms.CharField(max_length=255,
+                           label=_("Name"),
+			   widget=forms.TextInput(attrs={'readonly':'readonly'})
+    )
+
+    filter_identifier =  forms.ChoiceField(choices=filter_list,
+                                label=_("Filter identifier"),
+                                help_text=_("Filter identifier to be used."),
+                                required=False)
+
+    activation_url = forms.CharField(max_length=255,
+                           label=_("Activation Url"),
+                           help_text=_("Activation Url"))
+
+    valid_parameters = forms.CharField(max_length=255,
+                           label=_("valid_parameters"),
+                           required=False,
+                           help_text=_("A comma separated list of tuples of data, as Python dictionary. Ex: param2: integer, param1: bool"))
+
+    def __init__(self, request, *args, **kwargs):
+        self.filter_list = get_filter_list(self, request)
+        super(UpdateFilter, self).__init__(request, *args, **kwargs)
+	print(kwargs['initial'])
+        self.fields['filter_identifier'] = forms.ChoiceField(choices=self.filter_list,
+                                label=_("Filter identifier"),
+                                help_text=_("Filter identifier to be used."),
+                                required=False)
+
+    def handle(self, request, data):
+        name = data["name"]
+        # TODO convert string to dict or change input format
+        string_parameters = "{"+data["valid_parameters"]+"}"
+
+        try:
+            response = api.dsl_update_filter(request, name, data)
+            if 200 <= response.status_code < 300:
+                messages.success(request, _('Successfully created filter: %s') % data['name'])
+                return data
+            else:
+                raise sdsexception.SdsException(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:administration:index")
+            error_message = "Unable to create filter.\t %s" % ex.message
+            exceptions.handle(request, _(error_message), redirect=redirect)
+
