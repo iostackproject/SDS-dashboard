@@ -56,6 +56,14 @@ class DeleteFilter(tables.DeleteAction):
                               _(error_message),
                               redirect=redirect)
 
+class UpdateFilter(tables.LinkAction):
+    name = "update"
+    verbose_name = _("Edit")
+    icon = "pencil"
+    classes = ("ajax-modal","btn-update",)
+    def get_link_url(self, filter):
+        base_url = reverse("horizon:sdscontroller:administration:filters:update", kwargs={'filter_id': filter.id})
+        return base_url
 
 class DeleteMultipleFilters(DeleteFilter):
     name = "delete_multiple_filters"
@@ -80,3 +88,4 @@ class FilterTable(tables.DataTable):
         name = "filters"
         verbose_name = _("Filters")
         table_actions = (MyFilterAction, UploadFilter, DeleteMultipleFilters,)
+	row_actions = (UpdateFilter,)

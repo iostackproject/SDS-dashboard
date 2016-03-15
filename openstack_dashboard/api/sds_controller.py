@@ -443,7 +443,7 @@ def fil_list_filters(request):
     return r
 
 
-def fil_update_filter_metadata(request, filter_id, language, interface_version, main, dependencies="", object_metadata="no"):
+def fil_update_filter_metadata(request, filter_id, data):
     token = sds_controller_api(request)
     headers = {}
 
@@ -452,10 +452,7 @@ def fil_update_filter_metadata(request, filter_id, language, interface_version, 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"language": str(language), "interface_version": str(interface_version),
-                  "main": str(main), "dependencies": str(dependencies), "object_metadata": str(object_metadata)}
-
-    r = requests.put(url, json.dumps(parameters), headers=headers)
+    r = requests.put(url, json.dumps(data), headers=headers)
     return r
 
 
