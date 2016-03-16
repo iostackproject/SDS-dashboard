@@ -9,10 +9,9 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+import json
 from horizon import tabs
-
-from openstack_dashboard.dashboards.sdscontroller.executions \
-    import tabs as mydashboard_tabs
+from openstack_dashboard.dashboards.sdscontroller.executions import tabs as mydashboard_tabs
 
 
 class IndexView(tabs.TabbedTableView):
@@ -21,4 +20,11 @@ class IndexView(tabs.TabbedTableView):
 
     def get_data(self, request, context, *args, **kwargs):
         # Add data to the context here...
+        #strobj = request
+        #print(strobj)
+        #instances = json.loads(strobj)
+        #ret = []
+        #for inst in instances:
+        #    ret.append(Execution(inst['id'], inst['app_name'], inst['exec_name'], inst['submit_date'],
+        #                         inst['sched_date'], inst['fin_date'], inst['status']))
         return context
