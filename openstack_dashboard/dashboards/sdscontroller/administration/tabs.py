@@ -38,7 +38,14 @@ class RegistryTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(registry_models.Filter(inst['identifier'], inst['name'], inst['activation_url'], inst['valid_parameters']))
+	    response = api.fil_get_filter_metadata(self.request, inst['identifier'])
+	    if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+		error_message = 'Unable to get filters.'
+                raise ValueError(error_message)
+	    filter = json.loads(strobj)
+            ret.append(registry_models.Filter(inst['identifier'], inst['name'], inst['activation_url'], inst['valid_parameters'],filter['name']))
         return ret
 
 
