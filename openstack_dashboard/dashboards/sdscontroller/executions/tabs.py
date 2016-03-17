@@ -25,7 +25,6 @@ class ExecutionsTab(tabs.TableTab):
             for e in executionsdata:
                 try:
                     ex = Execution(e['id'], e['application']['name'], e['name'], e['time_started'], e['time_scheduled'], e['time_finished'], e['status'])
-                    print("OK")
                 except:
                     print("Unable to build Execution from {}".format(e))
                     continue
