@@ -1,4 +1,6 @@
-class Execution(object):
+class Execution:
+
+
     def __init__(self, id, app_name, exec_name, submit_date, sched_date, fin_date, status):
         self.id = id
         self.app_name = app_name

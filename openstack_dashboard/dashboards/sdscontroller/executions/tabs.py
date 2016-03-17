@@ -6,6 +6,7 @@ from horizon import tabs
 #from openstack_dashboard import api
 from openstack_dashboard.api import zoeapi
 from openstack_dashboard.dashboards.sdscontroller.executions import tables
+from openstack_dashboard.dashboards.sdscontroller.executions.models import Execution
 import json
 
 class ExecutionsTab(tabs.TableTab):
@@ -20,16 +21,13 @@ class ExecutionsTab(tabs.TableTab):
         executions = []
         try:
             res = zoeapi.exec_list_cmd(self.request)
-            print("Zoe API executed")
             executionsdata = zoeapi.list_zoe_exec()
-            print("LEN: ", len(executionsdata))
-            for el in executionsdata:
-                #Execution(id, app_name, exec_name, submit_date, sched_date, fin_date, status)
-                #keys() = [u'status', u'time_finished', u'time_started', u'time_scheduled', u'application', u'owner', u'id', u'containers', u'name']
+            for e in executionsdata:
                 try:
-                    ex = Execution(el['id'], el['application'], el['exec'], el['time_started'], el['time_scheduled'], el['time_finished'], el['status'])
+                    ex = Execution(e['id'], e['application']['name'], e['name'], e['time_started'], e['time_scheduled'], e['time_finished'], e['status'])
+                    print("OK")
                 except:
-                    print(el['id'], el['application'], el['exec'], el['time_started'], el['time_scheduled'], el['time_finished'], el['status'])
+                    print("Unable to build Execution from {}".format(e))
                     continue
                 executions.append(ex)
         except Exception:
