@@ -29,6 +29,8 @@ class Aggregates(horizon.Panel):
     def allowed(self, context):
         # extend basic permission-based check with a check to see whether
         # the Aggregates extension is even enabled in nova
+
+        # Zoe Integration
         try:
             if not nova.extension_supported('Aggregates', context['request']):
                 return False
@@ -37,4 +39,5 @@ class Aggregates(horizon.Panel):
                       "likely due to a problem communicating with the Nova "
                       "endpoint. Host Aggregates panel will not be displayed.")
             return False
+
         return super(Aggregates, self).allowed(context)
