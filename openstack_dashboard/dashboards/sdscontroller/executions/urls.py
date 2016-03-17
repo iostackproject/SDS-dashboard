@@ -11,16 +11,12 @@
 # under the License.
 from django.conf.urls import patterns
 from django.conf.urls import url
-from django.conf.urls import include
 
 from openstack_dashboard.dashboards.sdscontroller.executions import views
-#from openstack_dashboard.dashboards.sdscontroller.administration.filters import urls as filter_urls
-#from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import urls as registry_urls
 
 
 urlpatterns = patterns('',
     url(r'^$', views.IndexView.as_view(), name='index'),
-#    url(r'', include(filter_urls, namespace="filters")),
-#    url(r'', include(registry_urls, namespace="registry_dsl")),
+    url(r'^(?P<instance_id>[^/]+)/terminate/$', views.TerminateView.as_view(), name='terminate'),
 )
 

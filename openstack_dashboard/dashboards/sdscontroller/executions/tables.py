@@ -1,10 +1,33 @@
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 
 from horizon import tables
+from openstack_dashboard.api import zoeapi
 
 
 class MyFilterAction(tables.FilterAction):
     name = "myfilter"
+
+
+def is_terminating(execution):
+    exec_state = getattr(execution, "status", None)
+    if not exec_state:
+        return False
+    return exec_state.lower() == "terminating"
+
+
+class TerminateAction(tables.LinkAction):
+    icon = "camera"
+    name = "terminate"
+    verbose_name = _("Terminate Execution")
+    url = "horizon:sdscontroller:executions:terminate"
+    classes = ("ajax-modal",)
+
+    # This action should be disabled if the instance
+    # is not active, or the instance is being deleted
+    def allowed(self, request, execution=None):
+        return execution.status in ("running",) \
+            and not is_terminating(execution)
 
 
 class ExecutionsTable(tables.DataTable):
@@ -19,3 +42,7 @@ class ExecutionsTable(tables.DataTable):
         name = "executions"
         verbose_name = _("Executions")
         table_actions = (MyFilterAction,)
+        row_actions = (TerminateAction,)
+
+
+
