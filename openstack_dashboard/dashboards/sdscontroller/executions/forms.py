@@ -15,6 +15,7 @@ class TerminateZoeExecution(forms.SelfHandlingForm):
         try:
             print("Terminate: ", data['instance_id'])
             zoeapi.terminate_exec(request, data['instance_id'])
+            return True
         except Exception:
             exceptions.handle(request, _('Unable to terminate.'))
 
