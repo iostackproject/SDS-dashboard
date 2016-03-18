@@ -23,16 +23,12 @@ def exec_list_cmd(request):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
 
-    url = URL_BASIC + "/sdscontroller/executions"
-    r = requests.get(url, headers=headers)
-    return r
-
-
-def list_zoe_exec():
     exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
     data = exec_api.list()
-    return data
 
+    url = URL_BASIC + "/sdscontroller/executions"
+    r = requests.get(url, headers=headers)
+    return r, data
 
 def terminate_exec(request, exec_id):
     print("TO TERMINATE: ", exec_id)

@@ -16,12 +16,10 @@ class ExecutionsTab(tabs.TableTab):
     template_name = ("horizon/common/_detail_table.html")
     preload = False
 
-
     def get_executions_data(self):
         executions = []
         try:
-            res = zoeapi.exec_list_cmd(self.request)
-            executionsdata = zoeapi.list_zoe_exec()
+            res, executionsdata = zoeapi.exec_list_cmd(self.request)
             for e in executionsdata:
                 try:
                     ex = Execution(e['id'], e['application']['name'], e['name'], e['time_started'], e['time_scheduled'], e['time_finished'], e['status'])
