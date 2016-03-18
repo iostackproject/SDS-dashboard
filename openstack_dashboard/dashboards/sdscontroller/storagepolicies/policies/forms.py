@@ -28,7 +28,9 @@ from openstack_dashboard.api import sds_controller as api
 
 
 class CreatePolicy(forms.SelfHandlingForm):
-    policy = forms.CharField(max_length=255, label=_("Policy/Rule"))
+    policy = forms.CharField(max_length=255, label=_("Policy/Rule"),widget=forms.Textarea(
+                               attrs={"ng-model": "interface_version", "not-blank": ""}
+                           ))
 
     def handle(self, request, data):
         try:
