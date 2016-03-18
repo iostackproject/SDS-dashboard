@@ -33,15 +33,17 @@ class IndexView(tabs.TabbedTableView):
         # Add data to the context here...
         return context
 
+
 class TerminateView(forms.ModalFormView):
     form_class = project_forms.TerminateZoeExecution
     template_name = 'sdscontroller/executions/terminate.html'
-    success_url = reverse_lazy("horizon:project:images:index")
+    success_url = reverse_lazy("horizon:sdscontroller:executions:index")
     modal_id = "terminate_zoe_execution"
     modal_header = _("Terminate Zoe Execution")
     submit_label = _("Terminate Zoe Execution")
     submit_url = "horizon:sdscontroller:executions:terminate"
 
+    '''
     @memoized.memoized_method
     def get_object(self):
         try:
@@ -50,6 +52,7 @@ class TerminateView(forms.ModalFormView):
         except Exception:
             exceptions.handle(self.request,
                               _("Unable to retrieve Zoe execution."))
+    '''
 
     def get_initial(self):
         return {"instance_id": self.kwargs["instance_id"]}
@@ -58,6 +61,7 @@ class TerminateView(forms.ModalFormView):
         context = super(TerminateView, self).get_context_data(**kwargs)
         instance_id = self.kwargs['instance_id']
         context['instance_id'] = instance_id
-        context['instance'] = self.get_object()
+        #context['instance'] = self.get_object()
+        context['instance'] = None
         context['submit_url'] = reverse(self.submit_url, args=[instance_id])
         return context
