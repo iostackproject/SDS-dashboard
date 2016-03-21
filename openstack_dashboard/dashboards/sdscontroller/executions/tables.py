@@ -3,31 +3,71 @@ from django.utils.translation import ungettext_lazy
 
 from horizon import tables
 from openstack_dashboard.api import zoeapi
+from horizon import exceptions
 
 
 class MyFilterAction(tables.FilterAction):
     name = "myfilter"
 
 
-def is_terminating(execution):
-    exec_state = getattr(execution, "status", None)
-    if not exec_state:
-        return False
-    return exec_state.lower() == "terminating"
+#def is_terminating(execution):
+#    exec_state = getattr(execution, "status", None)
+#    if not exec_state:
+#        return False
+#    return exec_state.lower() == "terminating"
 
 
-class TerminateAction(tables.LinkAction):
+class TerminateAction(tables.DeleteAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Terminate Execution",
+            u"Terminate Executions",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Terminated Execution",
+            u"Terminated Executions",
+            count
+        )
+
     icon = "camera"
     name = "terminate"
     verbose_name = _("Terminate Execution")
-    url = "horizon:sdscontroller:executions:terminate"
-    classes = ("ajax-modal",)
+    url = "horizon:sdscontroller:executions:index"
+
 
     # This action should be disabled if the instance
     # is not active, or the instance is being deleted
-    def allowed(self, request, execution=None):
-        return execution.status in ("running",) \
-            and not is_terminating(execution)
+    #def allowed(self, request, exec_id=None):
+    #    execution = zoeapi.get_execution_details(exec_id)
+    #    return execution in ("running",) \
+    #        and not is_terminating(execution)
+
+    def delete(self, request, obj_id):
+        try:
+            zoeapi.terminate_exec(request, obj_id)
+            print("DONE")
+        except exceptions.Conflict as exc:
+            exceptions.handle(request, exc, redirect=self.success_url)
+        except Exception:
+            exceptions.handle(request,
+                              _('Unable to terminate execution.'),
+                              redirect=self.success_url)
+
+    def get_success_url(self, request=None):
+        """Returns the URL to redirect to after a successful action.
+        """
+        current_exec = self.table.kwargs.get("exec_name", None)
+
+        # If the current_container is deleted, then redirect to the default
+        # completion url
+        if current_exec in self.success_ids:
+            return self.success_url
+        return request.get_full_path()
 
 
 class ExecutionsTable(tables.DataTable):
