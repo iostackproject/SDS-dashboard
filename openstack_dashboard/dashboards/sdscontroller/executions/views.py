@@ -43,17 +43,6 @@ class TerminateView(forms.ModalFormView):
     submit_label = _("Terminate Zoe Execution")
     submit_url = "horizon:sdscontroller:executions:terminate"
 
-    '''
-    @memoized.memoized_method
-    def get_object(self):
-        try:
-            return api.nova.server_get(self.request,
-                                       self.kwargs["instance_id"])
-        except Exception:
-            exceptions.handle(self.request,
-                              _("Unable to retrieve Zoe execution."))
-    '''
-
     def get_initial(self):
         return {"instance_id": self.kwargs["instance_id"]}
 
