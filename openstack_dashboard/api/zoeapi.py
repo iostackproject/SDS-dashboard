@@ -30,8 +30,14 @@ def exec_list_cmd(request):
     r = requests.get(url, headers=headers)
     return r, data
 
+
 def terminate_exec(request, exec_id):
     print("TO TERMINATE: ", exec_id)
     exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
     return exec_api.terminate(exec_id)
+
+
+def get_execution_details(exec_id):
+    exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
+    return exec_api.execution_get(exec_id)
 
