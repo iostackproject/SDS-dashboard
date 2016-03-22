@@ -23,7 +23,7 @@ class Objectstorage(horizon.PanelGroup):
 class Zoe(horizon.PanelGroup):
     slug = "zoe"
     name = _("Zoe")
-    panels = ('executions',)
+    panels = ('executions', 'zoemonitoring',)
 
 
 class SDSController(horizon.Dashboard):
