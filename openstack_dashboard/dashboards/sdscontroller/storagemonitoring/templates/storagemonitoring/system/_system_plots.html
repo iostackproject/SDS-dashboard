@@ -1,6 +1,15 @@
+{% extends 'base.html' %}
+
 {% load i18n %}
 
-<div class="row">
+{% block page_header %}
+    {% include "sdscontroller/storagemonitoring/index.html" with title=_("Monitoring System") %}
+{% endblock page_header %}
+{% block main %}
+
+<iframe src="http://{{ ip_host }}:8089/goto/89a547cd4214d265922ffa8a6744ea2c" height="1120" width=100%></iframe>
+
+<!--<div class="row">
     <div class="col-sm-12">
         <iframe src="http://{{ ip_host }}:3000/dashboard-solo/db/collectd-defaults?panelId=1&fullscreen&theme=light"
                 width="450" height="200" frameborder="0"></iframe>
@@ -23,4 +32,7 @@
         <iframe src="http://{{ ip_host }}:3000/dashboard-solo/db/collectd-defaults?panelId=6&fullscreen&theme=light"
                 width="450" height="200" frameborder="0"></iframe>
     </div>
-</div>
+ </div>-->
+{% endblock %}
+
+

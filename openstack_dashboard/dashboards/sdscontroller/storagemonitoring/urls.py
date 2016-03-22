@@ -13,11 +13,14 @@
 from django.conf.urls import patterns
 from django.conf.urls import url
 
-from openstack_dashboard.dashboards.sdscontroller.storagemonitoring.views \
-    import IndexView
+import openstack_dashboard.dashboards.sdscontroller.storagemonitoring.views as views
 
 
 urlpatterns = patterns(
     '',
-    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^system$', views.SystemView.as_view(), name='system'),
+    url(r'^swift_container', views.SwiftContainerView.as_view(), name='swift_container'),
+
+
 )

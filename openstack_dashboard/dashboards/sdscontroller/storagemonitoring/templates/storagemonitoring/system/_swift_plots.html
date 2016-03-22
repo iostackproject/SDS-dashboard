@@ -1,11 +1,34 @@
+{% extends 'base.html' %}
+
 {% load i18n %}
 
+{% block page_header %}
+    {% include "sdscontroller/storagemonitoring/index.html" with title=_("Monitoring System") %}
+{% endblock page_header %}
+{% block main %}
+<iframe src="http://{{ ip_host }}:8089/goto/6fbeaca3a360c34b04e4d618ed54800c" height="800" width="100%"></iframe>
+<!--
 <div class="row">
     <div class="col-sm-12">
-        <iframe src="http://{{ ip_host }}:3000/dashboard-solo/db/swift?panelId=1&fullscreen&theme=light"
-                width="450" height="200" frameborder="0"></iframe>
-        <iframe src="http://{{ ip_host }}:3000/dashboard-solo/db/swift?panelId=2&fullscreen&theme=light"
-                width="450" height="200" frameborder="0"></iframe>
+<iframe src="http://{{ ip_host }}:8089/app/kibana#/visualize/edit/Container-get_ops?embed=true&_g=(refreshInterval:(display:'5%20seconds',pause:!f,section:1,value:5000),time:(from:now-15m,mode:quick,to:now))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),uiState:(spy:(mode:(fill:!f,name:!n)),vis:(colors:('Unique%20count%20of%20value':%23508642))),vis:(aggs:!((id:'1',params:(field:value),schema:metric,type:avg),(id:'2',params:(customInterval:'2h',extended_bounds:(),field:'@timestamp',interval:s,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(filters:!((input:(query:(query_string:(analyze_wildcard:!t,query:'metric_type:%20cm%20AND%20metric_name:%20get_ops'))),label:'Container%20get_ops')),row:!t),schema:split,type:filters),(id:'4',params:(field:metric_target,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTimeMarker:!f,addTooltip:!t,defaultYExtents:!f,drawLinesBetweenPoints:!t,interpolate:linear,radiusRatio:9,scale:linear,setYExtents:!f,shareYAxis:!t,showCircles:!t,smoothLines:!f,spyPerPage:10,times:!(),yAxis:()),title:'Container%20get_ops',type:line))" height="350" width="800"></iframe>
+<iframe src="http://{{ ip_host }}:8089/app/kibana#/visualize/edit/Tenant-get_ops?embed=true&_g=(refreshInterval:(display:'5%20seconds',pause:!f,section:1,value:5000),time:(from:now-15m,mode:quick,to:now))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),uiState:(spy:(mode:(fill:!f,name:!n)),vis:(colors:('Unique%20count%20of%20value':%23508642))),vis:(aggs:!((id:'1',params:(field:value),schema:metric,type:avg),(id:'2',params:(customInterval:'2h',extended_bounds:(),field:'@timestamp',interval:s,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(filters:!((input:(query:(query_string:(analyze_wildcard:!t,query:'metric_type:%20tm%20AND%20metric_name:%20get_ops'))),label:'Container%20get_ops')),row:!t),schema:split,type:filters),(id:'4',params:(field:metric_target,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTimeMarker:!f,addTooltip:!t,defaultYExtents:!f,drawLinesBetweenPoints:!t,interpolate:linear,radiusRatio:9,scale:linear,setYExtents:!f,shareYAxis:!t,showCircles:!t,smoothLines:!f,spyPerPage:10,times:!(),yAxis:()),title:'Tenant%20get_ops',type:line))" height="350" width="800"></iframe>
 
     </div>
 </div>
+<div class="row">
+
+    <div class="col-sm-12">
+       <iframe src="http://iostack.urv.cat:8089/goto/d2a088235dd5c1208c7466a9ba8b9bb9" height="350" width="800"></iframe>
+       <iframe src="http://iostack.urv.cat:8089/goto/bab8a41226aa8b67e9140938d5e8db49" height="350" width="800"></iframe>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-sm-12">
+        <iframe src="http://iostack.urv.cat:8089/goto/bf6aa4b009f2a35366ad6d90032ca34a" height="350" width="800"></iframe>
+        <iframe src="http://iostack.urv.cat:8089/goto/9b7a74c0a8f02016e4642e842333cc47" height="350" width="800"></iframe>
+    </div>
+
+</div>
+-->
+{% endblock %}

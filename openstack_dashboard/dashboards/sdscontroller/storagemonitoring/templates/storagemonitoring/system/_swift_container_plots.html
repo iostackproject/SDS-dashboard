@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block page_header %}
+    {% include "sdscontroller/storagemonitoring/index.html" with title=_("Monitoring System") %}
+{% endblock page_header %}
+{% block main %}
+<iframe src="http://{{ ip_host }}:8089/goto/9ae36ab80e33b6570d476d0a8092a48d" height="800" width=100%></iframe>
+{% endblock %}

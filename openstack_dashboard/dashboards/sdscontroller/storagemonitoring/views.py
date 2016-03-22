@@ -17,13 +17,30 @@ from openstack_dashboard.dashboards.sdscontroller.storagemonitoring \
 
 
 class IndexView(views.APIView):
-    tab_group_class = mydashboard_tabs.MypanelTabs
-    template_name = 'sdscontroller/storagemonitoring/index.html'
+    template_name = 'sdscontroller/storagemonitoring/system/_swift_plots.html'
 
     def get_data(self, request, context, *args, **kwargs):
         # Add data to the context here...
         context["ip_host"] = request.META['HTTP_HOST'].split(':')[0]
         return context
+
+
+class SystemView(views.APIView):
+    template_name = 'sdscontroller/storagemonitoring/system/_system_plots.html'
+
+    def get_data(self, request, context, *args, **kwargs):
+        # Add data to the context here...
+        context["ip_host"] = request.META['HTTP_HOST'].split(':')[0]
+        return context
+
+class SwiftContainerView(views.APIView):
+    template_name = 'sdscontroller/storagemonitoring/system/_swift_container_plots.html'
+
+    def get_data(self, request, context, *args, **kwargs):
+        # Add data to the context here...
+        context["ip_host"] = request.META['HTTP_HOST'].split(':')[0]
+        return context
+
 #
 # from horizon import tabs
 #

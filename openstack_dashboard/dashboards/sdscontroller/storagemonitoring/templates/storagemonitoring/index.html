@@ -1,11 +1,16 @@
-{% extends 'base.html' %}
 {% load i18n %}
 {% block title %}{% trans "Storage Monitoring" %}{% endblock %}
 
-{% block page_header %}
-    <h3>{% trans "Swift Summary" %}</h3>{% include "sdscontroller/storagemonitoring/system/_swift_plots.html" with title=_("Swift Summary") %}
-    <h3>{% trans "System Summary" %}</h3>{% include "sdscontroller/storagemonitoring/system/_system_plots.html" with title=_("System Summary") %}
-{% endblock page_header %}
+{#{% block page_header %}#}
+{#    <h3>{% trans "Swift Summary" %}</h3>{% include "sdscontroller/storagemonitoring/system/_swift_plots.html" with title=_("Swift Summary") %}#}
+{#    <h3>{% trans "System Summary" %}</h3>{% include "sdscontroller/storagemonitoring/system/_system_plots.html" with title=_("System Summary") %}#}
+{#{% endblock page_header %}#}
 
-{% block main %}
+
+{% block nav %}
+        <ul id="nav">
+            <li><a href="{% url "horizon:sdscontroller:storagemonitoring:index" %}">Swift Tenants Monitoring</a></li>
+            <li><a href="{% url "horizon:sdscontroller:storagemonitoring:swift_container" %}">Swift Container Monitoring</a></li>
+            <li><a href="{% url "horizon:sdscontroller:storagemonitoring:system" %}">System Monitoring</a></li>
+        </ul>
 {% endblock %}
