@@ -22,6 +22,50 @@ class UploadDependency(tables.LinkAction):
     icon = "upload"
 
 
+
+class UpdateDependency(tables.LinkAction):
+    name = "update"
+    verbose_name = _("Edit")
+    icon = "pencil"
+    classes = ("ajax-modal","btn-update",)
+    def get_link_url(self, dependency):
+        base_url = reverse("horizon:sdscontroller:administration:dependencies:update", kwargs={'dependency_id': dependency.id})
+        return base_url
+
+class UpdateCell(tables.UpdateAction):
+    def allowed(self, request, project, cell):
+	return((cell.column.name== 'name')or
+		(cell.column.name== 'version')or
+		(cell.column.name== 'permission'))	
+
+    def update_cell(self, request,datum, id,cell_name, new_cell_value):
+        try:
+            # updating changed value by new value
+            response = api.fil_get_dependency_metadata(request, id)
+            data = json.loads(response.text)
+            data[cell_name] = new_cell_value
+            api.fil_update_dependency_metadata(request,id,data)
+        except Conflict:
+            # Returning a nice error message about name conflict. The message
+            # from exception is not that clear for the user
+            message = _("Cant change value")
+            raise ValidationError(message)
+        except Exception:
+            exceptions.handle(request, ignore=True)
+            return False
+        return True
+
+
+class UpdateRow(tables.Row):
+    ajax = True
+    def get_data(self, request, id):
+        response = api.fil_get_dependency_metadata(request, id)
+        data = json.loads(response.text)
+	filter = Dependency(data['id'],data['name'],
+		data['version'],data['permission'])
+        return filter
+
+
 class DeleteDependency(tables.DeleteAction):
     @staticmethod
     def action_present(count):
@@ -72,3 +116,5 @@ class DependenciesTable(tables.DataTable):
         name = "dependencies"
         verbose_name = _("Dependencies")
         table_actions = (MyFilterAction, UploadDependency, DeleteMultipleDependencies,)
+	row_actions = (UpdateDependency, DeleteDependency)
+	row_class = UpdateRow
