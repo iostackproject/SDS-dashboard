@@ -10,6 +10,17 @@ class MyFilterAction(tables.FilterAction):
     name = "myfilter"
 
 
+class CreateExecutionAction(tables.LinkAction):
+    name = "execution"
+    verbose_name = _("Create Execution")
+    url = "horizon:sdscontroller:executions:create"
+    classes = ("ajax-modal",)
+    icon = "pencil"
+
+    def allowed(self, request, instance=None):
+        return True
+
+
 class TerminateAction(tables.DeleteAction):
     @staticmethod
     def action_present(count):
@@ -32,7 +43,6 @@ class TerminateAction(tables.DeleteAction):
     verbose_name = _("Terminate Execution")
     url = "horizon:sdscontroller:executions:index"
 
-
     # This action should be disabled if the instance
     # is not active, or the instance is being deleted
     def allowed(self, request, execution_instance=None):
@@ -43,7 +53,7 @@ class TerminateAction(tables.DeleteAction):
     def delete(self, request, obj_id):
         try:
             zoeapi.terminate_exec(request, obj_id)
-            print("DONE")
+            print("Zoe exec terminated")
         except exceptions.Conflict as exc:
             exceptions.handle(request, exc, redirect=self.success_url)
         except Exception:
@@ -74,7 +84,7 @@ class ExecutionsTable(tables.DataTable):
     class Meta:
         name = "executions"
         verbose_name = _("Executions")
-        table_actions = (MyFilterAction,)
+        table_actions = (CreateExecutionAction, MyFilterAction)
         row_actions = (TerminateAction,)
 
 
