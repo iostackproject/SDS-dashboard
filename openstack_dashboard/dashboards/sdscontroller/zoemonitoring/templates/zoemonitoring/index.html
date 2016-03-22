@@ -3,8 +3,8 @@
 {% block title %}{% trans "Zoe Monitoring" %}{% endblock %}
 
 {% block page_header %}
-    <h3>{% trans "Zoe Status Summary" %}</h3>{% include "sdscontroller/zoemonitoring/_zoe_plots.html" with title=_("Zoe Application") %}
-{#    <h3>{% trans "System Summary" %}</h3>{% include "sdscontroller/storagemonitoring/system/_system_plots.html" with title=_("System Summary") %}#}
+    <h3>{% trans "Zoe Applications" %}</h3>{% include "sdscontroller/zoemonitoring/_app_plots.html" with title=_("Zoe Applications") %}
+    <h3>{% trans "Zoe Status Summary" %}</h3>{% include "sdscontroller/zoemonitoring/_zoe_plots.html" with title=_("Zoe Status") %}
 {% endblock page_header %}
 
 {% block main %}
