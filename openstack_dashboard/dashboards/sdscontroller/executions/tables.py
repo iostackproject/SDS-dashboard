@@ -10,13 +10,6 @@ class MyFilterAction(tables.FilterAction):
     name = "myfilter"
 
 
-#def is_terminating(execution):
-#    exec_state = getattr(execution, "status", None)
-#    if not exec_state:
-#        return False
-#    return exec_state.lower() == "terminating"
-
-
 class TerminateAction(tables.DeleteAction):
     @staticmethod
     def action_present(count):
@@ -42,10 +35,10 @@ class TerminateAction(tables.DeleteAction):
 
     # This action should be disabled if the instance
     # is not active, or the instance is being deleted
-    #def allowed(self, request, exec_id=None):
-    #    execution = zoeapi.get_execution_details(exec_id)
-    #    return execution in ("running",) \
-    #        and not is_terminating(execution)
+    def allowed(self, request, execution_instance=None):
+        exec_id = execution_instance.id
+        execution = zoeapi.get_execution_details(exec_id)
+        return execution['status'] == "running"
 
     def delete(self, request, obj_id):
         try:

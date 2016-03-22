@@ -38,6 +38,8 @@ def terminate_exec(request, exec_id):
 
 
 def get_execution_details(exec_id):
+    print("zoeapi.py: exec_id = ", exec_id)
     exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
-    return exec_api.execution_get(exec_id)
+    exec_details = exec_api.execution_get(exec_id)
+    return exec_details
 
