@@ -53,7 +53,7 @@ class TenantList(tabs.TableTab):
     def get_tenants_data(self):
         try:
             response = api.swift_list_tenants(self.request)
-            print "CAMAMILLA ADMINISTRATION tabs tenants response", response.status_code, response.text
+            # print "CAMAMILLA ADMINISTRATION tabs tenants response", response.status_code, response.text
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
@@ -92,10 +92,10 @@ class Filters(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(filters_models.Filter(inst["id"], inst['name'], inst['language'], inst['dependencies'],
+            ret.append(filters_models.Filter(inst['id'], inst['name'], inst['language'], inst['dependencies'],
                                              inst['interface_version'], inst['object_metadata'], inst['main'],
-                                             inst["is_put"], inst["is_get"], inst["has_reverse"],
-                                             inst["execution_server_default"], inst["execution_server_reverse"]
+                                             inst['is_put'], inst['is_get'], inst['has_reverse'],
+                                             inst['execution_server_default'], inst['execution_server_reverse']
                                              ))
         return ret
 
