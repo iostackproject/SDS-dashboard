@@ -19,7 +19,7 @@
 """
 Views for managing SDS Dependencies.
 """
-
+import json
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse_lazy
 from django.core.urlresolvers import reverse

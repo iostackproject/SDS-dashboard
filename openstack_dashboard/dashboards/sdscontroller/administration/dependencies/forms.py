@@ -90,7 +90,8 @@ class UpdateDependency(forms.SelfHandlingForm):
 
     name = forms.CharField(max_length=255,
                            label=_("Name"),
-                           help_text=_("The name of the dependency to be created. It is a unique field."))
+                           help_text=_("The name of the dependency to be created. It is a unique field."),
+ 			   widget=forms.TextInput(attrs={'readonly':'readonly'}))
 
     version = forms.CharField(max_length=255,
                            label=_("Version"),
@@ -115,7 +116,7 @@ class UpdateDependency(forms.SelfHandlingForm):
 
         try:
 	    dependency_id = self.initial['id']
-	    response = api.fil_update_dependency_metadata(request, dependency_id ,data)
+	    response = api.fil_update_dependency_metadata(request, dependency_id ,data['version'], data['permissions'])
             if 200 <= response.status_code < 300:
 		if dependency_file!=None:
 		    response = api.fil_upload_dependency_data(request, dependency_id, dependency_file)
