@@ -16,26 +16,25 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import json
+
 from django.utils.translation import ugettext_lazy as _
-from django.forms import ValidationError  # noqa
 from django.core.urlresolvers import reverse
 
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-
-import json
-
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
+
 def get_programming_languages():
-    programming_languages = [(u'',u'Select one')]
+    programming_languages = [(u'', u'Select one')]
     programming_languages.extend([('java', 'Java')])
     return programming_languages
 
-class UploadFilter(forms.SelfHandlingForm):
 
+class UploadFilter(forms.SelfHandlingForm):
     name = forms.CharField(max_length=255,
                            label=_("Name"),
                            help_text=_("The name of the filter to be created."),
@@ -43,37 +42,37 @@ class UploadFilter(forms.SelfHandlingForm):
                                attrs={"ng-model": "name", "not-blank": ""}
                            ))
 
-    language =  forms.ChoiceField(choices = get_programming_languages(),
-                                label=_("Program Language"),
-                                help_text=_("The written language of the filter."),
-                                required=True,
-                                widget=forms.Select(
-                                attrs={"ng-model": "language", "not-blank": ""}
-                           ))
+    language = forms.ChoiceField(choices=get_programming_languages(),
+                                 label=_("Program Language"),
+                                 help_text=_("The written language of the filter."),
+                                 required=True,
+                                 widget=forms.Select(
+                                     attrs={"ng-model": "language", "not-blank": ""}
+                                 ))
 
     interface_version = forms.CharField(max_length=255,
-                           label=_("Interface Version"),
-                           required=False,
-                           help_text=_("Interface Version"),
-                           widget=forms.TextInput(
-                               attrs={"ng-model": "interface_version", "not-blank": ""}
-                           ))
+                                        label=_("Interface Version"),
+                                        required=False,
+                                        help_text=_("Interface Version"),
+                                        widget=forms.TextInput(
+                                            attrs={"ng-model": "interface_version", "not-blank": ""}
+                                        ))
 
     dependencies = forms.CharField(max_length=255,
-                           label=_("Dependencies"),
-                           required=False,
-                           help_text=_("A comma separated list of dependencies"),
-                           widget=forms.TextInput(
-                               attrs={"ng-model": "dependencies"}
-                           ))
+                                   label=_("Dependencies"),
+                                   required=False,
+                                   help_text=_("A comma separated list of dependencies"),
+                                   widget=forms.TextInput(
+                                       attrs={"ng-model": "dependencies"}
+                                   ))
 
     object_metadata = forms.CharField(max_length=255,
-                           label=_("Object Metadata"),
-                           required=False,
-                           help_text=_("Currently, not in use, but must appear. Use the value 'no'"),
-                            widget=forms.TextInput(
-                               attrs={"ng-model": "object_metadata"}
-                           ))
+                                      label=_("Object Metadata"),
+                                      required=False,
+                                      help_text=_("Currently, not in use, but must appear. Use the value 'no'"),
+                                      widget=forms.TextInput(
+                                          attrs={"ng-model": "object_metadata"}
+                                      ))
     main = forms.CharField(max_length=255,
                            label=_("Main Class"),
                            help_text=_("The name of the class that implements the Filters API."),
@@ -81,37 +80,33 @@ class UploadFilter(forms.SelfHandlingForm):
                                attrs={"ng-model": "main", "not-blank": ""}
                            ))
 
-    # path = forms.CharField(max_length=255,
-    #                        required=False,
-    #                        widget=forms.HiddenInput)
-
     is_put = forms.BooleanField(required=False)
     is_get = forms.BooleanField(required=False)
     has_reverse = forms.BooleanField(required=False)
 
     execution_server_default = forms.ChoiceField(
-                                label=_('Execution Server Default'),
-                                choices=[
-                                    ('proxy', _('Proxy Server')),
-                                    ('object', _('Object Storage Servers'))
-                                ],
-                                widget=forms.Select(attrs={
-                                    'class': 'switchable',
-                                    'data-slug': 'source'
-                                })
-                                )
+        label=_('Execution Server Default'),
+        choices=[
+            ('proxy', _('Proxy Server')),
+            ('object', _('Object Storage Servers'))
+        ],
+        widget=forms.Select(attrs={
+            'class': 'switchable',
+            'data-slug': 'source'
+        })
+    )
 
     execution_server_reverse = forms.ChoiceField(
-                                label=_('Execution Server Reverse'),
-                                choices=[
-                                    ('proxy', _('Proxy Server')),
-                                    ('object', _('Object Storage Servers'))
-                                ],
-                                widget=forms.Select(attrs={
-                                    'class': 'switchable',
-                                    'data-slug': 'source'
-                                })
-                                )
+        label=_('Execution Server Reverse'),
+        choices=[
+            ('proxy', _('Proxy Server')),
+            ('object', _('Object Storage Servers'))
+        ],
+        widget=forms.Select(attrs={
+            'class': 'switchable',
+            'data-slug': 'source'
+        })
+    )
 
     filter_file = forms.FileField(label=_("File"),
                                   required=True,
@@ -121,17 +116,11 @@ class UploadFilter(forms.SelfHandlingForm):
         super(UploadFilter, self).__init__(request, *args, **kwargs)
         get_programming_languages()
 
-
-    def handle(self, request, data):
+    @staticmethod
+    def handle(request, data):
         filter_file = data['filter_file']
         del data['filter_file']
-        dependencies = data["dependencies"]
-        object_metadata = data["object_metadata"]
 
-        if object_metadata is None or object_metadata is "":
-            object_metadata = "no"
-        if dependencies is None or dependencies is "":
-            dependencies = ""
         try:
             response = api.fil_create_filter(request, data)
 
@@ -149,95 +138,71 @@ class UploadFilter(forms.SelfHandlingForm):
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:administration:index")
             error_message = "Unable to create filter.\t %s" % ex.message
-            exceptions.handle(request,
-                              _(error_message),
-                              redirect=redirect)
+            exceptions.handle(request, _(error_message), redirect=redirect)
+
 
 class UpdateFilter(forms.SelfHandlingForm):
-
     name = forms.CharField(max_length=255, label=_("Name"), help_text=_("The name of the filter to be created."))
 
-    language =  forms.ChoiceField(choices = get_programming_languages(), label=_("Program Language"),help_text=_("The written language of the filter."),
-                                required=True)
+    language = forms.ChoiceField(choices=get_programming_languages(), label=_("Program Language"), help_text=_("The written language of the filter."),
+                                 required=True)
 
     interface_version = forms.CharField(max_length=255,
-                           label=_("Interface Version"),
-                           required=False,
-                           help_text=_("Interface Version"))
+                                        label=_("Interface Version"),
+                                        required=False,
+                                        help_text=_("Interface Version"))
 
     dependencies = forms.CharField(max_length=255,
-                           label=_("Dependencies"),
-                           required=False,
-                           help_text=_("A comma separated list of dependencies"))
+                                   label=_("Dependencies"),
+                                   required=False,
+                                   help_text=_("A comma separated list of dependencies"))
 
     object_metadata = forms.CharField(max_length=255,
-                           label=_("Object Metadata"),
-                           required=False,
-                           help_text=_("Currently, not in use, but must appear. Use the value 'no'"))
+                                      label=_("Object Metadata"),
+                                      required=False,
+                                      help_text=_("Currently, not in use, but must appear. Use the value 'no'"))
 
     main = forms.CharField(max_length=255,
                            label=_("Main Class"),
                            help_text=_("The name of the class that implements the Filters API."))
 
-    path = forms.CharField(max_length=255,
-                           required=False)
-
+    # TODO: Check this, not works properly on update
     is_put = forms.BooleanField(required=False)
     is_get = forms.BooleanField(required=False)
     has_reverse = forms.BooleanField(required=False)
 
     execution_server_default = forms.ChoiceField(
-                                label=_('Execution Server Default'),
-                                choices=[
-                                    ('proxy', _('Proxy Server')),
-                                    ('object', _('Object Storage Servers'))
-                                ])
+        label=_('Execution Server Default'),
+        choices=[
+            ('proxy', _('Proxy Server')),
+            ('object', _('Object Storage Servers'))
+        ])
 
     execution_server_reverse = forms.ChoiceField(
-                                label=_('Execution Server Reverse'),
-                                choices=[
-                                    ('proxy', _('Proxy Server')),
-                                    ('object', _('Object Storage Servers'))
-                                ]
-                                )
-
-    filter_file = forms.FileField(label=_("File"),
-                                  required=False,
-                                  allow_empty_file=False)
+        label=_('Execution Server Reverse'),
+        choices=[
+            ('proxy', _('Proxy Server')),
+            ('object', _('Object Storage Servers'))
+        ]
+    )
 
     def __init__(self, request, *args, **kwargs):
         super(UpdateFilter, self).__init__(request, *args, **kwargs)
-        get_programming_languages()	
+        get_programming_languages()
+
     failure_url = 'horizon:sdscontroller:administration:index'
 
     def handle(self, request, data):
-        filter_file = data['filter_file']
-        del data['filter_file']
-        dependencies = data["dependencies"]
-        object_metadata = data["object_metadata"]
-
-        if object_metadata is None or object_metadata is "":
-            object_metadata = "no"
-        if dependencies is None or dependencies is "":
-            dependencies = ""
         try:
-	    filter_id = self.initial['id']
-	    response = api.fil_update_filter_metadata(request, filter_id ,data)
-	    if 200 <= response.status_code < 300:
-		print(filter_file)
-		if filter_file != None:
-                    response = api.fil_upload_filter_data(request, filter_id, filter_file)
-                if 200 <= response.status_code < 300:
-                    messages.success(request, _('Successfully filter creation and upload.'))
-                    return data
-                else:
-                    raise sdsexception.SdsException(response.text)
+            filter_id = self.initial['id']
+            # print "\n#################\n", request, "\n#################\n", data, "\n#################\n"
+            response = api.fil_update_filter_metadata(request, filter_id, data)
+            if 200 <= response.status_code < 300:
+                messages.success(request, _('Successfully filter updated.'))
+                return data
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:administration:index")
             error_message = "Unable to create filter.\t %s" % ex.message
-            exceptions.handle(request,
-                              _(error_message),
-                              redirect=redirect)
-
+            exceptions.handle(request, _(error_message), redirect=redirect)

@@ -7,7 +7,7 @@ from horizon.utils.memoized import memoized  # noqa
 
 
 # TODO: Take parameters from a config file
-URL_BASIC = "http://0.0.0.0:8000"
+URL_BASIC = "http://10.30.102.240:18000"
 
 @memoized
 def sds_controller_api(request):

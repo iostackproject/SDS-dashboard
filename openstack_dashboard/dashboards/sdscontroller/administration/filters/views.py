@@ -20,16 +20,18 @@
 Views for managing SDS Filters.
 """
 import json
+
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+
 from django.core.urlresolvers import reverse_lazy
 
 from horizon import forms
 from horizon.utils import memoized
 from horizon import exceptions
-
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import forms as filters_forms
 from openstack_dashboard.api import sds_controller as api
+
 
 class UploadView(forms.ModalFormView):
     form_class = filters_forms.UploadFilter
@@ -42,6 +44,7 @@ class UploadView(forms.ModalFormView):
     context_object_name = 'filter'
     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
     page_title = _("Upload A Filter")
+
 
 class UpdateView(forms.ModalFormView):
     form_class = filters_forms.UpdateFilter
@@ -66,7 +69,7 @@ class UpdateView(forms.ModalFormView):
         filter_id = self.kwargs['filter_id']
         try:
             filter = api.fil_get_filter_metadata(self.request, filter_id)
-	    return filter
+            return filter
         except Exception:
             redirect = self.success_url
             msg = _('Unable to retrieve filter details.')
@@ -75,9 +78,9 @@ class UpdateView(forms.ModalFormView):
     def get_initial(self):
         filter = self._get_object()
         initial = json.loads(filter.text)
-	#initial = super(UpdateView, self).get_initial()
-	#initial['name'] = "my filter name"
-	return initial
+        # initial = super(UpdateView, self).get_initial()
+        # initial['name'] = "my filter name"
+        return initial
+
+
 classes = ("ajax-modal",)
-
-
