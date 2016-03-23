@@ -76,9 +76,9 @@ class UploadFilter(forms.SelfHandlingForm):
                                attrs={"ng-model": "main", "not-blank": ""}
                            ))
 
-    path = forms.CharField(max_length=255,
-                           required=False,
-                           widget=forms.HiddenInput)
+    # path = forms.CharField(max_length=255,
+    #                        required=False,
+    #                        widget=forms.HiddenInput)
 
     is_put = forms.BooleanField(required=False)
     is_get = forms.BooleanField(required=False)
