@@ -5,10 +5,38 @@
 {% block modal-body %}
 <div class="info detail">
   <dl class="dl-horizontal">
-    <dt>{% trans "Execution Name" %}</dt>
-    <dd>{{ execution.name }}</dd>
     <dt>{% trans "Execution id" %}</dt>
     <dd>{{ execution.id}}</dd>
+    <dt>{% trans "Execution Name" %}</dt>
+    <dd>{{ execution.name }}</dd>
+    <dt>{% trans "App Name" %}</dt>
+    <dd>{{ execution.application.name }}</dd>
+    <dt>{% trans "Status" %}</dt>
+    <dd>{{ execution.status}}</dd>
+    <dt>{% trans "Time Started" %}</dt>
+    <dd>{{ execution.time_started}}</dd>
+    <dt>{% trans "Time Scheduled" %}</dt>
+    <dd>{{ execution.time_scheduled }}</dd>
+    <dt>{% trans "Time Finished" %}</dt>
+    <dd>{{ execution.time_finished }}</dd>
+      <hr>
+    <table border="1">
+        <th>{% trans "Service" %}</th>
+        <th>{% trans "Image" %}</th>
+
+        {% for el in execution.application.services %}
+    <tr>
+            <td>{{ el.name }}</td>
+            <td>{{ el.docker_image }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+{#    {% for el in execution.application.services %}#}
+{#        <dt>{% trans "Service" %}</dt>#}
+{#        <dd>{{ el.name }}</dd>#}
+{#        <dt>{% trans "Image" %}</dt>#}
+{#        <dd>{{ el.docker_image }}</dd>#}
+{#    {% endfor %}#}
   </dl>
 </div>
 {% endblock %}
@@ -16,3 +44,4 @@
 {% block modal-footer %}
   <a href="{% url 'horizon:sdscontroller:executions:index' %}" class="btn btn-default secondary cancel close">{% trans "Close" %}</a>
 {% endblock %}
+
