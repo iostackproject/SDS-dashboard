@@ -1,5 +1,8 @@
-class Execution:
+from django.db import models
 
+
+class Execution(models.Model):
+    objects = models.Manager()
 
     def __init__(self, id, app_name, exec_name, submit_date, sched_date, fin_date, status):
         self.id = id

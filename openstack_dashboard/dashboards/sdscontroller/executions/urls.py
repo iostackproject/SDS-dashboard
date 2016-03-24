@@ -18,5 +18,6 @@ from openstack_dashboard.dashboards.sdscontroller.executions import views
 urlpatterns = patterns('',
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^create/$', views.CreateExecutionView.as_view(), name='create'),
+    url(r'^(?P<instance_id>[^/]+)/details$', views.ExecutionDetailsView.as_view(), name='details'),
 )
 

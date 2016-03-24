@@ -5,6 +5,8 @@ from horizon import tables
 from openstack_dashboard.api import zoeapi
 from horizon import exceptions
 
+from django.core.urlresolvers import reverse
+
 
 class MyFilterAction(tables.FilterAction):
     name = "myfilter"
@@ -73,7 +75,19 @@ class TerminateAction(tables.DeleteAction):
         return request.get_full_path()
 
 
+class ViewExecutionDetails(tables.LinkAction):
+     name = "view"
+     verbose_name = _("View Details")
+     url = "horizon:sdscontroller:executions:details"
+     classes = ("ajax-modal", "btn-view")
+
+     def get_link_url(self, datum=None):
+         obj_id = self.table.get_object_id(datum)
+         return reverse(self.url, args=(obj_id,))
+
+
 class ExecutionsTable(tables.DataTable):
+    #exec_name = tables.Column('exec_name', link=get_execution_link, verbose_name=_("Execution Name"))
     exec_name = tables.Column('exec_name', verbose_name=_("Execution Name"))
     app_name = tables.Column('app_name', verbose_name=_("Application Name"))
     submit_date = tables.Column('submit_date', verbose_name=_("Submitted"))
@@ -85,7 +99,7 @@ class ExecutionsTable(tables.DataTable):
         name = "executions"
         verbose_name = _("Executions")
         table_actions = (CreateExecutionAction, MyFilterAction)
-        row_actions = (TerminateAction,)
+        row_actions = (ViewExecutionDetails, TerminateAction)
 
 
 

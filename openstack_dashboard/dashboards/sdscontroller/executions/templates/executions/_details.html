@@ -1,0 +1,18 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+
+{% block modal-body %}
+<div class="info detail">
+  <dl class="dl-horizontal">
+    <dt>{% trans "Execution Name" %}</dt>
+    <dd>{{ execution.name }}</dd>
+    <dt>{% trans "Execution id" %}</dt>
+    <dd>{{ execution.id}}</dd>
+  </dl>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <a href="{% url 'horizon:sdscontroller:executions:index' %}" class="btn btn-default secondary cancel close">{% trans "Close" %}</a>
+{% endblock %}
