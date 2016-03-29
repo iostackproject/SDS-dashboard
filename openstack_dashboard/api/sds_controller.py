@@ -7,7 +7,8 @@ from horizon.utils.memoized import memoized  # noqa
 
 
 # TODO: Take parameters from a config file
-URL_BASIC = "http://10.30.102.240:18000"
+URL_BASIC = "http://10.30.103.250:18000"
+
 
 @memoized
 def sds_controller_api(request):
@@ -15,7 +16,18 @@ def sds_controller_api(request):
 
 ############################## # Swift API # ##############################
 
+def set_sort_nodes(request, data):
+    token = sds_controller_api(request)
 
+    headers = {}
+
+    url = URL_BASIC + "/swift/sort_nodes"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
 def swift_list_tenants(request):
     token = sds_controller_api(request)
 
@@ -538,7 +550,6 @@ def fil_get_dependency_metadata(request, dependecy_id):
 
     r = requests.get(url, headers=headers)
     return r
-
 
 def fil_list_dependencies(request):
     token = sds_controller_api(request)

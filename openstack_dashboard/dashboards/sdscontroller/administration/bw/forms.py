@@ -30,119 +30,42 @@ from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
-class UploadFilter(forms.SelfHandlingForm):
+class UpdateSortedMethod(forms.SelfHandlingForm):
 
-    name = forms.CharField(max_length=255,
-                           label=_("Name"),
-                           help_text=_("The name of the filter to be created."),
+    sorted_nodes_method = forms.CharField(max_length=255,
+                           label=_("Sorted Nodes Method:"),
+                           help_text=_("The sorted_method name."),
                            widget=forms.TextInput(
                                attrs={"ng-model": "name", "not-blank": ""}
                            ))
 
-    language = forms.CharField(max_length=255,
-                           label=_("Program Language"),
-                           help_text=_("The written language of the filter."),
+    sorted_nodes_criterion = forms.CharField(max_length=255,
+                           label=_("Sorted Nodes Criterion:"),
+                           help_text=_("ascending or descending ."),
                            widget=forms.TextInput(
                                attrs={"ng-model": "language", "not-blank": ""}
                            ))
 
-    interface_version = forms.CharField(max_length=255,
-                           label=_("Interface Version"),
-                           required=False,
-                           help_text=_("Interface Version"),
-                           widget=forms.TextInput(
-                               attrs={"ng-model": "interface_version", "not-blank": ""}
-                           ))
-
-    dependencies = forms.CharField(max_length=255,
-                           label=_("Dependencies"),
-                           required=False,
-                           help_text=_("A comma separated list of dependencies"),
-                           widget=forms.TextInput(
-                               attrs={"ng-model": "dependencies"}
-                           ))
-
-    object_metadata = forms.CharField(max_length=255,
-                           label=_("Object Metadata"),
-                           required=False,
-                           help_text=_("Currently, not in use, but must appear. Use the value 'no'"),
-                            widget=forms.TextInput(
-                               attrs={"ng-model": "object_metadata"}
-                           ))
-    main = forms.CharField(max_length=255,
-                           label=_("Main Class"),
-                           help_text=_("The name of the class that implements the Filters API."),
-                           widget=forms.TextInput(
-                               attrs={"ng-model": "main", "not-blank": ""}
-                           ))
-
-    path = forms.CharField(max_length=255,
-                           required=False,
-                           widget=forms.HiddenInput)
-
-    is_put = forms.BooleanField(required=False)
-    is_get = forms.BooleanField(required=False)
-    has_reverse = forms.BooleanField(required=False)
-
-    execution_server_default = forms.ChoiceField(
-                                label=_('Execution Server Default'),
-                                choices=[
-                                    ('proxy', _('Proxy Server')),
-                                    ('object', _('Object Storage Servers'))
-                                ],
-                                widget=forms.Select(attrs={
-                                    'class': 'switchable',
-                                    'data-slug': 'source'
-                                })
-                                )
-
-    execution_server_reverse = forms.ChoiceField(
-                                label=_('Execution Server Reverse'),
-                                choices=[
-                                    ('proxy', _('Proxy Server')),
-                                    ('object', _('Object Storage Servers'))
-                                ],
-                                widget=forms.Select(attrs={
-                                    'class': 'switchable',
-                                    'data-slug': 'source'
-                                })
-                                )
-
-    filter_file = forms.FileField(label=_("File"),
-                                  required=True,
-                                  allow_empty_file=False)
 
     def __init__(self, request, *args, **kwargs):
-        super(UploadFilter, self).__init__(request, *args, **kwargs)
+        super(UpdateSortedMethod, self).__init__(request, *args, **kwargs)
 
 
     def handle(self, request, data):
-        filter_file = data['filter_file']
-        del data['filter_file']
-        dependencies = data["dependencies"]
-        object_metadata = data["object_metadata"]
 
-        if object_metadata is None or object_metadata is "":
-            object_metadata = "no"
-        if dependencies is None or dependencies is "":
-            dependencies = ""
+        print 'data', data
         try:
-            response = api.fil_create_filter(request, data)
+            response = api.set_sort_nodes(request, data)
 
             if 200 <= response.status_code < 300:
-                filter_id = json.loads(response.text)["id"]
-                response = api.fil_upload_filter_data(request, filter_id, filter_file)
-
-                if 200 <= response.status_code < 300:
-                    messages.success(request, _('Successfully filter creation and upload.'))
-                    return data
-                else:
-                    raise sdsexception.SdsException(response.text)
+                messages.success(request, _('Successfully filter creation and upload.'))
+                return data
             else:
                 raise sdsexception.SdsException(response.text)
+
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:administration:index")
-            error_message = "Unable to create filter.\t %s" % ex.message
+            error_message = "Unable to update sorted method.\t %s" % ex.message
             exceptions.handle(request,
                               _(error_message),
                               redirect=redirect)

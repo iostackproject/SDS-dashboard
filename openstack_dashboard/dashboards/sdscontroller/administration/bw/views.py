@@ -25,18 +25,18 @@ from django.core.urlresolvers import reverse_lazy
 
 from horizon import forms
 
-from openstack_dashboard.dashboards.sdscontroller.administration.filters import forms as filters_forms
+from openstack_dashboard.dashboards.sdscontroller.administration.bw import forms as bw_forms
 
 
-class UploadView(forms.ModalFormView):
-    form_class = filters_forms.UploadFilter
-    form_id = "upload_filter_form"
+class UpdateView(forms.ModalFormView):
+    form_class = bw_forms.UpdateSortedMethod
+    form_id = "update_bw_form"
 
-    modal_header = _("Upload A Filter")
-    submit_label = _("Upload Filter")
-    submit_url = reverse_lazy('horizon:sdscontroller:administration:filters:upload')
-    template_name = "sdscontroller/administration/filters/upload.html"
-    context_object_name = 'filter'
+    modal_header = _("Update Sort Method")
+    submit_label = _("Update Sort Method")
+    submit_url = reverse_lazy('horizon:sdscontroller:administration:bw:update')
+    template_name = "sdscontroller/administration/bw/update.html"
+    context_object_name = 'bw'
     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
-    page_title = _("Upload A Filter")
+    page_title = _("Update Sort Method")
 

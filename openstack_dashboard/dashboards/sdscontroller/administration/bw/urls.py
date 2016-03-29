@@ -15,12 +15,12 @@
 from django.conf.urls import patterns
 from django.conf.urls import url
 
-from openstack_dashboard.dashboards.sdscontroller.administration.filters import views
+from openstack_dashboard.dashboards.sdscontroller.administration.bw import views
 
 
-VIEWS_MOD = ('openstack_dashboard.dashboards.sdscontroller.administration.filters.views')
+VIEWS_MOD = ('openstack_dashboard.dashboards.sdscontroller.administration.bw.views')
 
 urlpatterns = patterns(
     VIEWS_MOD,
-    url(r'^upload/$', views.UploadView.as_view(), name='upload'),
+    url(r'^update/$', views.UpdateView.as_view(), name='update'),
 )

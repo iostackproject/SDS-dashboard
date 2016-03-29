@@ -5,6 +5,8 @@ from horizon import tabs
 import json
 
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import tables as registry_tables
+from openstack_dashboard.dashboards.sdscontroller.administration.bw import tables as bw_tables
+
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import models as filters_models
 from openstack_dashboard.dashboards.sdscontroller.administration.dependencies import tables as dependency_tables
@@ -133,27 +135,12 @@ class Dependencies(tabs.TableTab):
 
 
 class BW(tabs.TableTab):
-    table_classes = (registry_tables.InstancesTable,)
+    table_classes = (bw_tables.BWTable,)
     name = _("BW Differentiation")
     slug = "bw_table"
     template_name = ("horizon/common/_detail_table.html")
 
-    def get_instances_data(self):
-        # try:
-        #     marker = self.request.GET.get(
-        #                 registry_tables.InstancesTable._meta.pagination_param, None)
-        #
-        #     instances, self._has_more = api.nova.server_list(
-        #         self.request,
-        #         search_opts={'marker': marker, 'paginate': True})
-        #
-        #     return instances
-        # except Exception:
-        #     self._has_more = False
-        #     error_message = _('Unable to get instances')
-        #     exceptions.handle(self.request, error_message)
-
-
+    def get_bw_data(self):
             return []
 
 
