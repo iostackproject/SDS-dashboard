@@ -25,9 +25,8 @@ class IndexView(views.APIView):
 
     def get_data(self, request, context, *args, **kwargs):
         # Add data to the context here...
-	print 'request',  request.META['HTTP_HOST'].split(':')[0]
         context["ip_host"] = request.META['HTTP_HOST'].split(':')[0]
-	return context
+        return context
 
 #
 # from horizon import tabs
