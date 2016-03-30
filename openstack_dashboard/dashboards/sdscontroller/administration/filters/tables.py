@@ -131,7 +131,7 @@ class UpdateRow(tables.Row):
                         data['language'], data['dependencies'],
                         data['interface_version'], data['object_metadata'],
                         data['main'], data['is_put'], data['is_get'],
-                        data['has_reverse'], data['execution_server_default'],
+                        data['has_reverse'], data['execution_server'],
                         data['execution_server_reverse'])
         return filter
 
@@ -153,7 +153,7 @@ class FilterTable(tables.DataTable):
     has_reverse = tables.Column('has_reverse', verbose_name=_("Has Reverse?"), form_field=forms.ChoiceField(choices=[
         ('True', _('True')), ('False', _('False'))
     ]), update_action=UpdateCell)
-    execution_server_default = tables.Column('execution_server_default', verbose_name=_("Execution Server Default"),
+    execution_server = tables.Column('execution_server', verbose_name=_("Execution Server Default"),
                                              form_field=forms.ChoiceField(choices=[
                                                  ('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))
                                              ]), update_action=UpdateCell)

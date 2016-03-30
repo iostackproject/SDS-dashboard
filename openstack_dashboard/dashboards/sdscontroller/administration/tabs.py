@@ -104,7 +104,7 @@ class Filters(tabs.TableTab):
             ret.append(filters_models.Filter(inst['id'], inst['name'], inst['language'], inst['dependencies'],
                                              inst['interface_version'], inst['object_metadata'], inst['main'],
                                              inst['is_put'], inst['is_get'], inst['has_reverse'],
-                                             inst['execution_server_default'], inst['execution_server_reverse']
+                                             inst['execution_server'], inst['execution_server_reverse']
                                              ))
         return ret
 

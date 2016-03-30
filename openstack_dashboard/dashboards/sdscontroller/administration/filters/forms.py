@@ -84,7 +84,7 @@ class UploadFilter(forms.SelfHandlingForm):
     is_get = forms.BooleanField(required=False)
     has_reverse = forms.BooleanField(required=False)
 
-    execution_server_default = forms.ChoiceField(
+    execution_server = forms.ChoiceField(
         label=_('Execution Server Default'),
         choices=[
             ('proxy', _('Proxy Server')),
