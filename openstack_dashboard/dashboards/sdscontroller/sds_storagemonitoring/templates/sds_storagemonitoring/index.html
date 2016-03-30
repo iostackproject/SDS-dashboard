@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Storage Monitoring" %}{% endblock %}
+
+{% block page_header %}
+    <h3>{% trans "SDS Summary" %}</h3>{% include "sdscontroller/sds_storagemonitoring/system/_sdsblock.html" with title=_("sds") %}
+
+{% endblock page_header %}
+
+{% block main %}
+{% endblock %}
