@@ -22,7 +22,7 @@ class GroupTab(tabs.TableTab):
         #
         ret = []
         try:           
-            resp = api.list_storagegroups(self.request)
+            resp = api.list_storagegroups()
             if 200 <= resp.status_code < 300:
                 data = resp.json()
                 for value in data:
