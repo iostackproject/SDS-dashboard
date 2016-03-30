@@ -14,6 +14,11 @@ from django.utils.translation import ugettext_lazy as _
 
 import horizon
 
+class Blockstorage(horizon.PanelGroup):
+    slug = "blockstorage"
+    name = _("Block Storage")
+    panels = ('sds_storagepolicies', 'sds_storagegroups','sds_volumes','sds_storagemonitoring')
+
 class Objectstorage(horizon.PanelGroup):
     slug = "objectstorage"
     name = _("Object Storage")
@@ -23,7 +28,7 @@ class Objectstorage(horizon.PanelGroup):
 class SDSController(horizon.Dashboard):
     name = _("SDS Controller")
     slug = "sdscontroller"
-    panels = (Objectstorage,)  # Add your panels here.
+    panels = (Objectstorage, Blockstorage)  # Add your panels here.
     default_panel = 'administration'  # Specify the slug of the default panel.
     permissions = ('openstack.roles.admin',)
 horizon.register(SDSController)
