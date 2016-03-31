@@ -104,11 +104,12 @@ class UpdateForm(forms.SelfHandlingForm):
         listfilters = [e.strip() for e in filters.split(',')]
         data['filters'] = listfilters
         policy_id = data['id']
+        policy_id = str(policy_id)
         #TODO: receiving error, method not allowed
         del data["id"]
         datasg = {}
         try:
-            resp = api.update_policy(self.request, data)
+            resp = api.update_policy(self.request, policy_id, data)
             if 200 <= resp.status_code < 300:
                 data = resp.json()
             else:
