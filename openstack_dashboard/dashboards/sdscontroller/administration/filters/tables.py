@@ -89,7 +89,7 @@ class UpdateCell(tables.UpdateAction):
                 (cell.column.name == 'language') or
                 (cell.column.name == 'interface_version') or
                 (cell.column.name == 'dependencies') or
-                (cell.column.name == 'execution_server_default') or
+                (cell.column.name == 'execution_server') or
                 (cell.column.name == 'execution_server_reverse') or
                 (cell.column.name == 'object_metadata') or
                 (cell.column.name == 'is_put') or
@@ -148,7 +148,7 @@ class FilterTable(tables.DataTable):
     is_put = tables.Column('is_put', verbose_name=_("Is Put?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
     is_get = tables.Column('is_get', verbose_name=_("Is Get?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
     has_reverse = tables.Column('has_reverse', verbose_name=_("Has Reverse?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
-    execution_server = tables.Column('execution_server', verbose_name=_("Execution Server Default"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
+    execution_server = tables.Column('execution_server', verbose_name=_("Execution Server"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
     execution_server_reverse = tables.Column('execution_server_reverse', verbose_name=_("Execution Server Reverse"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
 
     class Meta:

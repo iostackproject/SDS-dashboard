@@ -18,8 +18,8 @@
 
 import json
 
-from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
 from horizon import forms
@@ -85,7 +85,7 @@ class UploadFilter(forms.SelfHandlingForm):
     has_reverse = forms.BooleanField(required=False)
 
     execution_server = forms.ChoiceField(
-        label=_('Execution Server Default'),
+        label=_('Execution Server'),
         choices=[
             ('proxy', _('Proxy Server')),
             ('object', _('Object Storage Servers'))
@@ -171,8 +171,8 @@ class UpdateFilter(forms.SelfHandlingForm):
     is_get = forms.BooleanField(required=False)
     has_reverse = forms.BooleanField(required=False)
 
-    execution_server_default = forms.ChoiceField(
-        label=_('Execution Server Default'),
+    execution_server = forms.ChoiceField(
+        label=_('Execution Server'),
         choices=[
             ('proxy', _('Proxy Server')),
             ('object', _('Object Storage Servers'))

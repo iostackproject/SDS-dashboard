@@ -2,7 +2,8 @@ class Filter:
     """
         Filters class represents the filter data
     """
-    def __init__(self, id, name, language, dependencies, interface_version, object_metadata, main, is_put, is_get, has_reverse, execution_server_default, execution_server_reverse):
+
+    def __init__(self, id, name, language, dependencies, interface_version, object_metadata, main, is_put, is_get, has_reverse, execution_server, execution_server_reverse):
         """
 
         :param id:
@@ -28,5 +29,5 @@ class Filter:
         self.is_put = is_put
         self.is_get = is_get
         self.has_reverse = has_reverse
-        self.execution_server = execution_server_default
+        self.execution_server = execution_server
         self.execution_server_reverse = execution_server_reverse
