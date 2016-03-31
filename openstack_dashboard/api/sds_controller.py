@@ -92,6 +92,20 @@ def list_storage_nodes(request):
     return r
 
 
+def remove_storage_nodes(request, storage_node_id):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/registry/snode/" + str(storage_node_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
 def create_policy(request, policy):
     token = sds_controller_api(request)
     headers = {}
