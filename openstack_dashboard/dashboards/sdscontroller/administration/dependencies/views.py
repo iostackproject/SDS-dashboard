@@ -20,16 +20,17 @@
 Views for managing SDS Dependencies.
 """
 import json
-from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse_lazy
-from django.core.urlresolvers import reverse
 
+from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
+from django.utils.translation import ugettext_lazy as _
+
+from horizon import exceptions
 from horizon import forms
 from horizon.utils import memoized
-from horizon import exceptions
-
-from openstack_dashboard.dashboards.sdscontroller.administration.dependencies import forms as dependencies_forms
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller.administration.dependencies import forms as dependencies_forms
+
 
 class UploadView(forms.ModalFormView):
     form_class = dependencies_forms.UploadDependency
@@ -42,6 +43,7 @@ class UploadView(forms.ModalFormView):
     context_object_name = 'dependency'
     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
     page_title = _("Upload A Dependency")
+
 
 class UpdateView(forms.ModalFormView):
     form_class = dependencies_forms.UpdateDependency
@@ -66,7 +68,7 @@ class UpdateView(forms.ModalFormView):
         dependency_id = self.kwargs['dependency_id']
         try:
             dependency = api.fil_get_dependency_metadata(self.request, dependency_id)
-	    return dependency
+            return dependency
         except Exception:
             redirect = self.success_url
             msg = _('Unable to retrieve dependency details.')
@@ -75,4 +77,4 @@ class UpdateView(forms.ModalFormView):
     def get_initial(self):
         dependency = self._get_object()
         initial = json.loads(dependency.text)
-	return initial
+        return initial

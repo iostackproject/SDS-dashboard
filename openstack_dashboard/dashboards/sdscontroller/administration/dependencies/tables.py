@@ -1,18 +1,19 @@
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
 import json
 
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-
-from horizon import tables
-from horizon import exceptions
-from horizon import messages
-from horizon import forms
-
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 from keystoneclient.exceptions import Conflict
+
+from horizon import exceptions
+from horizon import forms
+from horizon import messages
+from horizon import tables
 from models import Dependency
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
+
 
 class MyFilterAction(tables.FilterAction):
     name = "myfilter"
@@ -26,28 +27,36 @@ class UploadDependency(tables.LinkAction):
     icon = "upload"
 
 
-
 class UpdateDependency(tables.LinkAction):
     name = "update"
     verbose_name = _("Edit")
     icon = "pencil"
-    classes = ("ajax-modal","btn-update",)
+    classes = ("ajax-modal", "btn-update",)
+
     def get_link_url(self, dependency):
         base_url = reverse("horizon:sdscontroller:administration:dependencies:update", kwargs={'dependency_id': dependency.id})
         return base_url
 
+
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
-	return((cell.column.name== 'version')or
-		(cell.column.name== 'permissions'))	
+        return ((cell.column.name == 'version') or
+                (cell.column.name == 'permissions'))
 
-    def update_cell(self, request,datum, id,cell_name, new_cell_value):
+    def update_cell(self, request, datum, id, cell_name, new_cell_value):
         try:
             # updating changed value by new value
             response = api.fil_get_dependency_metadata(request, id)
             data = json.loads(response.text)
             data[cell_name] = new_cell_value
-            api.fil_update_dependency_metadata(request,id,data['version'],data['permissions'])
+
+            # TODO: Check only the valid keys, delete the rest
+            if 'id' in data:  # PUT does not allow this key
+                del data['id']
+            if 'path' in data:  # PUT does not allow this key
+                del data['path']
+
+            api.fil_update_dependency_metadata(request, id, data['version'], data['permissions'])
         except Conflict:
             # Returning a nice error message about name conflict. The message
             # from exception is not that clear for the user
@@ -61,12 +70,13 @@ class UpdateCell(tables.UpdateAction):
 
 class UpdateRow(tables.Row):
     ajax = True
+
     def get_data(self, request, id):
         response = api.fil_get_dependency_metadata(request, id)
         data = json.loads(response.text)
-	print(data)
-	dependency = Dependency(data['id'],data['name'],
-		data['version'],data['permissions'])
+        print(data)
+        dependency = Dependency(data['id'], data['name'],
+                                data['version'], data['permissions'])
         return dependency
 
 
@@ -110,7 +120,6 @@ class DeleteMultipleDependencies(DeleteDependency):
 
 
 class DependenciesTable(tables.DataTable):
-
     id = tables.Column('id', verbose_name=_("ID"))
     name = tables.Column('name', verbose_name=_("Name"))
     version = tables.Column('version', verbose_name=_("Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
@@ -120,5 +129,5 @@ class DependenciesTable(tables.DataTable):
         name = "dependencies"
         verbose_name = _("Dependencies")
         table_actions = (MyFilterAction, UploadDependency, DeleteMultipleDependencies,)
-	row_actions = (UpdateDependency, DeleteDependency,)
+        row_actions = (UpdateDependency, DeleteDependency,)
         row_class = UpdateRow
