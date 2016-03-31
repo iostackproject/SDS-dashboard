@@ -14,7 +14,7 @@ URL_BASIC = "http://10.0.2.55:8080/"
 #    return request.user.token.id
 
 ############################## # Storage groups API # ##############################
-def list_storagegroups(request):
+def list_storagegroups():
     #token = sds_controller_api(request)
     headers = {'API-Version':'0'}
 
@@ -36,7 +36,7 @@ def delete_storagegroup(obj_id):
     #token = sds_controller_api(request)
     headers = {'API-Version':'0'}
 
-    url = URL_BASIC + "/groups/" + obj_id
+    url = URL_BASIC + "groups/" + obj_id
 
     r = requests.delete(url, headers=headers)
     return r  
@@ -54,16 +54,34 @@ def associate_group_node(request, groupid, node):
     #token = sds_controller_api(request)
     headers = {'API-Version':'0'}
 
-    url = URL_BASIC + "/groups/" + groupid + "/nodes/" + node
+    url = URL_BASIC + "groups/" + groupid + "/nodes/" + node
 
     r = requests.put(url, headers=headers)
     return r    
+
+def disassociate_group_node(request, groupid, node):
+    #token = sds_controller_api(request)
+    headers = {'API-Version':'0'}
+
+    url = URL_BASIC + "groups/" + groupid + "/nodes/" + node
+
+    r = requests.delete(url, headers=headers)
+    return r 
+    
+def list_groups_nodes(request, groupid):
+    #token = sds_controller_api(request)
+    headers = {'API-Version':'0'}
+
+    url = URL_BASIC + "groups/" + groupid + "/nodes"
+
+    r = requests.get(url, headers=headers)
+    return r
 
 def update_storagegroup(request, groupid, data):
     #token = sds_controller_api(request)
     headers = {'API-Version':'0'}
 
-    url = URL_BASIC + "/groups/" + groupid
+    url = URL_BASIC + "groups/" + groupid
 
     r = requests.patch(url, headers=headers, data=json.dumps(data))
     return r 
@@ -78,11 +96,11 @@ def create_policy(request, data):
     r = requests.post(url, headers=headers, data=json.dumps(data))
     return r
 
-def update_policy(request, data):
+def update_policy(request, policy_id, data):
     #token = sds_controller_api(request)
     headers = {'API-Version':'0'}
 
-    url = URL_BASIC + "policies"
+    url = URL_BASIC + "policies/" + policy_id
 
     r = requests.patch(url, headers=headers, data=json.dumps(data))
     return r
@@ -109,7 +127,7 @@ def delete_policy(obj_id):
     #token = sds_controller_api(request)
     headers = {'API-Version':'0'}
 
-    url = URL_BASIC + "/policies/" + obj_id
+    url = URL_BASIC + "policies/" + obj_id
 
     r = requests.delete(url, headers=headers)
     return r     
