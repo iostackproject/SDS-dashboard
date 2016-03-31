@@ -1,15 +1,15 @@
 import json
 
+from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
-from django.core.urlresolvers import reverse
-from django.core.exceptions import ValidationError
 from keystoneclient.exceptions import Conflict
 
-from horizon import tables
 from horizon import exceptions
-from horizon import messages
 from horizon import forms
+from horizon import messages
+from horizon import tables
 from models import Filter
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
@@ -104,6 +104,7 @@ class UpdateCell(tables.UpdateAction):
             data = json.loads(response.text)
             data[cell_name] = new_cell_value
 
+            # TODO: Check only the valid keys, delete the rest
             if 'id' in data:  # PUT does not allow this key
                 del data['id']
             if 'path' in data:  # PUT does not allow this key
@@ -144,24 +145,11 @@ class FilterTable(tables.DataTable):
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     main = tables.Column('main', verbose_name=_("Main"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    is_put = tables.Column('is_put', verbose_name=_("Is Put?"), form_field=forms.ChoiceField(choices=[
-        ('True', _('True')), ('False', _('False'))
-    ]), update_action=UpdateCell)
-    is_get = tables.Column('is_get', verbose_name=_("Is Get?"), form_field=forms.ChoiceField(choices=[
-        ('True', _('True')), ('False', _('False'))
-    ]), update_action=UpdateCell)
-    has_reverse = tables.Column('has_reverse', verbose_name=_("Has Reverse?"), form_field=forms.ChoiceField(choices=[
-        ('True', _('True')), ('False', _('False'))
-    ]), update_action=UpdateCell)
-    execution_server = tables.Column('execution_server', verbose_name=_("Execution Server Default"),
-                                             form_field=forms.ChoiceField(choices=[
-                                                 ('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))
-                                             ]), update_action=UpdateCell)
-    execution_server_reverse = tables.Column('execution_server_reverse', verbose_name=_("Execution Server Reverse"),
-                                             form_field=forms.ChoiceField(choices=[
-                                                 ('proxy', _('Proxy Server')),
-                                                 ('object', _('Object Storage Servers'))
-                                             ]), update_action=UpdateCell)
+    is_put = tables.Column('is_put', verbose_name=_("Is Put?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    is_get = tables.Column('is_get', verbose_name=_("Is Get?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    has_reverse = tables.Column('has_reverse', verbose_name=_("Has Reverse?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    execution_server = tables.Column('execution_server', verbose_name=_("Execution Server Default"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
+    execution_server_reverse = tables.Column('execution_server_reverse', verbose_name=_("Execution Server Reverse"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
 
     class Meta:
         name = "filters"
