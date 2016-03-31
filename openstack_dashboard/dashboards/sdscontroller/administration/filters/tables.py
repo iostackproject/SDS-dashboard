@@ -17,7 +17,7 @@ from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexcept
 
 def get_programming_languages():
     programming_languages = [(u'', u'Select one')]
-    programming_languages.extend([('java', 'Java')])
+    programming_languages.extend([(u'java', u'Java')])
     return programming_languages
 
 
