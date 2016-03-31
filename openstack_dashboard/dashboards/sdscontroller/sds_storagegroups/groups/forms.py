@@ -27,6 +27,7 @@ from horizon import messages
 from openstack_dashboard.api import sds_controller_blockstorage as api
 import json
 
+#create storage group
 class CreateGroup(forms.SelfHandlingForm):
     name = forms.CharField(max_length=255, label=_("Name"))
     policy = forms.ChoiceField(label=_("Policy"))
@@ -104,7 +105,7 @@ class CreateGroup(forms.SelfHandlingForm):
                 exceptions.handle(self.request, _(e.message))
         return data_values
         
-#updategroup
+#update storage group
 class UpdateForm(forms.SelfHandlingForm):
     id = forms.IntegerField(widget = forms.HiddenInput())
     name = forms.CharField(max_length=255,label=_("Storage Group Name"),required=False)
@@ -149,11 +150,13 @@ class UpdateForm(forms.SelfHandlingForm):
                                   
     def handle(self, request, data):
         #
+        data_values = data
+        nodes = data["nodes"]
+        del data["nodes"]
         groupid = data['id']
         groupid = str(groupid)
-        #TOFIX: receiving error, "method not allowed"
         #
-        datasg = {}
+        # Update Storage Group (Nodes can only be updated apart from other data at the moment)
         try:
             resp = api.update_storagegroup(self.request, groupid, data)
             if 200 <= resp.status_code < 300:
@@ -164,7 +167,51 @@ class UpdateForm(forms.SelfHandlingForm):
         except Exception as e:
             strobj = "[]"
             exceptions.handle(self.request, _(e.message))
-        return data
+        #
+        # Retrieve storage node list for the selected group
+        data_nodes = []
+        try:
+            resp = api.list_groups_nodes(self.request, groupid)
+            if resp.status_code == 200:
+                data_nodes = resp.json()
+            else:
+                error_message = 'Unable to retrieve Storage Nodes information.'
+                raise ValueError(error_message) 
+        except Exception as e:       
+                strobj = "[]"
+                exceptions.handle(self.request, _(e.message))
+        #
+        # Disassociate storage nodes associated with the selected storage group
+        count = 0
+        for d in data_nodes:
+            nodeid = d['id']
+            nodeid = str(nodeid)
+            try:
+                resp = api.disassociate_group_node(self.request, groupid, nodeid)
+                if 200 <= resp.status_code < 300:
+                    pass
+                else:
+                    error_message = 'Unable to disassociate group and storage node'
+                    raise ValueError(resp.text)
+            except Exception as e:                  
+                strobj = "[]"
+                exceptions.handle(self.request, _(e.message))             
+        #
+        # Assign storage nodes to storage group
+        count = 0
+        for node in nodes:
+            count = count + 1
+            try:
+                resp = api.associate_group_node(self.request, groupid, node)
+                if 200 <= resp.status_code < 300:
+                    pass
+                else:
+                    error_message = 'Unable to associate group and storage node'
+                    raise ValueError(resp.text)
+            except Exception as e:                  
+                strobj = "[]"
+                exceptions.handle(self.request, _(e.message))            
+        return data_values
         
     def manage_filters(self, filters_list):
         data=[e.strip() for e in filters_list.split(',')]
