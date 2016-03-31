@@ -265,7 +265,7 @@ class BindStorageNode(forms.SelfHandlingForm):
                            widget=forms.TextInput(
                                attrs={"ng-model": "name", "not-blank": ""}
                            ))
-    location = forms.CharField(max_length=5,
+    location = forms.CharField(max_length=255,
                                 label=_("Location"),
                                 help_text=_("The location from new storage node. Example: r1z1-STORAGE_NODE_MANAGEMENT_INTERFACE_IP_ADDRESS:6000/DEVICE_NAME"),
                                 widget=forms.TextInput(
