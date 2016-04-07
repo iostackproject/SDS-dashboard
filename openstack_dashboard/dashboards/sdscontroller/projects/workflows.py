@@ -592,14 +592,13 @@ class CreateSDSProject(workflows.Workflow):
     def _create_project(self, request, data):
         # create the project
         print 'data!!!', data
-        domain_id = data['domain_id']
         try:
-            desc = data['description']
-            self.object = sds_controller.tenant_create(request,
-                                                     name=data['name'],
-                                                     description=desc,
-                                                     enabled=data['enabled'],
-                                                     domain=domain_id)
+
+	    self.object = sds_controller.tenant_create(request,
+                                                     data['name'],
+                                                     data['user_admin'],
+                                                     data['user_password'])
+                                                     
             return self.object
         except exceptions.Conflict:
             msg = _('Project name "%s" is already used.') % data['name']
