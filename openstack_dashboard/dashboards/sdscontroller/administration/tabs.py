@@ -1,24 +1,21 @@
+import json
+
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
 from horizon import tabs
-import json
-
-from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import tables as registry_tables
-from openstack_dashboard.dashboards.sdscontroller.administration.bw import tables as bw_tables
-
-from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
-from openstack_dashboard.dashboards.sdscontroller.administration.filters import models as filters_models
-from openstack_dashboard.dashboards.sdscontroller.administration.dependencies import tables as dependency_tables
-from openstack_dashboard.dashboards.sdscontroller.administration.dependencies import models as dependency_models
-from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import models as registry_models
-from openstack_dashboard.dashboards.sdscontroller.administration.tenants import tables as tenant_tables
-from openstack_dashboard.dashboards.sdscontroller.administration.tenants import models as tenant_models
-from openstack_dashboard.dashboards.sdscontroller.administration.groups import tables as group_tables
-from openstack_dashboard.dashboards.sdscontroller.administration.groups import models as group_models
-
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
+from openstack_dashboard.dashboards.sdscontroller.administration.dependencies import models as dependency_models
+from openstack_dashboard.dashboards.sdscontroller.administration.dependencies import tables as dependency_tables
+from openstack_dashboard.dashboards.sdscontroller.administration.filters import models as filters_models
+from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
+from openstack_dashboard.dashboards.sdscontroller.administration.groups import models as group_models
+from openstack_dashboard.dashboards.sdscontroller.administration.groups import tables as group_tables
+from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import models as registry_models
+from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import tables as registry_tables
+from openstack_dashboard.dashboards.sdscontroller.administration.tenants import models as tenant_models
+from openstack_dashboard.dashboards.sdscontroller.administration.tenants import tables as tenant_tables
 
 
 class RegistryTab(tabs.TableTab):
@@ -42,14 +39,14 @@ class RegistryTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-	    response = api.fil_get_filter_metadata(self.request, inst['identifier'])
-	    if 200 <= response.status_code < 300:
+            response = api.fil_get_filter_metadata(self.request, inst['identifier'])
+            if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
-		error_message = 'Unable to get filters.'
+                error_message = 'Unable to get filters.'
                 raise ValueError(error_message)
-	    filter = json.loads(strobj)
-            ret.append(registry_models.Filter(inst['identifier'], inst['name'], inst['activation_url'], inst['valid_parameters'],filter['name']))
+            filter = json.loads(strobj)
+            ret.append(registry_models.Filter(inst['identifier'], inst['name'], inst['activation_url'], inst['valid_parameters'], filter['name']))
         return ret
 
 
@@ -62,7 +59,6 @@ class TenantList(tabs.TableTab):
     def get_tenants_data(self):
         try:
             response = api.swift_list_tenants(self.request)
-            # print "CAMAMILLA ADMINISTRATION tabs tenants response", response.status_code, response.text
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
@@ -134,16 +130,6 @@ class Dependencies(tabs.TableTab):
         return ret
 
 
-class BW(tabs.TableTab):
-    table_classes = (bw_tables.BWTable,)
-    name = _("BW Differentiation")
-    slug = "bw_table"
-    template_name = ("horizon/common/_detail_table.html")
-
-    def get_bw_data(self):
-            return []
-
-
 class Groups(tabs.TableTab):
     table_classes = (group_tables.GroupsTable,)
     name = _("Groups")
@@ -168,8 +154,8 @@ class Groups(tabs.TableTab):
 
         return ret
 
+
 class MypanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
-    tabs = (RegistryTab, Filters, Dependencies, BW, TenantList, Groups,)
+    tabs = (RegistryTab, Filters, Dependencies, TenantList, Groups,)
     sticky = True
-
