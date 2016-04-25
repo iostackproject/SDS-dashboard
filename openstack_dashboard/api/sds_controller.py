@@ -1,10 +1,11 @@
 # encoding: utf-8
 from __future__ import unicode_literals
 
-import requests
 import json
-from horizon.utils.memoized import memoized  # noqa
 
+import requests
+
+from horizon.utils.memoized import memoized  # noqa
 
 # TODO: Take parameters from a config file
 URL_BASIC = "http://10.30.102.240:18000"
@@ -13,6 +14,7 @@ URL_BASIC = "http://10.30.102.240:18000"
 @memoized
 def sds_controller_api(request):
     return request.user.token.id
+
 
 ############################## # Swift API # ##############################
 
@@ -28,6 +30,8 @@ def set_sort_nodes(request, data):
 
     r = requests.put(url, json.dumps(data), headers=headers)
     return r
+
+
 def swift_list_tenants(request):
     token = sds_controller_api(request)
 
@@ -41,6 +45,7 @@ def swift_list_tenants(request):
     r = requests.get(url, headers=headers)
     return r
 
+
 def tenant_create(request, tenant_name, admin_user, admin_pass):
     token = sds_controller_api(request)
     headers = {}
@@ -50,6 +55,7 @@ def tenant_create(request, tenant_name, admin_user, admin_pass):
     headers['Content-Type'] = "application/json"
     r = requests.post(url, json.dumps(parameters), headers=headers)
     return r
+
 
 def new_storage_policy(request, data):
     token = sds_controller_api(request)
@@ -61,6 +67,7 @@ def new_storage_policy(request, data):
 
     r = requests.post(url, json.dumps(data), headers=headers)
     return r
+
 
 ############################## # Registry DSL API # ##############################
 # # Registry DSL - Policies
@@ -539,7 +546,6 @@ def fil_upload_dependency_data(request, dependency_id, in_memory_file):
     return r
 
 
-
 def fil_delete_dependency(request, dependecy_id):
     token = sds_controller_api(request)
     headers = {}
@@ -564,6 +570,7 @@ def fil_get_dependency_metadata(request, dependecy_id):
 
     r = requests.get(url, headers=headers)
     return r
+
 
 def fil_list_dependencies(request):
     token = sds_controller_api(request)
