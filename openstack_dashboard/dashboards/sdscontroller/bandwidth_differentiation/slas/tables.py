@@ -1,3 +1,5 @@
+import json
+
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -6,7 +8,11 @@ from keystoneclient.exceptions import Conflict
 
 from horizon import exceptions
 from horizon import forms
+from horizon import messages
 from horizon import tables
+from models import SLA
+from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
 class MyFilterAction(tables.FilterAction):
@@ -32,26 +38,17 @@ class UpdateSLA(tables.LinkAction):
         return base_url
 
 
-# TODO: Check this, we need to add an API call.
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
-        return (cell.column.name == 'bandwidth')
+        return cell.column.name == 'bandwidth'
 
     def update_cell(self, request, datum, id, cell_name, new_cell_value):
         try:
-            print("DEBUG: Update SLA metadata")
             # updating changed value by new value
-            # response = api.bw_get_sla_metadata(request, id)
-            # data = json.loads(response.text)
-            # data[cell_name] = new_cell_value
-            #
-            # # TODO: Check only the valid keys, delete the rest
-            # if 'id' in data:  # PUT does not allow this key
-            #     del data['id']
-            # if 'path' in data:  # PUT does not allow this key
-            #     del data['path']
-            #
-            # api.bw_update_sla_metadata(request, id, data['bandwidth'])
+            response = api.bw_get_sla(request, id)
+            data = json.loads(response.text)
+            data[cell_name] = new_cell_value
+            api.bw_update_sla(request, id, data['bandwidth'])
         except Conflict:
             # Returning a nice error message about name conflict. The message
             # from exception is not that clear for the user
@@ -63,20 +60,17 @@ class UpdateCell(tables.UpdateAction):
         return True
 
 
-# TODO: Check this, we need to add an API call.
 class UpdateRow(tables.Row):
     ajax = True
 
     def get_data(self, request, id):
-        print(request)
-        # response = api.bw_get_sla_metadata(request, id)
-        # data = json.loads(response.text)
+        response = api.bw_get_sla(request, id)
+        data = json.loads(response.text)
 
-        # sla = SLA(data['id'], data['tenant'], data['bandwidth'])
-        # return sla
+        sla = SLA(data['id'], data['tenant'], data['bandwidth'])
+        return sla
 
 
-# TODO: Check this, we need to add an API call.
 class DeleteSLA(tables.DeleteAction):
     @staticmethod
     def action_present(count):
@@ -99,12 +93,11 @@ class DeleteSLA(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            print(request)
-            # response = api.bw_delete_sla(request, obj_id)
-            # if 200 <= response.status_code < 300:
-            #     messages.success(request, _('Successfully deleted sla: %s') % obj_id)
-            # else:
-            #     raise sdsexception.SdsException(response.text)
+            response = api.bw_delete_sla(request, obj_id)
+            if 200 <= response.status_code < 300:
+                messages.success(request, _('Successfully deleted sla: %s') % obj_id)
+            else:
+                raise sdsexception.SdsException(response.text)
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:bandwidth_differentiation:index")
             error_message = "Unable to remove sla.\t %s" % ex.message
