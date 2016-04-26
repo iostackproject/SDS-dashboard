@@ -18,7 +18,79 @@ def sds_controller_api(request):
 
 ############################## # Swift API # ##############################
 
-def set_sort_nodes(request, data):
+# # Swift - SLAs
+def bw_add_sla(request, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/bw/slas"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.post(url, json.dumps(data), headers=headers)
+    return r
+
+
+def bw_get_all_slas(request):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/bw/slas"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def bw_update_sla(request, name, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/bw/sla/" + str(name)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
+def bw_get_sla(request, name):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/bw/sla/" + str(name)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def bw_delete_sla(request, name):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/bw/sla/" + str(name)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+# # Swift - Sorting Methods
+def bw_add_sort_method(request, data):
     token = sds_controller_api(request)
 
     headers = {}
@@ -28,10 +100,67 @@ def set_sort_nodes(request, data):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
+    r = requests.post(url, json.dumps(data), headers=headers)
+    return r
+
+
+def bw_get_all_sort_method(request):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/sort_nodes"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def bw_update_sort_method(request, name, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/sort_nodes/" + str(name)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
     r = requests.put(url, json.dumps(data), headers=headers)
     return r
 
 
+def bw_get_sort_method(request, name, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/sort_nodes/" + str(name)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, json.dumps(data), headers=headers)
+    return r
+
+
+def bw_delete_sort_method(request, name):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/sort_nodes/" + str(name)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+# # Swift - Tenants
 def swift_list_tenants(request):
     token = sds_controller_api(request)
 
