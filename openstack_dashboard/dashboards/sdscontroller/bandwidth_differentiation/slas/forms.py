@@ -32,7 +32,7 @@ class CreateSLA(forms.SelfHandlingForm):
         try:
             response = api.bw_add_sla(request, data)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully dependency creation and upload.'))
+                messages.success(request, _('Successfully SLA creation.'))
                 return data
             else:
                 raise sdsexception.SdsException(response.text)
