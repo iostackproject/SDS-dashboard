@@ -48,7 +48,7 @@ class UpdateCell(tables.UpdateAction):
             response = api.bw_get_sla(request, id)
             data = json.loads(response.text)
             data[cell_name] = new_cell_value
-            api.bw_update_sla(request, id, data['bandwidth'])
+            api.bw_update_sla(request, id, data)
         except Conflict:
             # Returning a nice error message about name conflict. The message
             # from exception is not that clear for the user
