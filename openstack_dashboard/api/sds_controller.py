@@ -132,7 +132,7 @@ def bw_update_sort_method(request, name, data):
     return r
 
 
-def bw_get_sort_method(request, name, data):
+def bw_get_sort_method(request, name):
     token = sds_controller_api(request)
 
     headers = {}
@@ -142,7 +142,7 @@ def bw_get_sort_method(request, name, data):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    r = requests.get(url, json.dumps(data), headers=headers)
+    r = requests.get(url, headers=headers)
     return r
 
 
