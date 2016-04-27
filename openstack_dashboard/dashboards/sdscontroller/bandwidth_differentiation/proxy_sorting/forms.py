@@ -39,3 +39,27 @@ class CreateSortedMethod(forms.SelfHandlingForm):
             redirect = reverse("horizon:sdscontroller:bandwidth_differentiation:index")
             error_message = "Unable to create sorted method.\t %s" % ex.message
             exceptions.handle(request, _(error_message), redirect=redirect)
+
+
+class UpdateSortedMethod(forms.SelfHandlingForm):
+    criterion = forms.CharField(max_length=255,
+                                label=_("Criterion"),
+                                required=False,
+                                help_text=_("The new criterion that you want to assign."))
+
+    def __init__(self, request, *args, **kwargs):
+        super(UpdateSortedMethod, self).__init__(request, *args, **kwargs)
+
+    def handle(self, request, data):
+        try:
+            proxy_sorting_id = self.initial['id']
+            response = api.bw_update_sort_method(request, proxy_sorting_id, data)
+            if 200 <= response.status_code < 300:
+                messages.success(request, _('Successfully sorted method update.'))
+                return data
+            else:
+                raise sdsexception.SdsException(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:bandwidth_differentiation:index")
+            error_message = "Unable to update sorted method.\t %s" % ex.message
+            exceptions.handle(request, _(error_message), redirect=redirect)

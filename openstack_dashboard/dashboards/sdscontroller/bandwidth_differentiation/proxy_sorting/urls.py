@@ -7,5 +7,7 @@ VIEWS_MOD = ('openstack_dashboard.dashboards.sdscontroller.bandwidth_differentia
 
 urlpatterns = patterns(
     VIEWS_MOD,
-    url(r'^update/$', views.UpdateView.as_view(), name='update'),
+    url(r'^upload/$', views.UploadView.as_view(), name='upload'),
+    url(r'^update/(?P<proxy_sorting_id>[^/]+)/$', views.UpdateView.as_view(), name='update'),
+
 )
