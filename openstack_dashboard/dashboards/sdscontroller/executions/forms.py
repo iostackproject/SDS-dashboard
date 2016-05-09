@@ -15,11 +15,16 @@ class CreateExecutionForm(forms.SelfHandlingForm):
                                      ('spark', _('Spark Cluster')),
                                      ('mpi', _('MPI'))],
                                  )
+    num_workers = forms.IntegerField(label=_("Number of workers"))
+    max_memory = forms.IntegerField(label=_("Max requested memory (MB)"))
 
     def handle(self, request, data):
-         try:
-             zoeapi.new_execution(request, data['name'], data['app_name'])
-             return True
-         except Exception:
-             exceptions.handle(request, _('Unable to create execution.'))
+        assert data['name'] and data['app_name']
+        if data['max_memory']:
+            max_memory = data['max_memory'] * 1024
+        try:
+            zoeapi.new_execution(request, data['name'], data['app_name'])
+            return True
+        except Exception:
+            exceptions.handle(request, _('Unable to create execution.'))
 
