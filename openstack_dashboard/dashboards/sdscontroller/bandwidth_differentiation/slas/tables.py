@@ -67,7 +67,7 @@ class UpdateRow(tables.Row):
         response = api.bw_get_sla(request, id)
         data = json.loads(response.text)
 
-        sla = SLA(data['id'], data['tenant'], data['bandwidth'])
+        sla = SLA(data['tenant'], data['policy'], data['bandwidth'])
         return sla
 
 
@@ -109,8 +109,8 @@ class DeleteMultipleSLAs(DeleteSLA):
 
 
 class SLAsTable(tables.DataTable):
-    id = tables.Column('id', verbose_name=_("ID"))
     tenant = tables.Column('tenant', verbose_name=_("Tenant"))
+    policy = tables.Column('policy', verbose_name=_("Policy"))
     bandwidth = tables.Column('bandwidth', verbose_name=_("Bandwidth"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
 
     class Meta:
