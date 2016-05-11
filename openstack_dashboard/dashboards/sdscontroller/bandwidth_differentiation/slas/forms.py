@@ -16,6 +16,13 @@ class CreateSLA(forms.SelfHandlingForm):
                                  attrs={"ng-model": "tenant", "not-blank": ""}
                              ))
 
+    policy = forms.CharField(max_length=255,
+                             label=_("Policy"),
+                             help_text=_("The policy that you want to assign to the specific tenant."),
+                             widget=forms.TextInput(
+                                 attrs={"ng-model": "policy", "not-blank": ""}
+                             ))
+
     bandwidth = forms.CharField(max_length=255,
                                 label=_("Bandwidth"),
                                 help_text=_("The bandwidth that you want to assign to the specific tenant."),
