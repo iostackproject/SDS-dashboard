@@ -8,7 +8,7 @@ import requests
 from horizon.utils.memoized import memoized  # noqa
 
 # TODO: Take parameters from a config file
-URL_BASIC = "http://localhost:9000"
+URL_BASIC = "http://10.30.102.240:18000"
 
 
 @memoized
@@ -47,12 +47,12 @@ def bw_get_all_slas(request):
     return r
 
 
-def bw_update_sla(request, name, data):
+def bw_update_sla(request, sla_id, data):
     token = sds_controller_api(request)
 
     headers = {}
 
-    url = URL_BASIC + "/bw/sla/" + str(name)
+    url = URL_BASIC + "/bw/sla/" + str(sla_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -61,12 +61,12 @@ def bw_update_sla(request, name, data):
     return r
 
 
-def bw_get_sla(request, name):
+def bw_get_sla(request, sla_id):
     token = sds_controller_api(request)
 
     headers = {}
 
-    url = URL_BASIC + "/bw/sla/" + str(name)
+    url = URL_BASIC + "/bw/sla/" + str(sla_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -75,12 +75,12 @@ def bw_get_sla(request, name):
     return r
 
 
-def bw_delete_sla(request, name):
+def bw_delete_sla(request, sla_id):
     token = sds_controller_api(request)
 
     headers = {}
 
-    url = URL_BASIC + "/bw/sla/" + str(name)
+    url = URL_BASIC + "/bw/sla/" + str(sla_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
