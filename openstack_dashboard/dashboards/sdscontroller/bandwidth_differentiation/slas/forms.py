@@ -60,7 +60,7 @@ class UpdateSLA(forms.SelfHandlingForm):
 
     def handle(self, request, data):
         try:
-            sla_id = self.initial['id']
+            sla_id = self.initial['tenant'] + ':' + self.initial['policy']
             response = api.bw_update_sla(request, sla_id, data)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully sla update.'))

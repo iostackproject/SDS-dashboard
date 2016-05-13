@@ -4,7 +4,7 @@ class SLA:
     """
 
     def __init__(self, tenant, policy, bandwidth):
-        self.id = tenant + '_' + policy     # Unique identifier for tenant and policy
+        self.id = tenant + ':' + policy
         self.policy = policy
         self.tenant = tenant
         self.bandwidth = bandwidth

@@ -16,7 +16,7 @@ class SLAsTab(tabs.TableTab):
     table_classes = (slas_tables.SLAsTable,)
     name = _("SLAs")
     slug = "slas_table"
-    template_name = "horizon/common/_detail_table.html"
+    template_name = ("horizon/common/_detail_table.html")
 
     def get_slas_data(self):
         try:
@@ -32,9 +32,8 @@ class SLAsTab(tabs.TableTab):
 
         instances = json.loads(strobj)
         ret = []
-        for tenant in instances:
-            for policy in instances[tenant]:
-                ret.append(slas_models.SLA(tenant.replace("bw:", ""), policy, instances[tenant][policy] + "MB"))
+        for inst in instances:
+            ret.append(slas_models.SLA(inst['tenant'], inst['policy'], inst['bandwidth']))
         return ret
 
 
@@ -42,7 +41,7 @@ class ProxySortingTab(tabs.TableTab):
     table_classes = (proxy_sorting_tables.ProxySortingTable,)
     name = _("Proxy Sorting")
     slug = "proxy_sorting_table"
-    template_name = "horizon/common/_detail_table.html"
+    template_name = ("horizon/common/_detail_table.html")
 
     def get_proxy_sorting_data(self):
         try:
