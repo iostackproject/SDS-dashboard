@@ -199,7 +199,7 @@ def new_storage_policy(request, data):
 
 
 ############################## # Registry DSL API # ##############################
-# # Registry DSL - Policies
+# # Registry DSL - Storage Nodes
 
 def registry_storage_node(request, data):
     token = sds_controller_api(request)
@@ -242,6 +242,7 @@ def remove_storage_nodes(request, storage_node_id):
     return r
 
 
+# # Registry DSL - Policies
 def create_policy(request, policy):
     token = sds_controller_api(request)
     headers = {}
@@ -268,20 +269,6 @@ def list_policies(request):
     return r
 
 
-def list_metrics(request):
-    token = sds_controller_api(request)
-    headers = {}
-
-    url = URL_BASIC + "/registry/metrics"
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.get(url, headers=headers)
-    return r
-
-
-# TODO confirm
 def remove_policy(request, policy_id):
     token = sds_controller_api(request)
 
@@ -293,6 +280,20 @@ def remove_policy(request, policy_id):
     headers['Content-Type'] = "application/json"
 
     r = requests.delete(url, headers=headers)
+    return r
+
+
+# TODO: Search usages and change it to dsl_get_all_workload_metris
+def list_metrics(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metrics"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
     return r
 
 
