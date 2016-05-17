@@ -1,21 +1,19 @@
-from django.utils.translation import ugettext_lazy as _
-
-from horizon import tabs
-from horizon import exceptions
-
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies import tables as policies_tables
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies import models as policies_models
-
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import tables as metrics_tables
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import models as metrics_models
-
-from openstack_dashboard.api import sds_controller as api
 import json
 
+from django.utils.translation import ugettext_lazy as _
 
-class PolicyTab(tabs.TableTab):
-    name = _("Policy Tab")
-    slug = "policy_tab"
+from horizon import exceptions
+from horizon import tabs
+from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import models as metrics_models
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import tables as metrics_tables
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies import models as policies_models
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies import tables as policies_tables
+
+
+class StaticPolicyTab(tabs.TableTab):
+    name = _("Static Policies")
+    slug = "static_policies_tab"
     table_classes = (policies_tables.PoliciesTable,)
     template_name = ("horizon/common/_detail_table.html")
     preload = False
@@ -64,7 +62,8 @@ class MetricTab(tabs.TableTab):
             ret.append(metrics_models.Metric(inst["name"], inst['network_location'], inst['type']))
         return ret
 
+
 class PoliciesGroupTabs(tabs.TabGroup):
     slug = "policies_group_tabs"
-    tabs = (PolicyTab, MetricTab)
+    tabs = (StaticPolicyTab, MetricTab)
     sticky = True

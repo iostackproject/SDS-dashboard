@@ -1,13 +1,15 @@
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 
-from django.core.urlresolvers import reverse
-
-from horizon import tables
 from horizon import exceptions
 from horizon import messages
-
+from horizon import tables
 from openstack_dashboard.api import sds_controller as api
+
+
+class MyFilterAction(tables.FilterAction):
+    name = "myfilter"
 
 
 class CreatePolicy(tables.LinkAction):
@@ -48,9 +50,7 @@ class DeletePolicy(tables.DeleteAction):
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:storagepolicies:index")
             error_message = "Unable to remove policy.\t %s" % ex.message
-            exceptions.handle(request,
-                              _(error_message),
-                              redirect=redirect)
+            exceptions.handle(request, _(error_message), redirect=redirect)
 
 
 class DeleteMultiplePolicies(DeletePolicy):
@@ -58,7 +58,7 @@ class DeleteMultiplePolicies(DeletePolicy):
 
 
 class PoliciesTable(tables.DataTable):
-    id = tables.Column('id', verbose_name=_("Id"))
+    id = tables.Column('id', verbose_name=_("ID"))
     policy_description = tables.Column('policy_description', verbose_name="Policy Description")
     policy_location = tables.Column('policy_location', verbose_name=_("Policy Location"))
     alive = tables.Column('alive', verbose_name="Alive")
@@ -66,7 +66,5 @@ class PoliciesTable(tables.DataTable):
     class Meta:
         name = "policies"
         verbose_name = _("Policies")
-        #table_actions = (CreatePolicy, DeleteMultiplePolicies,)
-        table_actions = (CreatePolicy,)
-        # row_actions = (DeletePolicy,)
-
+        table_actions = (MyFilterAction, CreatePolicy, DeleteMultiplePolicies,)
+        row_actions = (DeletePolicy,)
