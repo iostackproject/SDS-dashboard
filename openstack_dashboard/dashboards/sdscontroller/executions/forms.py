@@ -24,6 +24,7 @@ class CreateExecutionForm(forms.SelfHandlingForm):
     worker_memory = forms.IntegerField(label=_('Worker memory limit'), required=False)
     worker_cores = forms.IntegerField(label=_('Worker cores'), required=False)
     master_mem_limit = forms.IntegerField(label=_('Master memory limit'), required=False)
+
     notebook_mem_limit = forms.IntegerField(label=_("Notebook memory limit"),
                               widget=forms.TextInput(attrs={
                                 'class': 'switched',
@@ -31,13 +32,16 @@ class CreateExecutionForm(forms.SelfHandlingForm):
                                 'data-app_name-ipython': _('Notebook memory limit')
                                 }), required=False)
 
-    mpicmdline = forms.CharField(max_length=255, label=_("MPI"),
+    mpicmdline = forms.CharField(max_length=255,
+                                 initial='mpirun -np 4 --hostfile ./mpi-helloworld/mpihosts ./mpi-helloworld/MPI_Hello',
+                                 label=_("MPI"),
                               widget=forms.TextInput(attrs={
                                 'class': 'switched',
                                 'data-switch-on': 'app_name',
                                 'data-app_name-mpi': _('MPI Cmdline')
                                 }), required=False)
     sparkcmdline = forms.CharField(max_length=255, label=_("Spark Cluster"),
+                                   initial='--class fr.eurecom.dsg.WordCount wc.jar WC-GBig hdfs://hdfs-namenode.hdfs/datasets/gutenberg/gutenberg_small.txt hdfs://hdfs-namenode.hdfs/tmp/cntwdc1',
                               widget=forms.TextInput(attrs={
                                 'class': 'switched',
                                 'data-switch-on': 'app_name',
