@@ -5,16 +5,44 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tabs
 from openstack_dashboard.api import sds_controller as api
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.dynamic_policies import models as policies_models
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.dynamic_policies import tables as policies_tables
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.dynamic_policies import models as dynamic_policies_models
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.dynamic_policies import tables as dynamic_policies_tables
 from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import models as metrics_models
 from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import tables as metrics_tables
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.static_policies import models as static_policies_models
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.static_policies import tables as static_policies_tables
+
+
+class StaticPolicyTab(tabs.TableTab):
+    name = _("Static Policies")
+    slug = "static_policies_tab"
+    table_classes = (static_policies_tables.PoliciesTable,)
+    template_name = ("horizon/common/_detail_table.html")
+    preload = False
+
+    def get_static_policies_data(self):
+        try:
+            response = api.list_policies(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to retrieve static_policies information.'
+                raise ValueError(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        instances = json.loads(strobj)
+        ret = []
+        for inst in instances:
+            ret.append(static_policies_models.Policy(inst["id"], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['params']))
+        return ret
 
 
 class DynamicPolicyTab(tabs.TableTab):
     name = _("Dynamic Policies")
     slug = "dynamic_policies_tab"
-    table_classes = (policies_tables.PoliciesTable,)
+    table_classes = (dynamic_policies_tables.PoliciesTable,)
     template_name = ("horizon/common/_detail_table.html")
     preload = False
 
@@ -33,7 +61,7 @@ class DynamicPolicyTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(policies_models.Policy(inst["id"], inst['policy'], inst['policy_location'], inst['alive']))
+            ret.append(dynamic_policies_models.Policy(inst["id"], inst['policy'], inst['policy_location'], inst['alive']))
         return ret
 
 
@@ -65,5 +93,5 @@ class MetricTab(tabs.TableTab):
 
 class PoliciesGroupTabs(tabs.TabGroup):
     slug = "policies_group_tabs"
-    tabs = (DynamicPolicyTab, MetricTab)
+    tabs = (StaticPolicyTab, DynamicPolicyTab, MetricTab)
     sticky = True
