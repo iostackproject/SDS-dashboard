@@ -15,11 +15,9 @@
 from django.conf.urls import patterns
 from django.conf.urls import url
 
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies \
-    .policies import views
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.dynamic_policies import views
 
-
-VIEWS_MOD = ('openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies.views')
+VIEWS_MOD = ('openstack_dashboard.dashboards.sdscontroller.storagepolicies.dynamic_policies.views')
 
 urlpatterns = patterns(
     'VIEWS_MOD',

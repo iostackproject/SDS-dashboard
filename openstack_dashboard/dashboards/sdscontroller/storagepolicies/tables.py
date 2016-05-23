@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies.\
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.dynamic_policies.\
     tables import PoliciesTable as tables
 
 
