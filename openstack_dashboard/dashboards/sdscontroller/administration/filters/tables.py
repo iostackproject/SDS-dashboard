@@ -107,6 +107,10 @@ class UpdateCell(tables.UpdateAction):
             # TODO: Check only the valid keys, delete the rest
             if 'id' in data:  # PUT does not allow this key
                 del data['id']
+            if 'etag' in data:  # PUT does not allow this key
+                del data['etag']
+            if 'content_length' in data:  # PUT does not allow this key
+                del data['content_length']
             if 'path' in data:  # PUT does not allow this key
                 del data['path']
 
