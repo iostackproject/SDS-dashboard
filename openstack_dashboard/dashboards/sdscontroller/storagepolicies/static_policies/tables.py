@@ -58,8 +58,8 @@ class DeleteMultiplePolicies(DeletePolicy):
 
 
 class PoliciesTable(tables.DataTable):
-    id = tables.Column('id', verbose_name=_("ID"))
     target = tables.Column('target', verbose_name=_("Target"))
+    filter = tables.Column('filter', verbose_name=_("Filter"))
     object_type = tables.Column('object_type', verbose_name="Object Type")
     object_size = tables.Column('object_size', verbose_name=_("Object Size"))
     execution_server = tables.Column('execution_server', verbose_name="Execution Server")
