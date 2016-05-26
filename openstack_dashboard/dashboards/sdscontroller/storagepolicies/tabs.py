@@ -35,7 +35,7 @@ class StaticPolicyTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(static_policies_models.Policy(inst["id"], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['params']))
+            ret.append(static_policies_models.Policy(inst["id"], inst['target'], inst['filter'], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
         return ret
 
 
