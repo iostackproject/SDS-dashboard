@@ -116,7 +116,7 @@ class UpdateRow(tables.Row):
     def get_data(self, request, policy_id):
         response = api.dsl_get_static_policy(request, policy_id)
         data = json.loads(response.text)
-        policy = Policy(data["id"], data['target'], data['filter'],
+        policy = Policy(data['id'], data['target'], data['filter_id'],
                         data['object_type'], data['object_size'],
                         data['execution_server'], data['execution_server_reverse'],
                         data['execution_order'], data['params'])
@@ -129,8 +129,8 @@ class PoliciesTable(tables.DataTable):
     filter = tables.Column('filter', verbose_name=_("Filter"))
     object_type = tables.Column('object_type', verbose_name="Object Type", form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_size = tables.Column('object_size', verbose_name=_("Object Size"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    execution_server = tables.Column('execution_server', verbose_name="Execution Server", form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    execution_server_reverse = tables.Column('execution_server_reverse', verbose_name="Execution Server Reverse", form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    execution_server = tables.Column('execution_server', verbose_name="Execution Server", form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
+    execution_server_reverse = tables.Column('execution_server_reverse', verbose_name="Execution Server Reverse", form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
     execution_order = tables.Column('execution_order', verbose_name="Execution Order", form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     params = tables.Column('params', verbose_name="Params", form_field=forms.CharField(max_length=255), update_action=UpdateCell)
 

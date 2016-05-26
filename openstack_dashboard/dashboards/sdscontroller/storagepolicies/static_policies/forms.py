@@ -43,11 +43,29 @@ class UpdatePolicy(forms.SelfHandlingForm):
                                   label=_("Object Size"),
                                   help_text=_("The size of object which the rule will be apply."))
 
-    execution_server = forms.CharField(max_length=255,
-                                       label=_("Execution Server"))
+    execution_server = forms.ChoiceField(
+        label=_('Execution Server'),
+        choices=[
+            ('proxy', _('Proxy Server')),
+            ('object', _('Object Storage Servers'))
+        ],
+        widget=forms.Select(attrs={
+            'class': 'switchable',
+            'data-slug': 'source'
+        })
+    )
 
-    execution_server_reverse = forms.CharField(max_length=255,
-                                               label=_("Execution Server Reverse"))
+    execution_server_reverse = forms.ChoiceField(
+        label=_('Execution Server Reverse'),
+        choices=[
+            ('proxy', _('Proxy Server')),
+            ('object', _('Object Storage Servers'))
+        ],
+        widget=forms.Select(attrs={
+            'class': 'switchable',
+            'data-slug': 'source'
+        })
+    )
 
     execution_order = forms.CharField(max_length=255,
                                       label=_("Execution Order"),
@@ -55,6 +73,7 @@ class UpdatePolicy(forms.SelfHandlingForm):
 
     params = forms.CharField(max_length=255,
                              label=_("Parameters"),
+                             required=False,
                              help_text=_("Parameters list."))
 
     def __init__(self, request, *args, **kwargs):
@@ -64,8 +83,8 @@ class UpdatePolicy(forms.SelfHandlingForm):
 
     def handle(self, request, data):
         try:
-            policy_id = self.initial['id']
-            # print "\n#################\n", request, "\n#################\n", data, "\n#################\n"
+            policy_id = self.initial['target'] + ':' + self.initial['id']
+            # print("\n#################\n", request, "\n#################\n", data, "\n#################\n")
             response = api.dsl_update_static_policy(request, policy_id, data)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully policy updated.'))
