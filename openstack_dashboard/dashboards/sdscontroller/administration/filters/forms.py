@@ -204,5 +204,5 @@ class UpdateFilter(forms.SelfHandlingForm):
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:administration:index")
-            error_message = "Unable to create filter.\t %s" % ex.message
+            error_message = "Unable to update filter.\t %s" % ex.message
             exceptions.handle(request, _(error_message), redirect=redirect)
