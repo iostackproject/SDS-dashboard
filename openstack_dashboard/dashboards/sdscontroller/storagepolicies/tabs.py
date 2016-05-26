@@ -22,7 +22,7 @@ class StaticPolicyTab(tabs.TableTab):
 
     def get_static_policies_data(self):
         try:
-            response = api.list_policies(self.request)
+            response = api.list_static_policies(self.request)
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
@@ -48,7 +48,7 @@ class DynamicPolicyTab(tabs.TableTab):
 
     def get_dynamic_policies_data(self):
         try:
-            response = api.list_policies(self.request)
+            response = api.list_dynamic_policies(self.request)
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
