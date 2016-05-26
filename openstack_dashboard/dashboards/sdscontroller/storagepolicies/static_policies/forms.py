@@ -21,7 +21,7 @@ class CreatePolicy(forms.SelfHandlingForm):
     def handle(request, data):
 
         try:
-            response = api.create_policy(request, data['policy'])
+            response = api.create_static_policy(request, data['policy'])
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully created policy/rule: %s') % data['policy'])
                 return data
