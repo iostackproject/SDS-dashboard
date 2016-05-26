@@ -178,10 +178,14 @@ def swift_list_tenants(request):
 def tenant_create(request, tenant_name, admin_user, admin_pass):
     token = sds_controller_api(request)
     headers = {}
+
     url = URL_BASIC + "/swift/tenants"
-    parameters = {"tenant_name": tenant_name, "user_name": admin_user, "user_password": admin_pass}
+
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
+
+    parameters = {"tenant_name": tenant_name, "user_name": admin_user, "user_password": admin_pass}
+
     r = requests.post(url, json.dumps(parameters), headers=headers)
     return r
 
@@ -189,6 +193,7 @@ def tenant_create(request, tenant_name, admin_user, admin_pass):
 def new_storage_policy(request, data):
     token = sds_controller_api(request)
     headers = {}
+
     url = URL_BASIC + "/swift/sdspolicies"
 
     headers["X-Auth-Token"] = str(token)
@@ -204,14 +209,13 @@ def new_storage_policy(request, data):
 def registry_storage_node(request, data):
     token = sds_controller_api(request)
     headers = {}
-    print 'api data', data
+
     url = URL_BASIC + "/registry/snode"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
 
     r = requests.post(url, json.dumps(data), headers=headers)
-    print r.text
     return r
 
 
@@ -243,11 +247,11 @@ def remove_storage_nodes(request, storage_node_id):
 
 
 # # Registry DSL - Policies
-def create_policy(request, policy):
+def create_static_policy(request, policy):
     token = sds_controller_api(request)
     headers = {}
 
-    url = URL_BASIC + "/registry/policy"
+    url = URL_BASIC + "/registry/static_policy"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
@@ -256,11 +260,11 @@ def create_policy(request, policy):
     return r
 
 
-def list_policies(request):
+def list_static_policies(request):
     token = sds_controller_api(request)
     headers = {}
 
-    url = URL_BASIC + "/registry/policy"
+    url = URL_BASIC + "/registry/static_policy"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -269,12 +273,52 @@ def list_policies(request):
     return r
 
 
-def remove_policy(request, policy_id):
+def remove_static_policy(request, policy_id):
     token = sds_controller_api(request)
 
     headers = {}
 
-    url = URL_BASIC + "/registry/policy/" + str(policy_id)
+    url = URL_BASIC + "/registry/static_policy/" + str(policy_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+def create_dynamic_policy(request, policy):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/dynamic_policy"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "text/plain"
+
+    r = requests.post(url, policy, headers=headers)
+    return r
+
+
+def list_dynamic_policies(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/dynamic_policy"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def remove_dynamic_policy(request, policy_id):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/registry/dynamic_policy/" + str(policy_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
