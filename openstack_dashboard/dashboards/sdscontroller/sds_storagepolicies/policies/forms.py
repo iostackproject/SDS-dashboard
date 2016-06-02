@@ -56,6 +56,8 @@ class CreatePolicy(forms.SelfHandlingForm):
         listfilters = [e.strip() for e in filters.split(',')]
         data['filters'] = listfilters
         #
+        if data['san_name'] == "":
+            data["san_name"] = None
         datasg = {}
         try:
             resp = api.create_policy(self.request, data)
@@ -107,6 +109,8 @@ class UpdateForm(forms.SelfHandlingForm):
         policy_id = str(policy_id)
         #TODO: receiving error, method not allowed
         del data["id"]
+        if data['san_name'] == "":
+            data["san_name"] = None
         datasg = {}
         try:
             resp = api.update_policy(self.request, policy_id, data)
