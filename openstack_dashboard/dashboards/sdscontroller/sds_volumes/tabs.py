@@ -30,7 +30,7 @@ class VolumeTableMixIn(object):
         try:
             return api.cinder.volume_list(self.request,
                                           search_opts=search_opts)
-        except Exception:
+        except Exception, e:
             exceptions.handle(self.request,
                               _('Unable to retrieve volume list.'))
             return []

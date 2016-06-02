@@ -31,7 +31,6 @@ from horizon import tables
 from openstack_dashboard import api
 from openstack_dashboard.api import cinder
 from openstack_dashboard import policy
-from openstack_dashboard.api import sds_controller_blockstorage as sdsapi
 import json
 
 DELETABLE_STATES = ("available", "error", "error_extending")
@@ -140,19 +139,6 @@ class AttachmentColumn(tables.Column):
 def get_volume_type(volume):
     return volume.volume_type if volume.volume_type != "None" else None
 
-def get_storage_group(volume):
-    volume_metadata = {}
-    volume_metadata = volume.metadata
-    groupid = volume_metadata.get('storage_group')
-    storage_group_name = ""
-    try:               
-        resp = sdsapi.retrieve_storagegroup(groupid)
-        data = resp.json()
-        storage_group_name = data.get('name')
-    except Exception as e:
-        pass    
-    return storage_group_name
-
 def get_encrypted_value(volume):
     if not hasattr(volume, 'encrypted') or volume.encrypted is None:
         return _("-")
@@ -259,8 +245,6 @@ class VolumesTable(VolumesTableBase):
                              filters=(filters.yesno, filters.capfirst))
     encryption = tables.Column(get_encrypted_value,
                                verbose_name=_("Encrypted"))
-    metadata =  tables.Column(get_storage_group,
-                                verbose_name=_("Storage Group"))
 
     class Meta(object):
         name = "volumes"

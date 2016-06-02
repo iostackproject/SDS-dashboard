@@ -40,7 +40,6 @@ from openstack_dashboard.api import nova
 from openstack_dashboard.dashboards.project.images import utils
 from openstack_dashboard.dashboards.project.instances import tables
 from openstack_dashboard.usage import quotas
-from openstack_dashboard.api import sds_controller_blockstorage as sdsapi
 import json
 
 IMAGE_BACKEND_SETTINGS = getattr(settings, 'OPENSTACK_IMAGE_BACKEND', {})
@@ -77,21 +76,6 @@ def availability_zones(request):
 
     return zone_list
     
-def storage_groups(request):
-    resp = sdsapi.list_storagegroups()
-    if resp.status_code == 200:
-        data = resp.json()
-    else:
-        error_message = 'Unable to retrieve groups information.'
-        raise ValueError(error_message)
-    #
-    storage_groups_list = []
-    for d in data:
-        name = d['name']
-        id = d['id']
-        storage_groups_list.append((id, '%s' % name))        
-    return storage_groups_list
-
 class CreateForm(forms.SelfHandlingForm):
     name = forms.CharField(max_length=255, label=_("Volume Name"),
                            required=False)
@@ -142,7 +126,6 @@ class CreateForm(forms.SelfHandlingForm):
                    'data-switch-on': 'source',
                    'data-source-no_source_type': _('Availability Zone'),
                    'data-source-image_source': _('Availability Zone')}))
-    storage_group = forms.ChoiceField(label=_("Storage Group"))                   
 
     def prepare_source_fields_if_snapshot_specified(self, request):
         try:
@@ -285,9 +268,6 @@ class CreateForm(forms.SelfHandlingForm):
         self.fields['type'].choices = [("no_type", _("No volume type"))] + \
                                     [(type.name, type.name)
                                        for type in volume_types]
-        #mz requesting storage groups
-        self.fields['storage_group'].choices = \
-            storage_groups(request)
         if 'initial' in kwargs and 'type' in kwargs['initial']:
             # if there is a default volume type to select, then remove
             # the first ""No volume type" entry
@@ -337,10 +317,7 @@ class CreateForm(forms.SelfHandlingForm):
                 usages['gigabytesUsed']
             availableVol = usages['maxTotalVolumes'] - usages['volumesUsed']
             #
-            #mz storage groups
             metadata = {}
-            metadata["storage_group"] = data["storage_group"] 
-            #
             snapshot_id = None
             image_id = None
             volume_id = None
@@ -407,7 +384,6 @@ class CreateForm(forms.SelfHandlingForm):
 
             if data['type'] == 'no_type':
                 data['type'] = ''
-
             volume = cinder.volume_create(request,
                                           data['size'],
                                           data['name'],
@@ -424,7 +400,7 @@ class CreateForm(forms.SelfHandlingForm):
         except ValidationError as e:
             self.api_error(e.messages[0])
             return False
-        except Exception:
+        except Exception, e:
             redirect = reverse("horizon:sdscontroller:sds_volumes:index")
             exceptions.handle(request,
                               _("Unable to create volume."),
