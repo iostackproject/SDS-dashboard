@@ -25,6 +25,7 @@ from horizon import forms
 from horizon import messages
 
 from openstack_dashboard.api import sds_controller_blockstorage as api
+from openstack_dashboard.api import cinder
 import json
 
 #create storage group
@@ -103,12 +104,44 @@ class CreateGroup(forms.SelfHandlingForm):
             except Exception as e:                  
                 strobj = "[]"
                 exceptions.handle(self.request, _(e.message))
+        #
+        # Create Volume type
+        try:
+            # Remove any new lines in the public key
+            volume_type = cinder.volume_type_create(
+                request,
+                data['name'])
+            messages.success(request, _('Successfully created volume type: %s')
+                             % data['name'])
+        except Exception as e:
+            if getattr(e, 'code', None) == 409:
+                msg = _('Volume type name "%s" already '
+                        'exists.') % data['name']
+                self._errors['name'] = self.error_class([msg])
+            else:
+                exceptions.handle(self.request, _('Unable to create volume type.'))
+        #
+        # Creating extra specs
+        dspecs={}
+        dspecs['key'] = "sds:storage_group_id"
+        dspecs['value'] = groupid
+        type_id=volume_type.id
+        try:
+            cinder.volume_type_extra_set(request,
+                                             type_id,
+                                             {dspecs['key']: dspecs['value']})
+            msg = _('Created extra spec "%s".') % dspecs['key']
+            messages.success(request, msg)
+        except Exception:
+            exceptions.handle(request,
+                              _("Unable to create volume type extra spec."),
+                              redirect=redirect)
         return data_values
         
 #update storage group
 class UpdateForm(forms.SelfHandlingForm):
     id = forms.IntegerField(widget = forms.HiddenInput())
-    name = forms.CharField(max_length=255,label=_("Storage Group Name"),required=False)
+    name = forms.CharField(max_length=255,label=_("Storage Group Name"),required=False, widget=forms.TextInput(attrs={'readonly':'readonly'}))
     policy = forms.ChoiceField(label=_("Policy"))
     def __init__(self, *args, **kwargs):
         super(UpdateForm, self).__init__(*args, **kwargs)

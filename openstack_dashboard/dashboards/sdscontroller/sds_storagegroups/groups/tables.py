@@ -8,6 +8,7 @@ from horizon import exceptions
 from horizon import messages
 
 from openstack_dashboard.api import sds_controller_blockstorage as api
+from openstack_dashboard.api import cinder
 import requests
 import json
 
@@ -52,7 +53,8 @@ class DeleteGroup(tables.DeleteAction):
         try:
             resp = resp = api.delete_storagegroup(obj_id)
             if 200 <= resp.status_code < 300:
-                messages.success(request, _('Successfully deleted group/rule: %s') % obj_id)
+                messages.success(request, _('Successfully deleted group'))
+                #messages.success(request, _('Successfully deleted group: %s') % obj_id)
             else:
                 raise ValueError(resp.text)
         except Exception as ex:
