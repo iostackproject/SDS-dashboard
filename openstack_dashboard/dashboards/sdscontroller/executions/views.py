@@ -64,8 +64,7 @@ class ExecutionDetailsView(forms.ModalFormMixin, generic.TemplateView):
     @memoized.memoized_method
     def get_object(self):
         try:
-            executions = zoeapi.get_execution_details(self.kwargs["instance_id"])
-            return executions
+            return zoeapi.get_execution_details(self.kwargs["instance_id"])
         except Exception:
             redirect = reverse("horizon:sdscontroller:executions:index")
             exceptions.handle(self.request,
