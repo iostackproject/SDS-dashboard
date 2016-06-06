@@ -49,7 +49,7 @@ class TerminateAction(tables.DeleteAction):
     # is not active, or the instance is being deleted
     def allowed(self, request, execution_instance=None):
         exec_id = execution_instance.id
-        execution = zoeapi.get_execution_details(exec_id)
+        execution, _ = zoeapi.get_execution_details(exec_id)
         return execution['status'] == "running"
 
     def delete(self, request, obj_id):
