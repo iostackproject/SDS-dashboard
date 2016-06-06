@@ -46,7 +46,6 @@ def get_execution_details(exec_id):
     exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
     cont_api = ZoeServiceAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
     exec_details = exec_api.execution_get(exec_id)
-    print("EXECUTION DETAILS: {}".format(type(exec_details)))
     service_details = {}
     for c_id in exec_details['services']:
         c = cont_api.get(c_id)
@@ -62,8 +61,8 @@ def get_execution_details(exec_id):
                                                            'ip': ip,
                                                            'port': p['port_number'],
                                                            'path': p['path']})
-
-    return exec_details, service_details
+    exec_details.update({'service_details': service_details})
+    return exec_details
 
 def new_execution(request, exec_name, app_name):
     print("zoe api: new execution")
