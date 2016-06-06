@@ -46,9 +46,7 @@ def get_execution_details(exec_id):
     exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
     cont_api = ZoeServiceAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
     exec_details = exec_api.execution_get(exec_id)
-    print("*******\n")
-    print(type(exec_details))
-    print("*******\n")
+    print("EXECUTION DETAILS:", type(exec_details))
     service_details = {}
     for c_id in exec_details['services']:
         c = cont_api.get(c_id)
