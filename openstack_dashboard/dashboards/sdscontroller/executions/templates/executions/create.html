@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Launch a Zoe Execution" %}{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=_("Launch a Zoe Execution") %}
+{% endblock page_header %}
+
+{% block main %}
+    {% include 'sdscontoller/executions/_create.html' %}
+{% endblock %}

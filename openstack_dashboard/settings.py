@@ -50,6 +50,11 @@ LOGIN_REDIRECT_URL = None
 STATIC_ROOT = None
 STATIC_URL = None
 
+ALLOWED_HOSTS = [
+    '91.216.54.4',
+    '127.0.0.1',
+]
+
 ROOT_URLCONF = 'openstack_dashboard.urls'
 
 HORIZON_CONFIG = {

@@ -26,11 +26,15 @@ class Dataexploration(horizon.PanelGroup):
     name = _("Data Exploration")
     panels = ('exploration',)
 
+class Zoe(horizon.PanelGroup):
+    slug = "zoe"
+    name = _("Zoe")
+    panels = ('executions', 'zoemonitoring',)
 
 class SDSController(horizon.Dashboard):
     name = _("SDS Controller")
     slug = "sdscontroller"
-    panels = (Objectstorage, Dataexploration,)  # Add your panels here.
+    panels = (Objectstorage, Dataexploration, Zoe)  # Add your panels here.
     default_panel = 'administration'  # Specify the slug of the default panel.
     permissions = ('openstack.roles.admin',)
 

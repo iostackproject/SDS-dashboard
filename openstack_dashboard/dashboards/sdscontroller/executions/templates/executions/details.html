@@ -1,0 +1,9 @@
+{% extends "horizon/common/_modal.html" %}
+{% load i18n %}
+
+{% block modal-header %}{% trans "Execution Details" %}{% endblock %}
+
+{% block modal-body %}
+ {% include 'sdscontoller/executions/_details.html' %}
+{% endblock %}
+
