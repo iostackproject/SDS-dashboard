@@ -46,12 +46,14 @@ def get_execution_details(exec_id):
     exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
     cont_api = ZoeServiceAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
     exec_details = exec_api.execution_get(exec_id)
-    for c_id in exec_details['services']:
-            c = cont_api.get(c_id)
-            ip = list(c['ip_address'].values())[0]  # FIXME how to decide which network is the right one?
-            print('Service {} (ID: {})'.format(c['name'], c['id']))
-            for p in c['ports']:
-                print(' - {}: {}://{}:{}{}'.format(p['name'], p['protocol'], ip, p['port_number'], p['path']))
+    print("*****")
+    print(exec_details.keys())
+    # for c_id in exec_details['services']:
+    #         c = cont_api.get(c_id)
+    #         ip = list(c['ip_address'].values())[0]  # FIXME how to decide which network is the right one?
+    #         print('Service {} (ID: {})'.format(c['name'], c['id']))
+    #         for p in c['ports']:
+    #             print(' - {}: {}://{}:{}{}'.format(p['name'], p['protocol'], ip, p['port_number'], p['path']))
     return exec_details
 
 def new_execution(request, exec_name, app_name):
