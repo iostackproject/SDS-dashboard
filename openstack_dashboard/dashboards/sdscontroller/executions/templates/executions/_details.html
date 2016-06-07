@@ -24,8 +24,8 @@
         <th>{% trans "Service" %}</th>
         <th>{% trans "Image" %}</th>
 
-        {% for el in execution.application.services %}
-{#        {% for el in execution.application.service_details %}#}
+{#        {% for el in execution.application.services %}#}
+       {% for el in execution.application.service_details %}
     <tr>
             <td>{{ el.name }}</td>
 {#            <td>{{ el.docker_image }}</td>#}
