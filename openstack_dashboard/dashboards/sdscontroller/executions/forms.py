@@ -41,6 +41,7 @@ class CreateExecutionForm(forms.SelfHandlingForm):
                                 }), required=False)
 
     def handle(self, request, data):
+        print("executions form: handle")
         try:
             zoeapi.new_execution(request, data['name'], data['app_name'])
             return True
