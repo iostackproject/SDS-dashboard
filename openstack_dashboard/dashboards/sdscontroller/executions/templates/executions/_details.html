@@ -23,12 +23,14 @@
     <table border="1">
         <th>{% trans "Service" %}</th>
         <th>{% trans "Url" %}</th>
+        <th>{% trans "Role" %}</th>
 
 {#        {% for el in execution.application.services %}#}
        {% for el in execution.service_details %}
     <tr>
             <td>{{ el.name }}</td>
             <td>{{ el.details.url }}</td>
+            <td>{{ el.details.name }}</td>
     </tr>
     {% endfor %}
     </table>
