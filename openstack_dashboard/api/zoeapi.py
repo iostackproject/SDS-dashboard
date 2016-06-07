@@ -53,11 +53,11 @@ def get_execution_details(exec_id):
         cont_id = c['id']
         cont_name = c['name']
         #print('Service {} (ID: {})'.format(cont_name, cont_id))
-        tmp = {'name': cont_name, 'list': []}
+        tmp = {'name': cont_name, 'details': {}}
         for p in c['ports']:
             url = "{}://{}:{}{}".format(p['protocol'], ip, p['port_number'], p['path'])
             #print(' - {}: {}'.format(p['name'], url))
-            tmp['list'].append({'name': p['name'], 'url': url})
+            tmp['details'] = {'name': p['name'], 'url': url}
         service_details.append(tmp)
     print(service_details)
     exec_details.update({'service_details': service_details})
