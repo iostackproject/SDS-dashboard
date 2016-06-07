@@ -44,12 +44,17 @@ def terminate_exec(request, exec_id):
 
 def get_user_info(exec_id):
     exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
-    data = exec_api.list()
-    owner = [e['owner'] for e in data if e['id'] == exec_id][0]
     query_api = ZoeQueryAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
-    users = query_api.query('user')
-    gateway = [u['gateway_urls'] for u in users if u['name'] == owner][0]
-    print("zoe owner: {} - {}".format(owner, gateway))
+
+    data = exec_api.list()
+    try:
+        owner = [e['owner'] for e in data if e['id'] == exec_id][0]
+        users = query_api.query('user')
+        gateway = [u['gateway_urls'] for u in users if u['name'] == owner][0]
+        print("zoe owner: {} - {}".format(owner, gateway))
+    except Exception as e:
+        print("exception: {}".format(e))
+        owner = gateway = None
     return owner, gateway
 
 
