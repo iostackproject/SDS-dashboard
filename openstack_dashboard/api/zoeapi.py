@@ -62,7 +62,6 @@ def get_execution_details(exec_id):
                                                            'port': p['port_number'],
                                                            'path': p['path']})
     exec_details.update({'service_details': service_details})
-    print("exec_details: {}".format(exec_details))
     return exec_details
 
 def new_execution(request, exec_name, app_name):
