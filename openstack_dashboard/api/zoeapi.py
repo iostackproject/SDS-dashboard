@@ -51,6 +51,7 @@ def get_execution_details(exec_id):
         ip = list(c['ip_address'].values())[0]  # FIXME how to decide which network is the right one?
         cont_id = c['id']
         cont_name = c['name']
+        print("")
         print('Service {} (ID: {})'.format(cont_name, cont_id))
         for p in c['ports']:
             url = "{}://{}:{}{}".format(p['protocol'], ip, p['port_number'], p['path'])
