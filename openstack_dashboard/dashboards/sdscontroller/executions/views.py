@@ -74,5 +74,6 @@ class ExecutionDetailsView(forms.ModalFormMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ExecutionDetailsView, self).get_context_data(**kwargs)
         context['execution'] = self.get_object()
+        print("contexxxt: {}".format(context['execution'].keys()))
         return context
 
