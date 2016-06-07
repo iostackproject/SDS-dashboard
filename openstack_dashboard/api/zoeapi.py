@@ -60,7 +60,7 @@ def get_execution_details(exec_id):
             tmp['details'] = {'name': p['name'], 'url': url}
         service_details.append(tmp)
     exec_details.update({'service_details': service_details})
-    print(exec_details)
+    print("zoe: {}".format(exec_details))
     return exec_details
 
 def new_execution(request, exec_name, app_name):
