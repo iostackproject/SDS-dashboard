@@ -12,10 +12,14 @@ from zoe_lib.predefined_apps import openmpi_iostack
 URL_BASIC = "http://127.0.0.1:8777"
 
 ZOE_CONF_FILE = "/root/Development/zoe/zoeconf.json"
-with open(ZOE_CONF_FILE ) as conf_file:
+with open(ZOE_CONF_FILE) as conf_file:
     cfg = json.load(conf_file)
     print("Zoe Configuration Loaded")
 
+# Default values
+ZOE_URL = cfg['ZOE_URL']
+ZOE_USER = cfg['ZOE_USER']
+ZOE_PWD = cfg['ZOE_PWD']
 
 @memoized
 def zoe_api(request):
@@ -28,7 +32,7 @@ def exec_list_cmd(request):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
 
-    exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
+    exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     data = exec_api.list()
 
     url = URL_BASIC + "/sdscontroller/executions"
@@ -38,13 +42,13 @@ def exec_list_cmd(request):
 
 def terminate_exec(request, exec_id):
     print("TO TERMINATE: ", exec_id)
-    exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
+    exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     return exec_api.terminate(exec_id)
 
 
 def get_user_info(exec_id):
-    exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
-    query_api = ZoeQueryAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
+    exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
+    query_api = ZoeQueryAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
 
     data = exec_api.list()
     try:
@@ -60,8 +64,8 @@ def get_user_info(exec_id):
 
 def get_execution_details(exec_id):
     #print("zoeapi.py: exec_id = ", exec_id)
-    exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
-    cont_api = ZoeServiceAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
+    exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
+    cont_api = ZoeServiceAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     owner, gateway = get_user_info(exec_id)
     exec_details = exec_api.execution_get(exec_id)
     service_details = []
@@ -81,7 +85,7 @@ def get_execution_details(exec_id):
 
 def new_execution(request, exec_name, app_name):
     print("zoe api: new execution")
-    exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
+    exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     if app_name == 'ipython':
         print("Starting ipython notebook Zoe execution: ", exec_name)
         app_descr = spark_interactive.spark_jupyter_notebook_app()
