@@ -59,7 +59,7 @@ def get_execution_details(exec_id):
             #print(' - {}: {}'.format(p['name'], url))
             tmp['list'].append({'name': p['name'], 'url': url})
         service_details.append(tmp)
-
+    print(service_details)
     exec_details.update({'service_details': service_details})
     return exec_details
 
