@@ -45,7 +45,8 @@ class CreateExecutionForm(forms.SelfHandlingForm):
         try:
             zoeapi.new_execution(request, data['name'], data['app_name'])
             return True
-        except Exception:
+        except Exception as e:
+            print("zoe exception: {}".format(e))
             exceptions.handle(request, _('Unable to create execution.'))
 
 # class CreateExecutionForm(forms.SelfHandlingForm):
