@@ -53,14 +53,14 @@ def get_execution_details(exec_id):
         cont_id = c['id']
         cont_name = c['name']
         # print('Service {} (ID: {})'.format(c['name'], c['id']))
-        service_details[cont_id] = {'service': cont_name, 'containers': []}
+        service_details[cont_name] = []
         for p in c['ports']:
             # print(' - {}: {}://{}:{}{}'.format(p['name'], p['protocol'], ip, p['port_number'], p['path']))
-            service_details[cont_id].append({'name': p['name'],
-                                             'protocol': p['protocol'],
-                                             'ip': ip,
-                                             'port': p['port_number'],
-                                             'path': p['path']})
+            service_details[cont_name].append({'name': p['name'],
+                                               'protocol': p['protocol'],
+                                               'ip': ip,
+                                               'port': p['port_number'],
+                                               'path': p['path']})
     exec_details.update({'service_details': service_details})
     return exec_details
 
