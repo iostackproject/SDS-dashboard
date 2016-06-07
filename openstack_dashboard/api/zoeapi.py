@@ -28,6 +28,7 @@ def zoe_api(request):
 
 
 def exec_list_cmd(request):
+    print("zoe api: exec_list_cmd")
     token = zoe_api(request)
     headers = dict()
     headers["X-Auth-Token"] = str(token)
@@ -42,12 +43,14 @@ def exec_list_cmd(request):
 
 
 def terminate_exec(request, exec_id):
+    print("zoe api: terminate_exec")
     print("TO TERMINATE: ", exec_id)
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     return exec_api.terminate(exec_id)
 
 
 def get_user_info(exec_id):
+    print("zoe api: get_user_info")
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     query_api = ZoeQueryAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
 
@@ -64,6 +67,7 @@ def get_user_info(exec_id):
 
 
 def get_execution_details(exec_id):
+    print("zoe api: get_execution_details")
     #print("zoeapi.py: exec_id = ", exec_id)
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     cont_api = ZoeServiceAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
