@@ -72,8 +72,8 @@ class ExecutionDetailsView(forms.ModalFormMixin, generic.TemplateView):
                               redirect=redirect)
 
     def get_context_data(self, **kwargs):
+        print("zoe execution details view: get_context_data")
         context = super(ExecutionDetailsView, self).get_context_data(**kwargs)
         context['execution'] = self.get_object()
-        print("contexxxt: {}".format(context['execution']['services']))
         return context
 
