@@ -21,16 +21,17 @@
     <dd>{{ execution.time_finished }}</dd>
       <hr>
     <table border="1">
+        <th>{% trans "Role" %}</th>
         <th>{% trans "Service" %}</th>
         <th>{% trans "Url" %}</th>
-        <th>{% trans "Role" %}</th>
+
 
 {#        {% for el in execution.application.services %}#}
        {% for el in execution.service_details %}
     <tr>
-            <td>{{ el.name }}</td>
-            <td>{{ el.details.url }}</td>
             <td>{{ el.details.name }}</td>
+            <td>{{ el.name }}</td>
+            <td><a href="{{ el.details.url }}">{{ el.details.url }}</a></td>
     </tr>
     {% endfor %}
     </table>
