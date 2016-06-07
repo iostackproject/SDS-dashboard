@@ -4,8 +4,8 @@ import json
 from zoe_lib.executions import ZoeExecutionsAPI
 from zoe_lib.services import ZoeServiceAPI
 from zoe_lib.query import ZoeQueryAPI
-from applications.ibm_notebook import ibm_notebook
-from applications.idiada.dyna import openmpi
+#from applications.ibm_notebook import ibm_notebook
+#from applications.idiada.dyna import openmpi
 #from zoe_lib.predefined_apps import spark_interactive
 #from zoe_lib.predefined_apps import wordcount_iostack
 #from zoe_lib.predefined_apps import openmpi_iostack
@@ -86,12 +86,13 @@ def get_execution_details(exec_id):
 def new_execution(request, exec_name, app_name):
     print("zoe api: new execution")
     exec_api = ZoeExecutionsAPI(cfg['ZOE_URL'], cfg['ZOE_USER'], cfg['ZOE_PWD'])
+    app_descr = ''
     if app_name == 'ipython':
         print("Starting ipython notebook Zoe execution: ", exec_name)
-        app_descr = ibm_notebook.spark_jupyter_notebook_ibm_app(name=exec_name)
+        #app_descr = ibm_notebook.spark_jupyter_notebook_ibm_app(name=exec_name)
     elif app_name == 'mpi':
         print("Starting MPI Zoe execution: ", exec_name)
-        app_descr = openmpi.openmpi_app(name="mpidynademo")
+        #app_descr = openmpi.openmpi_app(name="mpidynademo")
     else:
         print("App not supported.")
         return
