@@ -22,13 +22,13 @@
       <hr>
     <table border="1">
         <th>{% trans "Service" %}</th>
-        <th>{% trans "Image" %}</th>
+        <th>{% trans "Url" %}</th>
 
 {#        {% for el in execution.application.services %}#}
        {% for el in execution.service_details %}
     <tr>
             <td>{{ el.name }}</td>
-{#            <td>{{ el.docker_image }}</td>#}
+            <td>{{ el.details.url }}</td>
     </tr>
     {% endfor %}
     </table>
