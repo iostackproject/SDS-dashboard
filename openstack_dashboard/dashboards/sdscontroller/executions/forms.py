@@ -11,7 +11,6 @@ class CreateExecutionForm(forms.SelfHandlingForm):
     app_name = forms.ChoiceField(label=_('App Name'),
                                  choices=[
                                      ('ipython', _('iPython Notebook')),
-                                     ('spark', _('Spark Cluster')),
                                      ('mpi', _('MPI'))],
                                  widget=forms.Select(attrs={
                                         'class': 'switchable',
@@ -39,13 +38,6 @@ class CreateExecutionForm(forms.SelfHandlingForm):
                                 'class': 'switched',
                                 'data-switch-on': 'app_name',
                                 'data-app_name-mpi': _('MPI Cmdline')
-                                }), required=False)
-    sparkcmdline = forms.CharField(max_length=255, label=_("Spark Cluster"),
-                                   initial='--class fr.eurecom.dsg.WordCount wc.jar WC-GBig hdfs://hdfs-namenode.hdfs/datasets/gutenberg/gutenberg_small.txt hdfs://hdfs-namenode.hdfs/tmp/cntwdc1',
-                              widget=forms.TextInput(attrs={
-                                'class': 'switched',
-                                'data-switch-on': 'app_name',
-                                'data-app_name-spark': _('Spark Cmdline')
                                 }), required=False)
 
     def handle(self, request, data):

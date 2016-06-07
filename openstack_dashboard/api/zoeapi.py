@@ -89,11 +89,7 @@ def new_execution(request, exec_name, app_name):
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     if app_name == 'ipython':
         print("Starting ipython notebook Zoe execution: ", exec_name)
-        #app_descr = spark_interactive.spark_jupyter_notebook_app()
-        app_descr = ibm_notebook.create_app()
-    #elif app_name == 'spark':
-    #    print("Starting Spark Cluster Zoe execution: ", exec_name)
-    #    app_descr = wordcount_iostack.iostack_wordcount_app()
+        app_descr = ibm_notebook.create_app(name=exec_name)
     elif app_name == 'mpi':
         print("Starting MPI Zoe execution: ", exec_name)
         app_descr = openmpi_iostack.openmpi_hello_app(name="mpihello")
