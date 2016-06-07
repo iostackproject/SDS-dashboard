@@ -4,6 +4,7 @@ import json
 from zoe_lib.executions import ZoeExecutionsAPI
 from zoe_lib.services import ZoeServiceAPI
 from zoe_lib.query import ZoeQueryAPI
+from applications.ibm_notebook import ibm_notebook
 from zoe_lib.predefined_apps import spark_interactive
 from zoe_lib.predefined_apps import wordcount_iostack
 from zoe_lib.predefined_apps import openmpi_iostack
@@ -88,10 +89,11 @@ def new_execution(request, exec_name, app_name):
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     if app_name == 'ipython':
         print("Starting ipython notebook Zoe execution: ", exec_name)
-        app_descr = spark_interactive.spark_jupyter_notebook_app()
-    elif app_name == 'spark':
-        print("Starting Spark Cluster Zoe execution: ", exec_name)
-        app_descr = wordcount_iostack.iostack_wordcount_app()
+        #app_descr = spark_interactive.spark_jupyter_notebook_app()
+        app_descr = ibm_notebook.create_app()
+    #elif app_name == 'spark':
+    #    print("Starting Spark Cluster Zoe execution: ", exec_name)
+    #    app_descr = wordcount_iostack.iostack_wordcount_app()
     elif app_name == 'mpi':
         print("Starting MPI Zoe execution: ", exec_name)
         app_descr = openmpi_iostack.openmpi_hello_app(name="mpihello")
