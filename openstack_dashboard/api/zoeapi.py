@@ -4,6 +4,7 @@ import json
 from zoe_lib.executions import ZoeExecutionsAPI
 from zoe_lib.services import ZoeServiceAPI
 from zoe_lib.query import ZoeQueryAPI
+from zoe_lib.users import ZoeUserAPI
 from applications.ibm_notebook import ibm_notebook
 #from zoe_lib.predefined_apps import spark_interactive
 #from zoe_lib.predefined_apps import wordcount_iostack
@@ -52,21 +53,16 @@ def terminate_exec(request, exec_id):
 def get_user_info(exec_id):
     print("zoe api: get_user_info for exec_id {}".format(exec_id))
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
-    query_api = ZoeQueryAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
+    user_api = ZoeUserAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     data = exec_api.list()
-    for execution in data:
-        if execution['id'] == exec_id:
-            owner = execution['owner']
-            print("zoe owner: {}".format(owner))
-            users = query_api.query('user')
-            # print("zoe users - query_api {}".format(users))
-            for u in users:
-                if u['owner'] == owner:
-                    gateway = u['gateway_urls'][0]
-                    print("zoe owner {} : gateway = {}".format(owner, gateway))
-                    return owner, gateway
-    return "a", "b"
-
+    execution = [e for e in data if e['id'] == exec_id][0]
+    print("zoe api: execution: {}".format(execution))
+    owner = execution['owner']
+    print("zoe owner: {}".format(owner))
+    user = user_api.get(owner)
+    gateway = user['gateway_urls'][0]
+    print("zoe owner: {} = gateway {}".format(owner, gateway))
+    return owner, gateway
 
 
 def get_execution_details(exec_id):
