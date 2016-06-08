@@ -59,11 +59,15 @@ def get_user_info(exec_id):
         execution = [e for e in data if e['id'] == exec_id][0]
     except:
         print("zoe api: get_user_info: no execution found {}".format(exec_id))
-    owner = user_api.get(execution['owner'])
-    print("zoe api: get_user_info. owner = {}".format(owner))
-    name = owner['owner']
-    gateway = owner['gateway_urls'][0]
-    return name, gateway
+        execution = None
+    if execution:
+        owner = user_api.get(execution['owner'])
+        print("zoe api: get_user_info. owner = {}".format(owner))
+        name = owner['owner']
+        gateway = owner['gateway_urls'][0]
+        return name, gateway
+    else:
+        return '', ''
 
 
 def get_execution_details(exec_id):
