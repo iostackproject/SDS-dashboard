@@ -7,7 +7,7 @@ from zoe_lib.query import ZoeQueryAPI
 from zoe_lib.users import ZoeUserAPI
 
 from applications.ibm_notebook import ibm_notebook
-from zoe_lib.predefined_apps import openmpi_iostack
+from applications.idiada.dyna import openmpi
 
 # TODO: Take parameters from a config file
 URL_BASIC = "http://127.0.0.1:8777"
@@ -101,8 +101,8 @@ def new_execution(request, exec_name, app_name):
         print("Starting ipython notebook Zoe execution: ", exec_name)
         app_descr = ibm_notebook.create_app(app_name=exec_name)
     elif app_name == 'mpi':
-        print("Starting MPI Zoe execution: ", exec_name)
-        app_descr = openmpi_iostack.openmpi_hello_app(name="mpihello")
+        print("Starting MPI Zoe execution")
+        app_descr = openmpi.createapp()
     else:
         print("App not supported.")
         return
