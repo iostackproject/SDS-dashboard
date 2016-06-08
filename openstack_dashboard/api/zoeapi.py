@@ -76,6 +76,7 @@ def get_user_info(exec_id):
 def get_execution_details(exec_id):
     print("zoe api: get_execution_details")
     try:
+        print("zoe api: get_execution_details: found in vault with id = {}".format(exec_id))
         return vault[exec_id]
     except:
         print("zoe api: get_execution_details: no execution found with id = {}".format(exec_id))
