@@ -76,9 +76,7 @@ def get_execution_details(exec_id):
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     cont_api = ZoeServiceAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     owner, gateway = get_user_info(exec_id)
-    print("zoe api: call to get_user_info {} - {}".format(owner, gateway))
     exec_details = exec_api.execution_get(exec_id)
-    exec_details.update({'owner': owner, 'gateway': gateway})
     service_details = []
     for c_id in exec_details['services']:
         c = cont_api.get(c_id)
@@ -90,7 +88,7 @@ def get_execution_details(exec_id):
             url = "{}://{}:{}{}".format(p['protocol'], ip, p['port_number'], p['path'])
             tmp['details'] = {'name': p['name'], 'url': url}
         service_details.append(tmp)
-    exec_details.update({'service_details': service_details})
+    exec_details.update({'service_details': service_details, 'owner': owner, 'gateway': gateway})
     return exec_details
 
 
