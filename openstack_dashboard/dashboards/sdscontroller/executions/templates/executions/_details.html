@@ -35,13 +35,8 @@
     </tr>
     {% endfor %}
     </table>
-{#    {% for el in execution.application.services %}#}
-{#        <dt>{% trans "Service" %}</dt>#}
-{#        <dd>{{ el.name }}</dd>#}
-{#        <dt>{% trans "Image" %}</dt>#}
-{#        <dd>{{ el.docker_image }}</dd>#}
-{#    {% endfor %}#}
-  </dl>
+   </dl>
+<p>Socksv5 proxy for {{ execution.owner }} set up at: {{ execution.gateway }}</p>
 </div>
 {% endblock %}
 
