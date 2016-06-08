@@ -59,7 +59,6 @@ def get_user_info(exec_id):
         execution = [e for e in data if e['id'] == exec_id][0]
     except:
         print("zoe api: get_user_info: no execution found {}".format(exec_id))
-        return None
     owner = user_api.get(execution['owner'])
     print("zoe api: get_user_info. owner = {}".format(owner))
     name = owner['owner']
