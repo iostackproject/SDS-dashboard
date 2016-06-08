@@ -84,7 +84,7 @@ def get_execution_details(exec_id):
             url = "{}://{}:{}{}".format(p['protocol'], ip, p['port_number'], p['path'])
             tmp['details'] = {'name': p['name'], 'url': url}
         service_details.append(tmp)
-    exec_details.update({'service_details': service_details, 'owner': owner, 'gateway': gateway})
+    exec_details.update({'service_details': service_details})
     return exec_details
 
 
