@@ -61,7 +61,7 @@ def get_user_info(exec_id):
                 owner = execution['owner']
                 print("zoe owner: {}".format(owner))
                 users = query_api.query('user')
-                # print("zoe users - query_api {}".format(users))
+                print("zoe users - query_api {}".format(users))
                 for u in users:
                     if u['owner'] == owner:
                         gateway = u['gateway_urls'][0]
@@ -72,7 +72,8 @@ def get_user_info(exec_id):
 
 
 def get_execution_details(exec_id):
-    print("zoe api: get_execution_details for execution {}".format(exec_id))
+    print("zoe api: get_execution_details")
+    #print("zoeapi.py: exec_id = ", exec_id)
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     cont_api = ZoeServiceAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     owner, gateway = get_user_info(exec_id)
