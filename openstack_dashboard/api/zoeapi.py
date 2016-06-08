@@ -60,7 +60,7 @@ def get_user_info(exec_id):
         gateway = [u['gateway_urls'] for u in users if u['name'] == owner][0][0]
         print("zoe owner: {} - {}".format(owner, gateway))
     except Exception as e:
-        print("exception: {}".format(e))
+        print("zoe exception: {}".format(e))
         owner = gateway = None
     return owner, gateway
 
