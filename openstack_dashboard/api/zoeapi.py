@@ -4,9 +4,9 @@ import json
 from zoe_lib.executions import ZoeExecutionsAPI
 from zoe_lib.services import ZoeServiceAPI
 from zoe_lib.query import ZoeQueryAPI
+from zoe_lib.users import ZoeUserAPI
+
 from applications.ibm_notebook import ibm_notebook
-from zoe_lib.predefined_apps import spark_interactive
-from zoe_lib.predefined_apps import wordcount_iostack
 from zoe_lib.predefined_apps import openmpi_iostack
 
 # TODO: Take parameters from a config file
@@ -52,18 +52,19 @@ def terminate_exec(request, exec_id):
 def get_user_info(exec_id):
     print("zoe api: get_user_info")
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
-    query_api = ZoeQueryAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
-
+#    query_api = ZoeQueryAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
+    user_api = ZoeUserAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     data = exec_api.list()
     try:
-        owner = [e['owner'] for e in data if e['id'] == exec_id][0]
-        users = query_api.query('user')
-        gateway = [u['gateway_urls'] for u in users if u['name'] == owner][0][0]
-        print("zoe owner: {} - {}".format(owner, gateway))
-    except Exception as e:
-        print("exception: {}".format(e))
-        owner = gateway = None
-    return owner, gateway
+        execution = [e for e in data if e['id'] == exec_id][0]
+    except:
+        print("zoe api: get_user_info: no execution found {}".format(exec_id))
+        return None
+    owner = user_api.get(execution['owner'])
+    print("zoe api: get_user_info. owner = {}".format(owner))
+    name = owner['owner']
+    gateway = owner['gateway']
+    return name, gateway
 
 
 def get_execution_details(exec_id):
