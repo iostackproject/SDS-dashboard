@@ -77,9 +77,7 @@ def get_execution_details(exec_id):
     owner, gateway = get_user_info(exec_id)
     print("zoe api: call to get_user_info {} - {}".format(owner, gateway))
     exec_details = exec_api.execution_get(exec_id)
-    if not owner or not gateway:
-        print("zoe api: get_execution_details {} - unable to find user or gateway".format(exec_id))
-        return exec_details
+    
     exec_details.update({'owner': owner, 'gateway': gateway})
     service_details = []
     for c_id in exec_details['services']:
