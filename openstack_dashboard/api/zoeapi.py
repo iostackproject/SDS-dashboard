@@ -54,19 +54,14 @@ def get_user_info(exec_id):
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     query_api = ZoeQueryAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     data = exec_api.list()
-    for execution in data:
-        if execution['id'] == exec_id:
-            try:
-                owner = execution['owner'][0]
-                print("zoe owner: {}".format(owner))
-                users = query_api.query('user')
-                for u in users:
-                    if u == owner:
-                        gateway = u['gateway_urls'][0]
-                        print("zoe owner {} : gateway = {}".format(owner, gateway))
-            except Exception as ex:
-                print("zoe exception: {}".format(ex))
-                owner = gateway = None
+    try:
+        owner = [e['owner'] for e in data if e['id'] == exec_id][0]
+        users = query_api.query('user')
+        gateway = [u['gateway_urls'] for u in users if u['name'] == owner][0][0]
+        print("zoe owner: {} - {}".format(owner, gateway))
+    except Exception as e:
+        print("zoe exception: {}".format(e))
+        owner = gateway = None
     return owner, gateway
 
 
