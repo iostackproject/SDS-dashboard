@@ -5,8 +5,8 @@ from zoe_lib.executions import ZoeExecutionsAPI
 from zoe_lib.services import ZoeServiceAPI
 from zoe_lib.query import ZoeQueryAPI
 from applications.ibm_notebook import ibm_notebook
-#from zoe_lib.predefined_apps import spark_interactive
-#from zoe_lib.predefined_apps import wordcount_iostack
+from zoe_lib.predefined_apps import spark_interactive
+from zoe_lib.predefined_apps import wordcount_iostack
 from zoe_lib.predefined_apps import openmpi_iostack
 
 # TODO: Take parameters from a config file
@@ -84,7 +84,7 @@ def get_execution_details(exec_id):
             url = "{}://{}:{}{}".format(p['protocol'], ip, p['port_number'], p['path'])
             tmp['details'] = {'name': p['name'], 'url': url}
         service_details.append(tmp)
-    exec_details.update({'service_details': service_details})
+    exec_details.update({'service_details': service_details, 'owner': owner, 'gateway': gateway})
     return exec_details
 
 
