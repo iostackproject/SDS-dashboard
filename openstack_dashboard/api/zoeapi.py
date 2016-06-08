@@ -50,10 +50,9 @@ def terminate_exec(request, exec_id):
 
 
 def get_user_info(exec_id):
-    print("zoe api: get_user_info")
+    print("zoe api: get_user_info for exec_id {}".format(exec_id))
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     query_api = ZoeQueryAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
-
     data = exec_api.list()
     try:
         owner = [e['owner'] for e in data if e['id'] == exec_id][0]
