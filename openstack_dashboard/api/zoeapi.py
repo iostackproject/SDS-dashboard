@@ -52,15 +52,15 @@ def terminate_exec(request, exec_id):
 def get_user_info(exec_id):
     print("zoe api: get_user_info")
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
-#    query_api = ZoeQueryAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     user_api = ZoeUserAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     data = exec_api.list()
     print("zoe api: get_user_info. data = {}".format([(u['owner'], u['id'], u['name']) for u in data]))
     try:
         execution = [e for e in data if e['id'] == exec_id][0]
         print("zoe api: get_user_info. execution = {}".format(execution['id']))
-    except:
+    except Exception as e:
         print("zoe api: get_user_info: no execution found {}".format(exec_id))
+        print("zoe api: get_user_info: no execution found {}".format(e))
         execution = None
     if execution:
         owner = user_api.get(execution['owner'])
@@ -69,7 +69,7 @@ def get_user_info(exec_id):
         gateway = owner['gateway_urls'][0]
         return name, gateway
     else:
-        return '', ''
+        return '', ''  #FIXME return None?
 
 
 def get_execution_details(exec_id):
