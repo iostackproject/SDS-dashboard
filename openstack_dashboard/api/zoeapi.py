@@ -55,12 +55,7 @@ def get_user_info(exec_id):
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     user_api = ZoeUserAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     data = exec_api.list()
-    executions = [e for e in data if e['id'] == exec_id]
-    if len(executions) == 1:
-        execution = executions[0]
-    else:
-        print("zoe api: get_user_info: no execution with exec_id = {}".format(exec_id))
-        return
+    execution = [e for e in data if e['id'] == exec_id][0]
     print("zoe api: execution: {}".format(execution))
     owner = execution['owner']
     print("zoe owner: {}".format(owner))
@@ -77,9 +72,6 @@ def get_execution_details(exec_id):
     owner, gateway = get_user_info(exec_id)
     print("zoe api: call to get_user_info {} - {}".format(owner, gateway))
     exec_details = exec_api.execution_get(exec_id)
-    if not owner or not gateway:
-        print("zoe api: get_execution_details {} - unable to find user or gateway".format(exec_id))
-        return exec_details
     exec_details.update({'owner': owner, 'gateway': gateway})
     service_details = []
     for c_id in exec_details['services']:
