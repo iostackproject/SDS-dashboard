@@ -61,6 +61,7 @@ def get_user_info(exec_id):
                 owner = execution['owner']
                 print("zoe owner: {}".format(owner))
                 users = query_api.query('user')
+                print("zoe users - query_api {}".format(users))
                 for u in users:
                     if u == owner:
                         gateway = u['gateway_urls']
