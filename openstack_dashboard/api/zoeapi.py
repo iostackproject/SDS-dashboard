@@ -106,7 +106,7 @@ def new_execution(request, exec_name, app_name):
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     if app_name == 'ipython':
         print("Starting ipython notebook Zoe execution: ", exec_name)
-        app_descr = ibm_notebook.create_app(app_name=exec_name)
+        app_descr = ibm_notebook.create_app()
     elif app_name == 'mpi':
         print("Starting MPI Zoe execution")
         app_descr = openmpi.createapp()
