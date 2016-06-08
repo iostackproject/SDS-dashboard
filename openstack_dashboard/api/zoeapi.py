@@ -55,6 +55,7 @@ def get_user_info(exec_id):
 #    query_api = ZoeQueryAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     user_api = ZoeUserAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     data = exec_api.list()
+    print("zoe api: get_user_info. data = {}".format(data))
     try:
         execution = [e for e in data if e['id'] == exec_id][0]
     except:
