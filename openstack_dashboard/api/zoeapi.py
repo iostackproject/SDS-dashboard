@@ -26,6 +26,7 @@ ZOE_PWD = cfg['ZOE_PWD']
 def zoe_api(request):
     return request.user.token.id
 
+vault = {}
 
 def exec_list_cmd(request):
     print("zoe api: exec_list_cmd")
@@ -74,24 +75,29 @@ def get_user_info(exec_id):
 
 def get_execution_details(exec_id):
     print("zoe api: get_execution_details")
-    #print("zoeapi.py: exec_id = ", exec_id)
-    exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
-    cont_api = ZoeServiceAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
-    owner, gateway = get_user_info(exec_id)
-    exec_details = exec_api.execution_get(exec_id)
-    service_details = []
-    for c_id in exec_details['services']:
-        c = cont_api.get(c_id)
-        ip = list(c['ip_address'].values())[0]  # FIXME how to decide which network is the right one?
-        cont_id = c['id']
-        cont_name = c['name']
-        tmp = {'name': cont_name, 'details': {}}
-        for p in c['ports']:
-            url = "{}://{}:{}{}".format(p['protocol'], ip, p['port_number'], p['path'])
-            tmp['details'] = {'name': p['name'], 'url': url}
-        service_details.append(tmp)
-    exec_details.update({'service_details': service_details, 'owner': owner, 'gateway': gateway})
-    return exec_details
+    try:
+        return vault[exec_id]
+    except:
+        print("zoe api: get_execution_details: no execution found with id = {}".format(exec_id))
+        vault[exec_id] = {}
+        exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
+        cont_api = ZoeServiceAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
+        owner, gateway = get_user_info(exec_id)
+        exec_details = exec_api.execution_get(exec_id)
+        service_details = []
+        for c_id in exec_details['services']:
+            c = cont_api.get(c_id)
+            ip = list(c['ip_address'].values())[0]  # FIXME how to decide which network is the right one?
+            cont_id = c['id']
+            cont_name = c['name']
+            tmp = {'name': cont_name, 'details': {}}
+            for p in c['ports']:
+                url = "{}://{}:{}{}".format(p['protocol'], ip, p['port_number'], p['path'])
+                tmp['details'] = {'name': p['name'], 'url': url}
+            service_details.append(tmp)
+        exec_details.update({'service_details': service_details, 'owner': owner, 'gateway': gateway})
+        vault[exec_id].update(exec_details)
+        return vault[exec_id]
 
 
 def new_execution(request, exec_name, app_name):
