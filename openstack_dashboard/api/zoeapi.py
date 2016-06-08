@@ -64,7 +64,7 @@ def get_user_info(exec_id):
                 if u['owner'] == owner:
                     gateway = u['gateway_urls'][0]
                     print("zoe owner {} : gateway = {}".format(owner, gateway))
-                    return "a", "b"
+                    return owner, gateway
 
 
 
