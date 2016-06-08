@@ -63,8 +63,8 @@ def get_user_info(exec_id):
                 users = query_api.query('user')
                 print("zoe users - query_api {}".format(users))
                 for u in users:
-                    if u['owner'] == owner:
-                        gateway = u['gateway_urls'][0]
+                    if u == owner:
+                        gateway = u['gateway_urls']
                         print("zoe owner {} : gateway = {}".format(owner, gateway))
             except Exception as ex:
                 print("zoe exception: {}".format(ex))
