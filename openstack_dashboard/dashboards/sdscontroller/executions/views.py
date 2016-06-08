@@ -61,7 +61,7 @@ class ExecutionDetailsView(forms.ModalFormMixin, generic.TemplateView):
     template_name = 'sdscontroller/executions/details.html'
     page_title = _("Executions Details")
 
-    # @memoized.memoized_method
+    @memoized.memoized_method
     def get_object(self):
         try:
             return zoeapi.get_execution_details(self.kwargs["instance_id"])
