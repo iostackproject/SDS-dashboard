@@ -63,7 +63,7 @@ def get_user_info(exec_id):
     owner = user_api.get(execution['owner'])
     print("zoe api: get_user_info. owner = {}".format(owner))
     name = owner['owner']
-    gateway = owner['gateway']
+    gateway = owner['gateway_urls'][0]
     return name, gateway
 
 
