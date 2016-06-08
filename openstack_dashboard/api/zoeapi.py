@@ -57,16 +57,17 @@ def get_user_info(exec_id):
     owner = gateway = None
     for execution in data:
         if execution['id'] == exec_id:
-            owner = execution['owner']
-            print("zoe owner: {}".format(owner))
-            users = query_api.query('user')
-            # print("zoe users - query_api {}".format(users))
-            for u in users:
-                if u['owner'] == owner:
-                    gateway = u['gateway_urls'][0]
-                    print("zoe owner {} : gateway = {}".format(owner, gateway))
-                    break
-            break
+            try:
+                owner = execution['owner']
+                print("zoe owner: {}".format(owner))
+                users = query_api.query('user')
+                # print("zoe users - query_api {}".format(users))
+                for u in users:
+                    if u['owner'] == owner:
+                        gateway = u['gateway_urls'][0]
+                        print("zoe owner {} : gateway = {}".format(owner, gateway))
+            except Exception as ex:
+                print("zoe exception: {}".format(ex))
     return owner, gateway
 
 
@@ -87,7 +88,8 @@ def get_execution_details(exec_id):
         tmp = {'name': cont_name, 'details': {}}
         for p in c['ports']:
             url = "{}://{}:{}{}".format(p['protocol'], ip, p['port_number'], p['path'])
-            tmp['details'] = {'name': p['name'], 'url': url}
+            #tmp['details'] = {'name': p['name'], 'url': url}
+            tmp['details'] = {'name': owner, 'url': url}
         service_details.append(tmp)
     exec_details.update({'service_details': service_details})
     return exec_details
