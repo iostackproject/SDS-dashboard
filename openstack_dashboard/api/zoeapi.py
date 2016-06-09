@@ -64,7 +64,7 @@ def get_execution_details(exec_id):
     try:
         print("zoe api: get_execution_details: found in vault with id = {}".format(exec_id))
         return vault[exec_id]
-    except:
+    except KeyError:
         print("zoe api: get_execution_details: no execution found with id = {}".format(exec_id))
         vault[exec_id] = {}
         exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
