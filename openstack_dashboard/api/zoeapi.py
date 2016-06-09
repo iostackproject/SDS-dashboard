@@ -93,11 +93,13 @@ def new_execution(request, exec_name, app_name):
     if app_name == 'ipython':
         print("Starting ipython notebook Zoe execution: ", exec_name)
         app_descr = ibm_notebook.create_app()
+        exec_api.execution_start(exec_name, app_descr)
     elif app_name == 'mpi':
         print("Starting MPI Zoe execution")
         app_descr = openmpi.createapp()
+        exec_api.execution_start('mpidynademo', app_descr)
     else:
         print("App not supported.")
         return
-    exec_api.execution_start(exec_name, app_descr)
+
     return "Done"
