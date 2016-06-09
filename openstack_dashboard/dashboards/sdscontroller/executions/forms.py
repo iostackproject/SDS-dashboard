@@ -11,7 +11,7 @@ class CreateExecutionForm(forms.SelfHandlingForm):
     app_name = forms.ChoiceField(label=_('App Name'),
                                  choices=[
                                      ('ipython', _('iPython Notebook')),
-                                     ('mpi', _('MPI'))],
+                                     ('mpi', _('openmpi-dyna'))],
                                  widget=forms.Select(attrs={
                                         'class': 'switchable',
                                         'data-slug': 'app_name'
