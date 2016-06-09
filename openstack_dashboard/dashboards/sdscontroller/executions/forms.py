@@ -19,10 +19,33 @@ class CreateExecutionForm(forms.SelfHandlingForm):
                                  )
 
     name = forms.CharField(max_length=255, label=_("Execution Name"))
-    worker_count = forms.IntegerField(label=_('Worker count'), required=False)
-    worker_memory = forms.IntegerField(label=_('Worker memory limit'), required=False)
-    worker_cores = forms.IntegerField(label=_('Worker cores'), required=False)
-    master_mem_limit = forms.IntegerField(label=_('Master memory limit'), required=False)
+    worker_count = forms.IntegerField(label=_('Worker count'),
+                              widget=forms.TextInput(attrs={
+                                'class': 'switched',
+                                'data-switch-on': 'app_name',
+                                'data-app_name-ipython': _('Worker count')
+                                }), required=False)
+
+    worker_memory = forms.IntegerField(label=_('Worker memory limit'),
+                              widget=forms.TextInput(attrs={
+                                'class': 'switched',
+                                'data-switch-on': 'app_name',
+                                'data-app_name-ipython': _('Worker memory limit')
+                                }), required=False)
+
+    worker_cores = forms.IntegerField(label=_('Worker cores'),
+                              widget=forms.TextInput(attrs={
+                                'class': 'switched',
+                                'data-switch-on': 'app_name',
+                                'data-app_name-ipython': _('Worker cores')
+                                }), required=False)
+
+    master_mem_limit = forms.IntegerField(label=_('Master memory limit'),
+                              widget=forms.TextInput(attrs={
+                                'class': 'switched',
+                                'data-switch-on': 'app_name',
+                                'data-app_name-ipython': _('Master memory limit')
+                                }), required=False)
 
     notebook_mem_limit = forms.IntegerField(label=_("Notebook memory limit"),
                               widget=forms.TextInput(attrs={
