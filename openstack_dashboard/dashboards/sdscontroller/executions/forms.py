@@ -54,14 +54,14 @@ class CreateExecutionForm(forms.SelfHandlingForm):
                                 'data-app_name-ipython': _('Notebook memory limit')
                                 }), required=False)
 
-    mpicmdline = forms.CharField(max_length=255,
-                                 initial='mpirun -np 4 --hostfile ./mpi-helloworld/mpihosts ./mpi-helloworld/MPI_Hello',
-                                 label=_("MPI"),
-                              widget=forms.TextInput(attrs={
-                                'class': 'switched',
-                                'data-switch-on': 'app_name',
-                                'data-app_name-mpi': _('MPI Cmdline')
-                                }), required=False)
+    # mpicmdline = forms.CharField(max_length=255,
+    #                              initial='mpirun -np 4 --hostfile ./mpi-helloworld/mpihosts ./mpi-helloworld/MPI_Hello',
+    #                              label=_("MPI"),
+    #                           widget=forms.TextInput(attrs={
+    #                             'class': 'switched',
+    #                             'data-switch-on': 'app_name',
+    #                             'data-app_name-mpi': _('MPI Cmdline')
+    #                             }), required=False)
 
     def handle(self, request, data):
         print("executions form: handle")
