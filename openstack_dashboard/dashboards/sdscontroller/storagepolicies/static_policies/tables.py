@@ -110,13 +110,14 @@ class UpdateCell(tables.UpdateAction):
         return True
 
 
+# TODO: Check None value for filter_type
 class UpdateRow(tables.Row):
     ajax = True
 
     def get_data(self, request, policy_id):
         response = api.dsl_get_static_policy(request, policy_id)
         data = json.loads(response.text)
-        policy = Policy(data['id'], data['target'], data['filter_id'],
+        policy = Policy(data['id'], data['target'], data['filter_id'], None,
                         data['object_type'], data['object_size'],
                         data['execution_server'], data['execution_server_reverse'],
                         data['execution_order'], data['params'])
@@ -126,7 +127,7 @@ class UpdateRow(tables.Row):
 
 class PoliciesTable(tables.DataTable):
     target = tables.Column('target', verbose_name=_("Target"))
-    filter = tables.Column('filter', verbose_name=_("Filter"))
+    filter_name = tables.Column('filter_name', verbose_name=_("Filter"))
     object_type = tables.Column('object_type', verbose_name="Object Type", form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_size = tables.Column('object_size', verbose_name=_("Object Size"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     execution_server = tables.Column('execution_server', verbose_name="Execution Server", form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)

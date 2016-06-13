@@ -13,6 +13,7 @@ from openstack_dashboard.dashboards.sdscontroller.storagepolicies.static_policie
 from openstack_dashboard.dashboards.sdscontroller.storagepolicies.static_policies import tables as static_policies_tables
 
 
+# TODO: Check None value for filter_type
 class StaticPolicyTab(tabs.TableTab):
     name = _("Static Policies")
     slug = "static_policies_tab"
@@ -35,7 +36,7 @@ class StaticPolicyTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(static_policies_models.Policy(inst["id"], inst['target'], inst['filter'], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
+            ret.append(static_policies_models.Policy(inst["id"], inst['target'], inst['filter'], None, inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
         return ret
 
 

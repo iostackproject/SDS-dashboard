@@ -3,10 +3,11 @@ class Policy:
         Policy class represents the policy data
     """
 
-    def __init__(self, id_, target, filter_, object_type, object_size, execution_server, execution_server_reverse, execution_order, params):
+    def __init__(self, id_, target, filter_name, filter_type, object_type, object_size, execution_server, execution_server_reverse, execution_order, params):
         self.id = target + ':' + id_
         self.target = target
-        self.filter = filter_
+        self.filter_name = filter_name
+        self.filter_type = filter_type
         self.object_type = object_type
         self.object_size = object_size
         self.execution_server = execution_server
