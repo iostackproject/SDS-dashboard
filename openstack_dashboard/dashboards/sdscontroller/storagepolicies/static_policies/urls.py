@@ -7,6 +7,6 @@ VIEWS_MOD = 'openstack_dashboard.dashboards.sdscontroller.storagepolicies.static
 
 urlpatterns = patterns(
     VIEWS_MOD,
-    url(r'^create_policies', views.CreatePolicyView.as_view(), name='create_policy'),
-    url(r'^update/(?P<policy_id>[^/]+)/$', views.UpdatePolicyView.as_view(), name='update_policy'),
+    url(r'^create_policy', views.CreatePolicyView.as_view(), name='create_policy'),
+    url(r'^update_policy/(?P<policy_id>[^/]+)/$', views.UpdatePolicyView.as_view(), name='update_policy'),
 )
