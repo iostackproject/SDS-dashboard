@@ -149,7 +149,7 @@ class UpdateRow(tables.Row):
 class FilterTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
     name = tables.Column('name', verbose_name=_("Name"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    language = tables.Column(lambda x: INTERNAL_LANGUAGES[x.language], verbose_name=_("Language"), form_field=forms.ChoiceField(choices=get_programming_languages()), update_action=UpdateCell)
+    language = tables.Column(lambda x: INTERNAL_LANGUAGES[x.language], verbose_name=_("Filter Type"), form_field=forms.ChoiceField(choices=get_programming_languages()), update_action=UpdateCell)
     interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
