@@ -117,7 +117,7 @@ class UpdateRow(tables.Row):
     def get_data(self, request, policy_id):
         response = api.dsl_get_static_policy(request, policy_id)
         data = json.loads(response.text)
-        policy = Policy(data['id'], data['target'], data['filter_id'], None,
+        policy = Policy(data['id'], data['target'], data['filter_id'],
                         data['object_type'], data['object_size'],
                         data['execution_server'], data['execution_server_reverse'],
                         data['execution_order'], data['params'])
