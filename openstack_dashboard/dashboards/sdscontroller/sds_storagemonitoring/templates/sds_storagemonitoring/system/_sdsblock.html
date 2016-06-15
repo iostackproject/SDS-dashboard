@@ -2,11 +2,6 @@
 
 <div class="row">
     <div class="col-sm-12">
-		<iframe src="http://{{ ip_host }}/app/kibana#/dashboard/dashboard_hare?embed=true&_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-15m,mode:quick,to:now))&_a=(filters:!(),options:(darkTheme:!f),panels:!((col:1,id:read_bw_hare_vis,panelIndex:1,row:1,size_x:3,size_y:2,type:visualization),(col:4,id:write_bw_hare_vis,panelIndex:2,row:1,size_x:3,size_y:2,type:visualization)),query:(query_string:(analyze_wildcard:!t,query:'*')),title:dashboard_hare,uiState:())" height="600" width="800"></iframe>
-        <!-- TODO iphost http://10.0.16.152:5601-->
-<!--
-        <iframe src="http://{{ ip_host }}/app/kibana#/dashboard/16_100_elktest_dashboard?embed=true&_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-1h,mode:quick,to:now))&_a=(filters:!(),options:(darkTheme:!f),panels:!((col:1,id:'16_100_elktest_read_ios_vis',panelIndex:1,row:1,size_x:6,size_y:3,type:visualization),(col:7,id:'16_100_elktest_write_ios_vis',panelIndex:2,row:1,size_x:6,size_y:3,type:visualization),(col:1,id:'16_100_elktest_readbandwidth_vis',panelIndex:3,row:4,size_x:6,size_y:3,type:visualization),(col:7,id:'16_100_elktest_writebandwidth_vis',panelIndex:4,row:4,size_x:6,size_y:3,type:visualization)),query:(query_string:(analyze_wildcard:!t,query:'*')),title:'16_100_elktest_dashboard',uiState:(P-1:(vis:(legendOpen:!f)),P-2:(vis:(legendOpen:!f)),P-3:(vis:(legendOpen:!f)),P-4:(vis:(legendOpen:!f))))" height="1000" width="1000"></iframe>    
--->
+<iframe src="http://{{ ip_host }}/app/kibana#/dashboard?embed=true&_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-15m,mode:quick,to:now))&_a=(filters:!(),options:(darkTheme:!f),panels:!((col:1,id:mpstor_volume_read_bw_vis,panelIndex:1,row:1,size_x:6,size_y:4,type:visualization),(col:7,id:mpstor_volume_write_bw_vis,panelIndex:2,row:1,size_x:6,size_y:4,type:visualization)),query:(query_string:(analyze_wildcard:!t,query:'metric:test3')),title:'New%20Dashboard',uiState:())" height="600" width="800"></iframe>
     </div>
-</div>
 </div>
