@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
-
 {% load i18n %}
 
 {% block page_header %}
-{% include "sdscontroller/storagemonitoring/index.html" with title=_("Monitoring System") %}
+    {% include "sdscontroller/storagemonitoring/index.html" with title=_("Monitoring System") %}
 {% endblock page_header %}
 {% block main %}
-<iframe src="http://{{ ip_host }}:8089/goto/8234fc3da5ec51c05a930a69ff038313" height="672" width="100%"></iframe>
-<!--<iframe src="http://{{ ip_host }}:8089/goto/9ae36ab80e33b6570d476d0a8092a48d" height="800" width=100%></iframe>-->
+    <iframe src="http://{{ ip_host }}:8089/goto/3d4ec893fe6677da75bf306a28921f0b" height="672" width="100%"></iframe>
 {% endblock %}
