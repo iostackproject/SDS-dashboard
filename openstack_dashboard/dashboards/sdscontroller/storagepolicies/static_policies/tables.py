@@ -93,10 +93,12 @@ class UpdateCell(tables.UpdateAction):
             # TODO: Check only the valid keys, delete the rest
             if 'id' in data:  # PUT does not allow this key
                 del data['id']
-            if 'target' in data:  # PUT does not allow this key
-                del data['target']
-            if 'filter' in data:  # PUT does not allow this key
-                del data['filter']
+            if 'target_id' in data:  # PUT does not allow this key
+                del data['target_id']
+            if 'target_name' in data:  # PUT does not allow this key
+                del data['target_name']
+            if 'filter_name' in data:  # PUT does not allow this key
+                del data['filter_name']
 
             api.dsl_update_static_policy(request, policy_id, data)
         except Conflict:
@@ -117,16 +119,16 @@ class UpdateRow(tables.Row):
     def get_data(self, request, policy_id):
         response = api.dsl_get_static_policy(request, policy_id)
         data = json.loads(response.text)
-        policy = Policy(data['id'], data['target'], data['filter_id'],
-                        data['object_type'], data['object_size'],
-                        data['execution_server'], data['execution_server_reverse'],
-                        data['execution_order'], data['params'])
+        policy = Policy(data['id'], data['target_id'], data['target_name'], data['filter_name'],
+                        data['object_type'], data['object_size'], data['execution_server'],
+                        data['execution_server_reverse'], data['execution_order'], data['params'])
 
         return policy
 
 
 class PoliciesTable(tables.DataTable):
-    target = tables.Column('target', verbose_name=_("Target"))
+    target_id = tables.Column('target_id', verbose_name=_("Target ID"))
+    target_name = tables.Column('target_name', verbose_name=_("Target Name"))
     filter_name = tables.Column('filter_name', verbose_name=_("Filter"))
     object_type = tables.Column('object_type', verbose_name="Object Type", form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_size = tables.Column('object_size', verbose_name=_("Object Size"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)

@@ -83,8 +83,7 @@ class UpdatePolicy(forms.SelfHandlingForm):
 
     def handle(self, request, data):
         try:
-            policy_id = self.initial['target'] + ':' + self.initial['id']
-            # print("\n#################\n", request, "\n#################\n", data, "\n#################\n")
+            policy_id = self.initial['target_id'] + ':' + self.initial['id']
             response = api.dsl_update_static_policy(request, policy_id, data)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully policy updated.'))
