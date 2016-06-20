@@ -37,10 +37,12 @@ class CreatePolicy(forms.SelfHandlingForm):
 class UpdatePolicy(forms.SelfHandlingForm):
     object_type = forms.CharField(max_length=255,
                                   label=_("Object Type"),
+                                  required=False,
                                   help_text=_("The type of object which the rule will be apply."))
 
     object_size = forms.CharField(max_length=255,
                                   label=_("Object Size"),
+                                  required=False,
                                   help_text=_("The size of object which the rule will be apply."))
 
     execution_server = forms.ChoiceField(
