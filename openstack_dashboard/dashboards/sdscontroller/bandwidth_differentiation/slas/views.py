@@ -30,7 +30,7 @@ class UpdateView(forms.ModalFormView):
     modal_header = _("Update A SLA")
     submit_label = _("Update SLA")
     submit_url = "horizon:sdscontroller:bandwidth_differentiation:slas:update_sla"
-    template_name = "sdscontroller/bandwidth_differentiation/slas/create.html"
+    template_name = "sdscontroller/bandwidth_differentiation/slas/update.html"
     context_object_name = "sla"
     success_url = reverse_lazy("horizon:sdscontroller:bandwidth_differentiation:index")
     page_title = _("Update A SLA")
