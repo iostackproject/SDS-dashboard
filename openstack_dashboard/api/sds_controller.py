@@ -598,6 +598,19 @@ def dsl_delete_tenant_group_member(request, group_name, tenant_id):
     return r
 
 
+# # Registry DSL - Object Types
+def dsl_get_all_object_types(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/object_type"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
 ############################## # Filters API # ##############################
 # Filters - Filters
 def fil_create_filter(request, data):

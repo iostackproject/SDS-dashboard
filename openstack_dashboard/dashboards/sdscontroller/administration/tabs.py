@@ -12,6 +12,8 @@ from openstack_dashboard.dashboards.sdscontroller.administration.filters import 
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.groups import models as group_models
 from openstack_dashboard.dashboards.sdscontroller.administration.groups import tables as group_tables
+from openstack_dashboard.dashboards.sdscontroller.administration.object_types import models as object_types_models
+from openstack_dashboard.dashboards.sdscontroller.administration.object_types import tables as object_types_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import models as registry_models
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import tables as registry_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.tenants import models as tenant_models
@@ -155,7 +157,32 @@ class Groups(tabs.TableTab):
         return ret
 
 
+class ObjectTypes(tabs.TableTab):
+    table_classes = (object_types_tables.ObjectTypesTable,)
+    name = _("Object Types")
+    slug = "object_types_table"
+    template_name = ("horizon/common/_detail_table.html")
+
+    def get_object_types_data(self):
+        ret = []
+        try:
+            response = api.dsl_get_all_object_types(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get object types.'
+                raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        object_types = json.loads(strobj)
+        for ot in object_types:
+            ret.append(object_types_models.ObjectType(ot['name'], ', '.join(ot['types_list'])))
+        return ret
+
+
 class MypanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
-    tabs = (RegistryTab, Filters, Dependencies, TenantList, Groups,)
+    tabs = (RegistryTab, Filters, Dependencies, TenantList, Groups, ObjectTypes, )
     sticky = True
