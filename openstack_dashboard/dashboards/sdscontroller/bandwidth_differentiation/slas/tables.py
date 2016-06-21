@@ -22,7 +22,7 @@ class MyFilterAction(tables.FilterAction):
 class CreateSLA(tables.LinkAction):
     name = "create"
     verbose_name = _("Create SLA")
-    url = "horizon:sdscontroller:bandwidth_differentiation:slas:upload"
+    url = "horizon:sdscontroller:bandwidth_differentiation:slas:create_sla"
     classes = ("ajax-modal",)
     icon = "plus"
 
@@ -33,14 +33,14 @@ class UpdateSLA(tables.LinkAction):
     icon = "pencil"
     classes = ("ajax-modal", "btn-update",)
 
-    def get_link_url(self, sla):
-        base_url = reverse("horizon:sdscontroller:bandwidth_differentiation:slas:update", kwargs={'sla_id': sla.id})
+    def get_link_url(self, datum=None):
+        base_url = reverse("horizon:sdscontroller:bandwidth_differentiation:slas:update_sla", kwargs={"sla_id": datum.id})
         return base_url
 
 
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
-        return cell.column.name == 'bandwidth'
+        return cell.column.name == "bandwidth"
 
     def update_cell(self, request, datum, id, cell_name, new_cell_value):
         try:
@@ -67,7 +67,7 @@ class UpdateRow(tables.Row):
         response = api.bw_get_sla(request, id)
         data = json.loads(response.text)
 
-        sla = SLA(data['tenant'], data['policy'], data['bandwidth'])
+        sla = SLA(data["tenant_id"], data["tenant_name"], data["policy_id"], data["policy_name"], data["bandwidth"])
         return sla
 
 
@@ -95,7 +95,7 @@ class DeleteSLA(tables.DeleteAction):
         try:
             response = api.bw_delete_sla(request, obj_id)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully deleted sla: %s') % obj_id)
+                messages.success(request, _("Successfully deleted sla: %s") % obj_id)
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:
@@ -109,9 +109,10 @@ class DeleteMultipleSLAs(DeleteSLA):
 
 
 class SLAsTable(tables.DataTable):
-    tenant = tables.Column('tenant', verbose_name=_("Tenant"))
-    policy = tables.Column('policy', verbose_name=_("Policy"))
-    bandwidth = tables.Column('bandwidth', verbose_name=_("Bandwidth"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    tenant_id = tables.Column("tenant_id", verbose_name=_("Tenant ID"))
+    tenant_name = tables.Column("tenant_name", verbose_name=_("Tenant Name"))
+    policy_name = tables.Column("policy_name", verbose_name=_("Policy"))
+    bandwidth = tables.Column("bandwidth", verbose_name=_("Bandwidth"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
 
     class Meta:
         name = "slas"

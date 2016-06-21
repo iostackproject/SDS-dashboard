@@ -9,19 +9,19 @@ from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexcept
 
 
 class CreateSLA(forms.SelfHandlingForm):
-    tenant = forms.CharField(max_length=255,
-                             label=_("Tenant"),
-                             help_text=_("Tenant identificator."),
-                             widget=forms.TextInput(
-                                 attrs={"ng-model": "tenant", "not-blank": ""}
-                             ))
+    tenant_id = forms.CharField(max_length=255,
+                                label=_("Tenant ID"),
+                                help_text=_("Tenant identificator."),
+                                widget=forms.TextInput(
+                                    attrs={"ng-model": "tenant_id", "not-blank": ""}
+                                ))
 
-    policy = forms.CharField(max_length=255,
-                             label=_("Policy"),
-                             help_text=_("The policy that you want to assign to the specific tenant."),
-                             widget=forms.TextInput(
-                                 attrs={"ng-model": "policy", "not-blank": ""}
-                             ))
+    policy_id = forms.CharField(max_length=255,
+                                label=_("Policy ID"),
+                                help_text=_("The policy that you want to assign to the specific tenant."),
+                                widget=forms.TextInput(
+                                    attrs={"ng-model": "policy_id", "not-blank": ""}
+                                ))
 
     bandwidth = forms.CharField(max_length=255,
                                 label=_("Bandwidth"),
@@ -39,7 +39,7 @@ class CreateSLA(forms.SelfHandlingForm):
         try:
             response = api.bw_add_sla(request, data)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully SLA creation.'))
+                messages.success(request, _("Successfully SLA creation."))
                 return data
             else:
                 raise sdsexception.SdsException(response.text)
@@ -60,10 +60,10 @@ class UpdateSLA(forms.SelfHandlingForm):
 
     def handle(self, request, data):
         try:
-            sla_id = self.initial['id']
+            sla_id = self.initial["id"]
             response = api.bw_update_sla(request, sla_id, data)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully sla update.'))
+                messages.success(request, _("Successfully sla update."))
                 return data
             else:
                 raise sdsexception.SdsException(response.text)
