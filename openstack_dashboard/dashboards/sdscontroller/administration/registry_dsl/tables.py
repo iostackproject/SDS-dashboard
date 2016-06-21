@@ -82,10 +82,10 @@ class UpdateCell(tables.UpdateAction):
         # inline update project info
         try:
             # updating changed value by new value
-	    response = api.dsl_get_filter_metadata(request, name)
-	    data = json.loads(response.text)
-	    data[cell_name] = new_cell_value
-	    api.dsl_update_filter(request,name,data)
+            response = api.dsl_get_filter_metadata(request, name)
+            data = json.loads(response.text)
+            data[cell_name] = new_cell_value
+            api.dsl_update_filter(request,name,data)
         except Conflict:
             # Returning a nice error message about name conflict. The message
             # from exception is not that clear for the user
@@ -101,8 +101,8 @@ class UpdateRow(tables.Row):
     def get_data(self, request, name):
         response = api.dsl_get_filter_metadata(request, name)
         data = json.loads(response.text)
-	filter= Filter(data['identifier'],name, data['activation_url'],data['valid_parameters'],'filter name')
-	return filter
+        filter= Filter(data['identifier'],name, data['activation_url'],data['valid_parameters'],'filter name')
+        return filter
 
 
 class DeleteMultipleDslFilters(DeleteDslFilter):
@@ -118,10 +118,10 @@ class DslFilterTable(tables.DataTable):
     def __init__(self, request, data=None, needs_form_wrapper=None, **kwargs):
         self.filter_list = self.get_filter_list(request)
         super(DslFilterTable,self).__init__(request, data=data,needs_form_wrapper=needs_form_wrapper, **kwargs)
-    	self.columns['filter_identifier'].get_form_field  = forms.ChoiceField(choices=[])
+        self.columns['filter_identifier'].get_form_field  = forms.ChoiceField(choices=[])
 
     def get_filter_list(self,request):
-    	try:
+        try:
            response = api.fil_list_filters(request)
            if 200 <= response.status_code < 300:
                strobj = response.text
@@ -141,9 +141,9 @@ class DslFilterTable(tables.DataTable):
     class Meta:
         name = "dsl_filters"
         verbose_name = _("Filters")
-	row_class = UpdateRow
+        row_class = UpdateRow
         table_actions = (MyFilterAction, CreateFilter, DeleteMultipleDslFilters,)
-	row_actions = (UpdateFilter,DeleteDslFilter,)
+        row_actions = (UpdateFilter,DeleteDslFilter,)
 
 class InstancesTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_("Name"))
