@@ -1,12 +1,16 @@
+import json
+
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 
 from horizon import exceptions
+from horizon import forms
 from horizon import messages
 from horizon import tables
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
+from openstack_dashboard.dashboards.sdscontroller.administration.object_types.models import ObjectType
 
 
 class MyFilterAction(tables.FilterAction):
@@ -56,12 +60,44 @@ class DeleteObjectType(tables.DeleteAction):
                               redirect=redirect)
 
 
+class UpdateCell(tables.UpdateAction):
+    def allowed(self, request, datum, cell):
+        return cell.column.name == 'extensions'
+
+    def update_cell(self, request, datum, obj_id,
+                    cell_name, new_cell_value):
+        # inline update object type info
+        try:
+            # updating changed value by new value
+            # response = api.dsl_get_object_type(request, obj_id)
+            # data = json.loads(response.text)
+            if cell_name == 'extensions':
+                extensions = [x.strip() for x in new_cell_value.split(',')]
+                api.dsl_update_object_type(request, obj_id, extensions)
+        except Exception:
+            exceptions.handle(request, ignore=True)
+            return False
+        return True
+
+
+class UpdateRow(tables.Row):
+    ajax = True
+
+    def get_data(self, request, name):
+        response = api.dsl_get_object_type(request, name)
+        data = json.loads(response.text)
+        objectType= ObjectType(data["name"], ', '.join(data["types_list"]))
+        return objectType
+
+
 class ObjectTypesTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
-    extensions = tables.Column('extensions', verbose_name=_("Extensions"))
+    extensions = tables.Column('extensions', verbose_name=_("Extensions"), form_field=forms.CharField(max_length=255),
+                               update_action=UpdateCell)
 
     class Meta:
         name = "object_types"
         verbose_name = _("Object Types")
-        table_actions = (MyFilterAction,CreateObjectType,)
+        row_class = UpdateRow
+        table_actions = (MyFilterAction, CreateObjectType,)
         row_actions = (DeleteObjectType,)

@@ -98,6 +98,7 @@ class UpdateCell(tables.UpdateAction):
 
 class UpdateRow(tables.Row):
     ajax = True
+
     def get_data(self, request, name):
         response = api.dsl_get_filter_metadata(request, name)
         data = json.loads(response.text)
