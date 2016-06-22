@@ -611,6 +611,62 @@ def dsl_get_all_object_types(request):
     r = requests.get(url, headers=headers)
     return r
 
+
+def dsl_create_object_type(request, name, extensions):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/object_type"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    parameters = {"name": str(name), "types_list": extensions}
+
+    r = requests.post(url, json.dumps(parameters), headers=headers)
+    return r
+
+
+def dsl_get_object_type(request, object_type_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/object_type/" + str(object_type_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def dsl_update_object_type(request, object_type_id, extensions):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/object_type/" + str(object_type_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(extensions), headers=headers)
+    return r
+
+
+def dsl_delete_object_type(request, object_type_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/object_type/" + str(object_type_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+
 ############################## # Filters API # ##############################
 # Filters - Filters
 def fil_create_filter(request, data):
