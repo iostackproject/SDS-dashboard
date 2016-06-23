@@ -12,6 +12,8 @@ from openstack_dashboard.dashboards.sdscontroller.administration.filters import 
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.groups import models as group_models
 from openstack_dashboard.dashboards.sdscontroller.administration.groups import tables as group_tables
+from openstack_dashboard.dashboards.sdscontroller.administration.metric_modules import models as metric_module_models
+from openstack_dashboard.dashboards.sdscontroller.administration.metric_modules import tables as metric_module_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.object_types import models as object_types_models
 from openstack_dashboard.dashboards.sdscontroller.administration.object_types import tables as object_types_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import models as registry_models
@@ -49,32 +51,6 @@ class RegistryTab(tabs.TableTab):
                 raise ValueError(error_message)
             filter = json.loads(strobj)
             ret.append(registry_models.Filter(inst['identifier'], inst['name'], inst['activation_url'], inst['valid_parameters'], filter['name']))
-        return ret
-
-
-class TenantList(tabs.TableTab):
-    table_classes = (tenant_tables.TenantsTable,)
-    name = _("Tenant List")
-    slug = "tenant_list_table"
-    template_name = ("horizon/common/_detail_table.html")
-
-    def get_tenants_data(self):
-        try:
-            response = api.swift_list_tenants(self.request)
-            if 200 <= response.status_code < 300:
-                strobj = response.text
-            else:
-                error_message = 'Unable to get tenants. %s' % response.text
-                raise sdsexception.SdsException(error_message)
-        except Exception as e:
-            strobj = "{}"
-            exceptions.handle(self.request, _(e.message))
-
-        instances = json.loads(strobj)
-        ret = []
-        if "tenants" in instances:
-            for inst in instances["tenants"]:
-                ret.append(tenant_models.Tenant(inst['id'], inst['name'], inst['description'], inst['enabled']))
         return ret
 
 
@@ -132,6 +108,60 @@ class Dependencies(tabs.TableTab):
         return ret
 
 
+class MetricModules(tabs.TableTab):
+    table_classes = (metric_module_tables.FilterTable,)
+    name = _("Workload Metric Modules")
+    slug = "metric_modules_table"
+    template_name = ("horizon/common/_detail_table.html")
+
+    def get_metric_modules_data(self):
+        try:
+            strobj = "[]"
+            # response = api.fil_list_filters(self.request)
+            # if 200 <= response.status_code < 300:
+            #     strobj = response.text
+            # else:
+            #     error_message = 'Unable to get instances.'
+            #     raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        instances = json.loads(strobj)
+        ret = []
+        for inst in instances:
+            ret.append(metric_module_models.MetricModule(inst['id'], inst['name'], inst['interface_version'], inst['object_metadata'],
+                                                         inst['is_put'], inst['is_get'], inst['execution_server'],
+                                                         ))
+        return ret
+
+
+class TenantList(tabs.TableTab):
+    table_classes = (tenant_tables.TenantsTable,)
+    name = _("Tenant List")
+    slug = "tenant_list_table"
+    template_name = ("horizon/common/_detail_table.html")
+
+    def get_tenants_data(self):
+        try:
+            response = api.swift_list_tenants(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get tenants. %s' % response.text
+                raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = "{}"
+            exceptions.handle(self.request, _(e.message))
+
+        instances = json.loads(strobj)
+        ret = []
+        if "tenants" in instances:
+            for inst in instances["tenants"]:
+                ret.append(tenant_models.Tenant(inst['id'], inst['name'], inst['description'], inst['enabled']))
+        return ret
+
+
 class Groups(tabs.TableTab):
     table_classes = (group_tables.GroupsTable,)
     name = _("Groups")
@@ -149,11 +179,10 @@ class Groups(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
 
             instances = eval(strobj)
-            for k, v in instances.iteritems():
+            for k, v in instances.items():
                 ret.append(group_models.Group(k, v))
         except Exception as e:
             exceptions.handle(self.request, _(e.message))
-
         return ret
 
 
@@ -184,5 +213,5 @@ class ObjectTypes(tabs.TableTab):
 
 class MypanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
-    tabs = (RegistryTab, Filters, Dependencies, TenantList, Groups, ObjectTypes, )
+    tabs = (RegistryTab, Filters, Dependencies, MetricModules, TenantList, Groups, ObjectTypes,)
     sticky = True
