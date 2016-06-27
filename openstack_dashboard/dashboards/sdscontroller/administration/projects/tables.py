@@ -1,12 +1,10 @@
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 
-from django.core.urlresolvers import reverse
-
-from horizon import tables
 from horizon import exceptions
 from horizon import messages
-
+from horizon import tables
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
@@ -49,13 +47,13 @@ class CreateGroup(tables.BatchAction):
             exceptions.handle(request, _(error_message), redirect=redirect)
 
 
-class TenantsTable(tables.DataTable):
+class ProjectTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
     name = tables.Column('name', verbose_name=_("Name"))
     description = tables.Column('description', verbose_name=_("Description"))
     enabled = tables.Column('enabled', verbose_name=_("Enabled"))
 
     class Meta:
-        name = "tenants"
-        verbose_name = _("Tenants")
+        name = "projects"
+        verbose_name = _("Projects")
         table_actions = (MyFilterAction, CreateGroup,)
