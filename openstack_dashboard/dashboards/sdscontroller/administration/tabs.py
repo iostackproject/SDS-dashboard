@@ -26,7 +26,7 @@ class RegistryTab(tabs.TableTab):
     table_classes = (registry_tables.DslFilterTable,)
     name = _("Registry DSL")
     slug = "registry_table"
-    template_name = ("horizon/common/_detail_table.html")
+    template_name = "horizon/common/_detail_table.html"
 
     def get_dsl_filters_data(self):
         try:
@@ -49,8 +49,8 @@ class RegistryTab(tabs.TableTab):
             else:
                 error_message = 'Unable to get filters.'
                 raise ValueError(error_message)
-            filter = json.loads(strobj)
-            ret.append(registry_models.Filter(inst['identifier'], inst['name'], inst['activation_url'], inst['valid_parameters'], filter['name']))
+            _filter = json.loads(strobj)
+            ret.append(registry_models.Filter(inst['identifier'], inst['name'], inst['activation_url'], inst['valid_parameters'], _filter['name']))
         return ret
 
 
@@ -58,7 +58,7 @@ class Filters(tabs.TableTab):
     table_classes = (filter_tables.FilterTable,)
     name = _("Filters")
     slug = "filters_table"
-    template_name = ("horizon/common/_detail_table.html")
+    template_name = "horizon/common/_detail_table.html"
 
     def get_filters_data(self):
         try:
@@ -87,7 +87,7 @@ class Dependencies(tabs.TableTab):
     table_classes = (dependency_tables.DependenciesTable,)
     name = _("Dependencies")
     slug = "dependencies_table"
-    template_name = ("horizon/common/_detail_table.html")
+    template_name = "horizon/common/_detail_table.html"
 
     def get_dependencies_data(self):
         try:
@@ -112,7 +112,7 @@ class MetricModules(tabs.TableTab):
     table_classes = (metric_module_tables.FilterTable,)
     name = _("Workload Metric Modules")
     slug = "metric_modules_table"
-    template_name = ("horizon/common/_detail_table.html")
+    template_name = "horizon/common/_detail_table.html"
 
     def get_metric_modules_data(self):
         try:
@@ -140,7 +140,7 @@ class Projects(tabs.TableTab):
     table_classes = (project_tables.ProjectTable,)
     name = _("Projects")
     slug = "projects_table"
-    template_name = ("horizon/common/_detail_table.html")
+    template_name = "horizon/common/_detail_table.html"
 
     def get_projects_data(self):
         try:
@@ -166,7 +166,7 @@ class Groups(tabs.TableTab):
     table_classes = (group_tables.GroupsTable,)
     name = _("Groups")
     slug = "groups_table"
-    template_name = ("horizon/common/_detail_table.html")
+    template_name = "horizon/common/_detail_table.html"
 
     def get_groups_data(self):
         ret = []
@@ -190,7 +190,7 @@ class ObjectTypes(tabs.TableTab):
     table_classes = (object_types_tables.ObjectTypesTable,)
     name = _("Object Types")
     slug = "object_types_table"
-    template_name = ("horizon/common/_detail_table.html")
+    template_name = "horizon/common/_detail_table.html"
 
     def get_object_types_data(self):
         ret = []
@@ -211,7 +211,7 @@ class ObjectTypes(tabs.TableTab):
         return ret
 
 
-class MypanelTabs(tabs.TabGroup):
+class MyPanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
     tabs = (RegistryTab, Filters, Dependencies, MetricModules, Projects, Groups, ObjectTypes,)
     sticky = True
