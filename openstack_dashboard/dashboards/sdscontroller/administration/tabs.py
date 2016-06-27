@@ -156,8 +156,8 @@ class Projects(tabs.TableTab):
 
         instances = json.loads(strobj)
         ret = []
-        if "projects" in instances:
-            for inst in instances["projects"]:
+        if "tenants" in instances:
+            for inst in instances["tenants"]:
                 ret.append(project_models.Project(inst['id'], inst['name'], inst['description'], inst['enabled']))
         return ret
 
