@@ -33,8 +33,8 @@ class UpdateDependency(tables.LinkAction):
     icon = "pencil"
     classes = ("ajax-modal", "btn-update",)
 
-    def get_link_url(self, dependency):
-        base_url = reverse("horizon:sdscontroller:administration:dependencies:update", kwargs={'dependency_id': dependency.id})
+    def get_link_url(self, datum=None):
+        base_url = reverse("horizon:sdscontroller:administration:dependencies:update", kwargs={'dependency_id': datum.id})
         return base_url
 
 
