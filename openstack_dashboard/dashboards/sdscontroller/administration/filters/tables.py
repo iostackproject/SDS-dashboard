@@ -79,8 +79,8 @@ class UpdateFilter(tables.LinkAction):
     icon = "pencil"
     classes = ("ajax-modal", "btn-update",)
 
-    def get_link_url(self, filter):
-        base_url = reverse("horizon:sdscontroller:administration:filters:update", kwargs={'filter_id': filter.id})
+    def get_link_url(self, datum=None):
+        base_url = reverse("horizon:sdscontroller:administration:filters:update", kwargs={'filter_id': datum.id})
         return base_url
 
 
