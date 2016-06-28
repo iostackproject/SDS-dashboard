@@ -24,5 +24,5 @@ urlpatterns = patterns(
     'VIEWS_MOD',
     url(r'^create', views.CreateObjectTypeView.as_view(),
         name='create'),
-    #url(r'^update/(?P<name>[^/]+)/$', views.UpdateObjectTypeView.as_view(), name='update'),
+    url(r'^update/(?P<object_type_id>[^/]+)/$', views.UpdateObjectTypeView.as_view(), name='update'),
 )

@@ -25,6 +25,17 @@ class CreateObjectType(tables.LinkAction):
     icon = "plus"
 
 
+class UpdateObjectType(tables.LinkAction):
+    name = "update"
+    verbose_name = _("Edit")
+    icon = "pencil"
+    classes = ("ajax-modal", "btn-update",)
+
+    def get_link_url(self, datum=None):
+        base_url = reverse("horizon:sdscontroller:administration:object_types:update", kwargs={'object_type_id': datum.id})
+        return base_url
+
+
 class DeleteObjectType(tables.DeleteAction):
     @staticmethod
     def action_present(count):
@@ -69,8 +80,6 @@ class UpdateCell(tables.UpdateAction):
         # inline update object type info
         try:
             # updating changed value by new value
-            # response = api.dsl_get_object_type(request, obj_id)
-            # data = json.loads(response.text)
             if cell_name == 'extensions':
                 extensions = [x.strip() for x in new_cell_value.split(',')]
                 api.dsl_update_object_type(request, obj_id, extensions)
@@ -100,4 +109,4 @@ class ObjectTypesTable(tables.DataTable):
         verbose_name = _("Object Types")
         row_class = UpdateRow
         table_actions = (MyFilterAction, CreateObjectType,)
-        row_actions = (DeleteObjectType,)
+        row_actions = (UpdateObjectType, DeleteObjectType, )

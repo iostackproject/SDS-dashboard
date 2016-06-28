@@ -15,19 +15,19 @@
 """
 Views for managing object types.
 """
-#import json
+import json
 
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-#from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse
 
 from horizon import forms
-#from horizon.utils import memoized
-#from horizon import exceptions
+from horizon.utils import memoized
+from horizon import exceptions
 
 from openstack_dashboard.dashboards.sdscontroller.administration.object_types \
     import forms as ot_forms
-#from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.api import sds_controller as api
 
 
 class CreateObjectTypeView(forms.ModalFormView):
@@ -41,40 +41,39 @@ class CreateObjectTypeView(forms.ModalFormView):
     submit_url = reverse_lazy(
         "horizon:sdscontroller:administration:object_types:create")
 
+class UpdateObjectTypeView(forms.ModalFormView):
+    form_class = ot_forms.UpdateObjectType
+    form_id = "update_object_type_form"
+    modal_header = _("Update Object Type")
+    submit_label = _("Update Object Type")
+    submit_url = "horizon:sdscontroller:administration:object_types:update"
+    template_name = "sdscontroller/administration/object_types/update.html"
+    context_object_name = 'object_type'
+    success_url = reverse_lazy('horizon:sdscontroller:administration:index')
+    page_title = _("Update Object Type")
 
-# class UpdateFilterView(forms.ModalFormView):
-#     form_class = policies_forms.UpdateFilter
-#     form_id = "update_filter_form"
-#     modal_header = _("Update A Filter")
-#     submit_label = _("Update Filter")
-#     submit_url = "horizon:sdscontroller:administration:registry_dsl:update_filter"
-#     template_name = "sdscontroller/administration/registry_dsl/update_filter.html"
-#     context_object_name = 'filter'
-#     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
-#     page_title = _("Update A Filter")
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(UpdateFilterView, self).get_context_data(**kwargs)
-#         context['name'] = self.kwargs['name']
-#         args = (self.kwargs['name'],)
-#         context['submit_url'] = reverse(self.submit_url, args=args)
-#         return context
-#
-#     @memoized.memoized_method
-#     def _get_object(self, *args, **kwargs):
-#         name = self.kwargs['name']
-#         try:
-#             filter = api.dsl_get_filter_metadata(self.request, name)
-# 	    return filter
-#         except Exception:
-#             redirect = self.success_url
-#             msg = _('Unable to retrieve filter details.')
-#             exceptions.handle(self.request, msg, redirect=redirect)
-#
-#     def get_initial(self):
-#         filter = self._get_object()
-# 	name = self.kwargs['name']
-#         initial = json.loads(filter.text)
-# 	initial['name']=name
-# 	print(initial)
-# 	return initial
+    def get_context_data(self, **kwargs):
+        context = super(UpdateObjectTypeView, self).get_context_data(**kwargs)
+        context['object_type_id'] = self.kwargs['object_type_id']
+        args = (self.kwargs['object_type_id'],)
+        context['submit_url'] = reverse(self.submit_url, args=args)
+        return context
+
+    @memoized.memoized_method
+    def _get_object(self, *args, **kwargs):
+        name = self.kwargs['object_type_id']
+        try:
+            object_type = api.dsl_get_object_type(self.request, name)
+            return object_type
+        except Exception:
+            redirect = self.success_url
+            msg = _('Unable to retrieve object type details.')
+            exceptions.handle(self.request, msg, redirect=redirect)
+
+    def get_initial(self):
+        object_type = self._get_object()
+        name = self.kwargs['object_type_id']
+        initial = json.loads(object_type.text)
+        initial['name'] = name
+        initial['extensions'] = ', '.join(initial['types_list'])
+        return initial
