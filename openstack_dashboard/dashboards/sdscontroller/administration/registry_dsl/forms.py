@@ -117,7 +117,6 @@ class UpdateFilter(forms.SelfHandlingForm):
     def __init__(self, request, *args, **kwargs):
         self.filter_list = get_filter_list(self, request)
         super(UpdateFilter, self).__init__(request, *args, **kwargs)
-        print(kwargs['initial'])
         self.fields['filter_identifier'] = forms.ChoiceField(choices=self.filter_list,
                                                              label=_("Filter identifier"),
                                                              help_text=_("Filter identifier to be used."),

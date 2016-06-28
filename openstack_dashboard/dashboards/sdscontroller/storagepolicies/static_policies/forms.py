@@ -1,3 +1,5 @@
+import json
+
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
@@ -6,6 +8,25 @@ from horizon import forms
 from horizon import messages
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
+
+
+def get_object_type_list(self, request):
+    try:
+        response = api.dsl_get_all_object_types(request)
+        if 200 <= response.status_code < 300:
+            strobj = response.text
+        else:
+            error_message = 'Unable to get object types.'
+            raise ValueError(error_message)
+    except Exception as e:
+        strobj = "[]"
+        exceptions.handle(self.request, _(e.message))
+    instances = json.loads(strobj)
+    choices = []
+    for inst in instances:
+        choices.append((inst['name'], inst['name']))
+    object_type_choices = (('', 'None'), ('Object types', choices))
+    return object_type_choices
 
 
 class CreatePolicy(forms.SelfHandlingForm):
@@ -35,10 +56,17 @@ class CreatePolicy(forms.SelfHandlingForm):
 
 
 class UpdatePolicy(forms.SelfHandlingForm):
-    object_type = forms.CharField(max_length=255,
-                                  label=_("Object Type"),
-                                  required=False,
-                                  help_text=_("The type of object which the rule will be apply."))
+    # object_type = forms.CharField(max_length=255,
+    #                               label=_("Object Type"),
+    #                               required=False,
+    #                               help_text=_("The type of object the rule will be applied to."))
+
+    # Empty definition
+    object_type_list = []
+    object_type = forms.ChoiceField(choices=object_type_list,
+                                          label=_("Object Type"),
+                                          help_text=_("The type of object the rule will be applied to."),
+                                          required=False)
 
     object_size = forms.CharField(max_length=255,
                                   label=_("Object Size"),
@@ -79,7 +107,15 @@ class UpdatePolicy(forms.SelfHandlingForm):
                              help_text=_("Parameters list."))
 
     def __init__(self, request, *args, **kwargs):
+        # Obtain list of object types
+        self.object_type_list = get_object_type_list(self, request)
+        # initialization
         super(UpdatePolicy, self).__init__(request, *args, **kwargs)
+        # overwrite object_type input form
+        self.fields['object_type'] = forms.ChoiceField(choices=self.object_type_list,
+                                          label=_("Object Type"),
+                                          help_text=_("The type of object the rule will be applied to."),
+                                          required=False)
 
     failure_url = 'horizon:sdscontroller:storagepolicies:index'
 
@@ -88,7 +124,7 @@ class UpdatePolicy(forms.SelfHandlingForm):
             policy_id = self.initial['target_id'] + ':' + self.initial['id']
             response = api.dsl_update_static_policy(request, policy_id, data)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully policy updated.'))
+                messages.success(request, _('Policy successfully updated.'))
                 return data
             else:
                 raise sdsexception.SdsException(response.text)
