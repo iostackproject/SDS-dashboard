@@ -130,12 +130,26 @@ class PoliciesTable(tables.DataTable):
     target_id = tables.Column('target_id', verbose_name=_("Target ID"))
     target_name = tables.Column('target_name', verbose_name=_("Target Name"))
     filter_name = tables.Column('filter_name', verbose_name=_("Filter"))
-    object_type = tables.Column('object_type', verbose_name="Object Type", form_field=forms.CharField(max_length=255), empty_value=True, update_action=UpdateCell)
-    object_size = tables.Column('object_size', verbose_name=_("Object Size"), form_field=forms.CharField(max_length=255), empty_value=True, update_action=UpdateCell)
-    execution_server = tables.Column('execution_server', verbose_name="Execution Server", form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
-    execution_server_reverse = tables.Column('execution_server_reverse', verbose_name="Execution Server Reverse", form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
-    execution_order = tables.Column('execution_order', verbose_name="Execution Order", form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    params = tables.Column('params', verbose_name="Params", form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    object_type = tables.Column('object_type', verbose_name="Object Type",
+                                form_field=forms.CharField(max_length=255, required=False),
+                                empty_value=True, update_action=UpdateCell)
+    object_size = tables.Column('object_size', verbose_name=_("Object Size"),
+                                form_field=forms.CharField(max_length=255, required=False),
+                                empty_value=True, update_action=UpdateCell)
+    execution_server = tables.Column('execution_server', verbose_name="Execution Server",
+                                     form_field=forms.ChoiceField(
+                                         choices=[('proxy', _('Proxy Server')),
+                                                  ('object', _('Object Storage Servers'))]),
+                                     update_action=UpdateCell)
+    execution_server_reverse = tables.Column('execution_server_reverse', verbose_name="Execution Server Reverse",
+                                             form_field=forms.ChoiceField(
+                                                 choices=[('proxy', _('Proxy Server')),
+                                                          ('object', _('Object Storage Servers'))]),
+                                             update_action=UpdateCell)
+    execution_order = tables.Column('execution_order', verbose_name="Execution Order",
+                                    form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    params = tables.Column('params', verbose_name="Params", form_field=forms.CharField(max_length=255, required=False),
+                           update_action=UpdateCell)
 
     class Meta:
         name = "static_policies"
