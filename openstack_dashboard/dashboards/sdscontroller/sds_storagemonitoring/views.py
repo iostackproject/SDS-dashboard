@@ -11,31 +11,28 @@
 # under the License.
 
 from horizon import views
+from django.utils.translation import ugettext_lazy as _
 
 from openstack_dashboard.dashboards.sdscontroller.sds_storagemonitoring \
     import tabs as mydashboard_tabs
 
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.views.generic.edit import FormView
+from openstack_dashboard.dashboards.sdscontroller.sds_storagemonitoring \
+    import forms as monitoring_forms
 
-class IndexView(views.APIView):
+class IndexView(FormView):
     tab_group_class = mydashboard_tabs.MypanelTabs
+    form_class = monitoring_forms.SelectVolume
     template_name = 'sdscontroller/sds_storagemonitoring/index.html'
 
-    def get_data(self, request, context, *args, **kwargs):
-        #TODO set iphost - Add data to the context here...
-        #context["ip_host"] = request.META['HTTP_HOST'].split(':')[0]
-        context["ip_host"]='10.30.1.6:5601'
-        return context
-#
-# from horizon import tabs
-#
-# from openstack_dashboard.dashboards.sdscontroller.administration \
-#     import tabs as mydashboard_tabs
-#
-#
-# class IndexView(tabs.TabbedTableView):
-#     tab_group_class = mydashboard_tabs.MypanelTabs
-#     template_name = 'sdscontroller/administration/index.html'
-#
-#     def get_data(self, request, context, *args, **kwargs):
-#         # Add data to the context here...
-#         return context
+    def get(self, request, *args, **kwargs):       
+        form = self.form_class(request, *args, **kwargs)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request, *args, **kwargs)
+        volume = request.POST['volume']
+        ip ='10.0.16.206:5601'
+        return render(request, self.template_name, {'form': form, 'ip': ip, 'volume': volume})

@@ -2,6 +2,26 @@
 
 <div class="row">
     <div class="col-sm-12">
-<iframe src="http://{{ ip_host }}/app/kibana#/dashboard?embed=true&_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-15m,mode:quick,to:now))&_a=(filters:!(),options:(darkTheme:!f),panels:!((col:1,id:mpstor_volume_read_bw_vis,panelIndex:1,row:1,size_x:6,size_y:4,type:visualization),(col:7,id:mpstor_volume_write_bw_vis,panelIndex:2,row:1,size_x:6,size_y:4,type:visualization)),query:(query_string:(analyze_wildcard:!t,query:'metric:test3')),title:'New%20Dashboard',uiState:())" height="600" width="800"></iframe>
+    <form class="create" id="create" action="." method="post" name="frmc">
+    {% csrf_token %}
+        <fieldset>
+        {% csrf_token %}
+            {% for field in form %}
+                {{ field.label_tag }}
+                {% if field.errors %}{{ field.errors }}{% endif %}
+                <p>{{ field }}</p>
+            {% endfor %}
+        <div class="button"><input type="submit" value="Update" /></div>
+      </fieldset>
+    </form>
     </div>
+    <div class="col-sm-12">
+        {% if volume %}
+            <iframe src="http://{{ ip }}/app/kibana#/dashboard/mpstor_volume?embed=true&_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-15m,mode:quick,to:now))&_a=(filters:!(),options:(darkTheme:!f),panels:!((col:1,id:volume_read_bw_vis,panelIndex:1,row:1,size_x:11,size_y:2,type:visualization),(col:4,id:volume_write_bw_vis,panelIndex:2,row:1,size_x:11,size_y:2,type:visualization),(col:7,id:volume_read_iops_vis,panelIndex:3,row:1,size_x:11,size_y:2,type:visualization),(col:10,id:volume_write_iops_vis,panelIndex:4,row:1,size_x:11,size_y:2,type:visualization)),query:(query_string:(analyze_wildcard:!t,query:'metric:{{ volume }}')),title:mpstor_volume,uiState:())" height="600" width="800"></iframe>
+        {% else %}
+        <br>
+            <p>Please select a volume to show Monitoring data</p>
+        {% endif %}
+    </div>
+</div>
 </div>
