@@ -10,7 +10,7 @@ from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
-def get_object_type_list(self, request):
+def get_object_type_choices(request):
     try:
         response = api.dsl_get_all_object_types(request)
         if 200 <= response.status_code < 300:
@@ -20,7 +20,7 @@ def get_object_type_list(self, request):
             raise ValueError(error_message)
     except Exception as e:
         strobj = "[]"
-        exceptions.handle(self.request, _(e.message))
+        exceptions.handle(request, _(e.message))
     instances = json.loads(strobj)
     choices = []
     for inst in instances:
@@ -62,8 +62,8 @@ class UpdatePolicy(forms.SelfHandlingForm):
     #                               help_text=_("The type of object the rule will be applied to."))
 
     # Empty definition
-    object_type_list = []
-    object_type = forms.ChoiceField(choices=object_type_list,
+    object_type_choices = []
+    object_type = forms.ChoiceField(choices=object_type_choices,
                                           label=_("Object Type"),
                                           help_text=_("The type of object the rule will be applied to."),
                                           required=False)
@@ -108,11 +108,11 @@ class UpdatePolicy(forms.SelfHandlingForm):
 
     def __init__(self, request, *args, **kwargs):
         # Obtain list of object types
-        self.object_type_list = get_object_type_list(self, request)
+        self.object_type_choices = get_object_type_choices(request)
         # initialization
         super(UpdatePolicy, self).__init__(request, *args, **kwargs)
         # overwrite object_type input form
-        self.fields['object_type'] = forms.ChoiceField(choices=self.object_type_list,
+        self.fields['object_type'] = forms.ChoiceField(choices=self.object_type_choices,
                                           label=_("Object Type"),
                                           help_text=_("The type of object the rule will be applied to."),
                                           required=False)

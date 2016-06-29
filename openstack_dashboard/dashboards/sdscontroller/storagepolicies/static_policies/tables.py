@@ -12,6 +12,7 @@ from horizon import messages
 from horizon import tables
 from models import Policy
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.static_policies import forms as policies_forms
 
 
 class MyFilterAction(tables.FilterAction):
@@ -123,6 +124,9 @@ class UpdateRow(tables.Row):
                         data['object_type'], data['object_size'], data['execution_server'],
                         data['execution_server_reverse'], data['execution_order'], data['params'])
 
+        # Overwrite choices for object_type
+        choices = policies_forms.get_object_type_choices(request)
+        self.table.columns['object_type'].form_field.choices = choices
         return policy
 
 
@@ -131,8 +135,9 @@ class PoliciesTable(tables.DataTable):
     target_name = tables.Column('target_name', verbose_name=_("Target Name"))
     filter_name = tables.Column('filter_name', verbose_name=_("Filter"))
     object_type = tables.Column('object_type', verbose_name="Object Type",
-                                form_field=forms.CharField(max_length=255, required=False),
-                                empty_value=True, update_action=UpdateCell)
+                                form_field=forms.ChoiceField(required=False,
+                                                             choices=[]),
+                                update_action=UpdateCell)
     object_size = tables.Column('object_size', verbose_name=_("Object Size"),
                                 form_field=forms.CharField(max_length=255, required=False),
                                 empty_value=True, update_action=UpdateCell)
