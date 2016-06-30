@@ -95,7 +95,7 @@ class UpdateRow(tables.Row):
     def get_data(self, request, name):
         response = api.dsl_get_object_type(request, name)
         data = json.loads(response.text)
-        objectType= ObjectType(data["name"], ', '.join(data["types_list"]))
+        objectType = ObjectType(data["name"], ', '.join(data["types_list"]))
         return objectType
 
 

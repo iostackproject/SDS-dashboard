@@ -66,8 +66,8 @@ class UpdatePolicy(tables.LinkAction):
     icon = "pencil"
     classes = ("ajax-modal", "btn-update",)
 
-    def get_link_url(self, policy):
-        base_url = reverse("horizon:sdscontroller:storagepolicies:static_policies:update_policy", kwargs={'policy_id': policy.id})
+    def get_link_url(self, datum=None):
+        base_url = reverse("horizon:sdscontroller:storagepolicies:static_policies:update_policy", kwargs={'policy_id': datum.id})
         return base_url
 
 
@@ -76,7 +76,7 @@ class DeleteMultiplePolicies(DeletePolicy):
 
 
 class UpdateCell(tables.UpdateAction):
-    def allowed(self, request, project, cell):
+    def allowed(self, request, datum, cell):
         return ((cell.column.name == 'object_type') or
                 (cell.column.name == 'object_size') or
                 (cell.column.name == 'execution_server') or
@@ -86,22 +86,22 @@ class UpdateCell(tables.UpdateAction):
 
     def update_cell(self, request, datum, policy_id, cell_name, new_cell_value):
         try:
-            # updating changed value by new value
-            response = api.dsl_get_static_policy(request, policy_id)
-            data = json.loads(response.text)
-            data[cell_name] = new_cell_value
+            # # updating changed value by new value
+            # response = api.dsl_get_static_policy(request, policy_id)
+            # data = json.loads(response.text)
+            # data[cell_name] = new_cell_value
+            #
+            # # TODO: Check only the valid keys, delete the rest
+            # if 'id' in data:  # PUT does not allow this key
+            #     del data['id']
+            # if 'target_id' in data:  # PUT does not allow this key
+            #     del data['target_id']
+            # if 'target_name' in data:  # PUT does not allow this key
+            #     del data['target_name']
+            # if 'filter_name' in data:  # PUT does not allow this key
+            #     del data['filter_name']
 
-            # TODO: Check only the valid keys, delete the rest
-            if 'id' in data:  # PUT does not allow this key
-                del data['id']
-            if 'target_id' in data:  # PUT does not allow this key
-                del data['target_id']
-            if 'target_name' in data:  # PUT does not allow this key
-                del data['target_name']
-            if 'filter_name' in data:  # PUT does not allow this key
-                del data['filter_name']
-
-            api.dsl_update_static_policy(request, policy_id, data)
+            api.dsl_update_static_policy(request, policy_id, {cell_name: new_cell_value})
         except Conflict:
             # Returning a nice error message about name conflict. The message
             # from exception is not that clear for the user
@@ -127,6 +127,7 @@ class UpdateRow(tables.Row):
         # Overwrite choices for object_type
         choices = policies_forms.get_object_type_choices(request)
         self.table.columns['object_type'].form_field.choices = choices
+
         return policy
 
 
@@ -140,7 +141,7 @@ class PoliciesTable(tables.DataTable):
                                 update_action=UpdateCell)
     object_size = tables.Column('object_size', verbose_name=_("Object Size"),
                                 form_field=forms.CharField(max_length=255, required=False),
-                                empty_value=True, update_action=UpdateCell)
+                                update_action=UpdateCell)
     execution_server = tables.Column('execution_server', verbose_name="Execution Server",
                                      form_field=forms.ChoiceField(
                                          choices=[('proxy', _('Proxy Server')),
