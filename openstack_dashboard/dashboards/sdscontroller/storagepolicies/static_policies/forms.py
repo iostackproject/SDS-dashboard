@@ -29,7 +29,7 @@ def get_object_type_choices(request):
     return object_type_choices
 
 
-class CreatePolicy(forms.SelfHandlingForm):
+class CreatePolicyDSL(forms.SelfHandlingForm):
     policy = forms.CharField(max_length=255,
                              label=_("Policy/Rule"),
                              widget=forms.Textarea(
@@ -37,13 +37,13 @@ class CreatePolicy(forms.SelfHandlingForm):
                              ))
 
     def __init__(self, request, *args, **kwargs):
-        super(CreatePolicy, self).__init__(request, *args, **kwargs)
+        super(CreatePolicyDSL, self).__init__(request, *args, **kwargs)
 
     @staticmethod
     def handle(request, data):
 
         try:
-            response = api.dsl_add_static_policy(request, data['policy'])
+            response = api.dsl_add_static_policy_dsl(request, data['policy'])
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully created policy/rule: %s') % data['policy'])
                 return data
@@ -64,9 +64,9 @@ class UpdatePolicy(forms.SelfHandlingForm):
     # Empty definition
     object_type_choices = []
     object_type = forms.ChoiceField(choices=object_type_choices,
-                                          label=_("Object Type"),
-                                          help_text=_("The type of object the rule will be applied to."),
-                                          required=False)
+                                    label=_("Object Type"),
+                                    help_text=_("The type of object the rule will be applied to."),
+                                    required=False)
 
     object_size = forms.CharField(max_length=255,
                                   label=_("Object Size"),
@@ -113,9 +113,9 @@ class UpdatePolicy(forms.SelfHandlingForm):
         super(UpdatePolicy, self).__init__(request, *args, **kwargs)
         # overwrite object_type input form
         self.fields['object_type'] = forms.ChoiceField(choices=self.object_type_choices,
-                                          label=_("Object Type"),
-                                          help_text=_("The type of object the rule will be applied to."),
-                                          required=False)
+                                                       label=_("Object Type"),
+                                                       help_text=_("The type of object the rule will be applied to."),
+                                                       required=False)
 
     failure_url = 'horizon:sdscontroller:storagepolicies:index'
 

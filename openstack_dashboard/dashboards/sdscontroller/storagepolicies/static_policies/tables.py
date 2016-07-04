@@ -19,10 +19,10 @@ class MyFilterAction(tables.FilterAction):
     name = "myfilter"
 
 
-class CreatePolicy(tables.LinkAction):
+class CreatePolicyDSL(tables.LinkAction):
     name = "create"
-    verbose_name = _("Create Policy")
-    url = "horizon:sdscontroller:storagepolicies:static_policies:create_policy"
+    verbose_name = _("Create Policy (DSL)")
+    url = "horizon:sdscontroller:storagepolicies:static_policies:create_policy_dsl"
     classes = ("ajax-modal",)
     icon = "plus"
 
@@ -160,6 +160,6 @@ class PoliciesTable(tables.DataTable):
     class Meta:
         name = "static_policies"
         verbose_name = _("Policies")
-        table_actions = (MyFilterAction, CreatePolicy, DeleteMultiplePolicies,)
+        table_actions = (MyFilterAction, CreatePolicyDSL, DeleteMultiplePolicies,)
         row_actions = (UpdatePolicy, DeletePolicy,)
         row_class = UpdateRow

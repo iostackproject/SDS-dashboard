@@ -247,7 +247,7 @@ def remove_storage_nodes(request, storage_node_id):
 
 
 # # Registry DSL - Static Policies
-def dsl_add_static_policy(request, policy):
+def dsl_add_static_policy_dsl(request, policy):
     token = sds_controller_api(request)
     headers = {}
 

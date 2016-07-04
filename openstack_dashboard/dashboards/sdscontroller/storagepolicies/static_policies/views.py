@@ -11,18 +11,18 @@ from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller.storagepolicies.static_policies import forms as policies_forms
 
 
-class CreatePolicyView(forms.ModalFormView):
-    form_class = policies_forms.CreatePolicy
+class CreatePolicyDSLView(forms.ModalFormView):
+    form_class = policies_forms.CreatePolicyDSL
     form_id = "create_policy_form"
 
-    modal_header = _("Create Policy")
-    modal_id = "create_policy_modal"
+    modal_header = _("Create a Policy (DSL)")
+    modal_id = "create_policy_dsl_modal"
     submit_label = _("Create")
-    submit_url = reverse_lazy("horizon:sdscontroller:storagepolicies:static_policies:create_policy")
-    template_name = 'sdscontroller/storagepolicies/static_policies/create_policy.html'
+    submit_url = reverse_lazy("horizon:sdscontroller:storagepolicies:static_policies:create_policy_dsl")
+    template_name = 'sdscontroller/storagepolicies/static_policies/create_policy_dsl.html'
     content_object_name = 'policy'
-    success_url = reverse_lazy('horizon:sdscontroller:storagepolicies:policy_tab')
-    page_title = _("Create a Policy")
+    success_url = reverse_lazy('horizon:sdscontroller:storagepolicies:index')
+    page_title = _("Create a Policy (DSL)")
 
 
 class UpdatePolicyView(forms.ModalFormView):
