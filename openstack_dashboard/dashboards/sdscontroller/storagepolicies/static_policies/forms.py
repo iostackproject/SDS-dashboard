@@ -116,7 +116,7 @@ class CreatePolicy(forms.SelfHandlingForm):
         try:
             response = api.fil_deploy_filter(request, data['filter_id'], data['target_id'], data)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully created policy/rule: %s') % data['policy'])
+                messages.success(request, _('Successfully created simple policy/rule!'))
                 return data
             else:
                 raise ValueError(response.text)
