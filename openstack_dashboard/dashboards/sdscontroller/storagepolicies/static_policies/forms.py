@@ -58,12 +58,12 @@ class CreatePolicyDSL(forms.SelfHandlingForm):
 class CreatePolicy(forms.SelfHandlingForm):
     target_id = forms.CharField(max_length=255,
                                 label=_("Target ID"),
-                                required=False,
+                                required=True,
                                 help_text=_("The target where the rule will be apply."))
 
     filter_id = forms.CharField(max_length=255,
                                 label=_("Filter ID"),
-                                required=False,
+                                required=True,
                                 help_text=_("The id of the filter which will be used."))
 
     # Empty definition
