@@ -150,3 +150,13 @@ def retrieve_controller(node):
 
     r = requests.get(url, headers=headers)
     return r
+    
+################################# Volumes ##################################
+def list_volumes(request):
+    #token = sds_controller_api(request)
+    headers = {'API-Version':'0'}
+
+    url = URL_BASIC + "volumes"
+
+    r = requests.get(url, headers=headers)
+    return r    
