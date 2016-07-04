@@ -757,9 +757,9 @@ def fil_deploy_filter(request, filter_id, account_id, parameters):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"params": str(parameters)}
+    params = {"params": json.dumps(parameters)}
 
-    r = requests.put(url, json.dumps(parameters), headers=headers)
+    r = requests.put(url, json.dumps(params), headers=headers)
     return r
 
 
