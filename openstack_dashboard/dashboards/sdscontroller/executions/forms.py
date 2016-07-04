@@ -38,11 +38,7 @@ class CreateExecutionForm(forms.SelfHandlingForm):
 
     worker_memory = forms.IntegerField(label=_('Worker memory limit (GB)'),
                                        initial=12,
-                                       widget=forms.TextInput(attrs={
-                                           'class': 'switched',
-                                           'data-switch-on': 'app_name',
-                                           'data-app_name-ipython': _('Worker memory limit')
-                                        }), required=False)
+                                       required=False)
 
     master_mem_limit = forms.IntegerField(label=_('Master memory limit (MB)'),
                                           initial=512,
@@ -60,10 +56,11 @@ class CreateExecutionForm(forms.SelfHandlingForm):
                                                 'data-app_name-ipython': _('Notebook memory limit')
                                             }), required=False)
 
+
     def handle(self, request, data):
         print("executions form: handle")
         try:
-            zoeapi.new_execution(request, data['name'], data['app_name'])
+            zoeapi.new_execution(request, data['name'], data['app_name'], data)
             return True
         except Exception as e:
             print("zoe exception: {}".format(e))

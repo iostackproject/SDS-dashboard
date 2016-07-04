@@ -6,8 +6,8 @@ from zoe_lib.services import ZoeServiceAPI
 from zoe_lib.query import ZoeQueryAPI
 from zoe_lib.users import ZoeUserAPI
 
-from applications.ibm_notebook import ibm_notebook
-from applications.idiada.dyna import openmpi
+import openstack_dashboard.api.zoeapps as zapps
+
 
 # TODO: Take parameters from a config file
 URL_BASIC = "http://127.0.0.1:8777"
@@ -87,16 +87,32 @@ def get_execution_details(exec_id):
         return vault[exec_id]
 
 
-def new_execution(request, exec_name, app_name):
+def new_execution(request, exec_name, app_name, **kwargs):
     print("zoe api: new execution")
+    print("zoe api: new execution {} - {}: arguments {}".format(exec_name, app_name, kwargs))
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     if app_name == 'ipython':
-        print("Starting ipython notebook Zoe execution: ", exec_name)
-        app_descr = ibm_notebook.create_app()
+        try:
+            notebook_memory_limit = kwargs['notebook_mem_limit'] * (1024 ** 3)      # GB
+            spark_master_memory_limit = kwargs['master_mem_limit'] * (1024 ** 2)    # MB
+            spark_worker_memory_limit = kwargs['worker_memory'] * (1024 ** 3)       # GB
+            spark_worker_cores = kwargs['worker_cores']
+            spark_worker_count = kwargs['worker_count']
+            app_descr = zapps.create_notebook_app(notebook_memory_limit=notebook_memory_limit,
+                                                  spark_master_memory_limit=spark_master_memory_limit,
+                                                  spark_worker_memory_limit=spark_worker_memory_limit,
+                                                  spark_worker_cores=spark_worker_cores,
+                                                  spark_worker_count=spark_worker_count
+                                                  )
+        except:
+            app_descr = zapps.create_notebook_app()
         exec_api.execution_start(exec_name, app_descr)
     elif app_name == 'mpi':
-        print("Starting MPI Zoe execution")
-        app_descr = openmpi.createapp()
+        try:
+            wm = int(kwargs['worker_memory']) * (1024 ** 3)
+            app_descr = zapps.create_idiada_app(worker_memory=wm)
+        except KeyError:
+            app_descr = zapps.create_idiada_app()
         exec_api.execution_start('mpidynademo', app_descr)
     else:
         print("App not supported.")
