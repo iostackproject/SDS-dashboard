@@ -179,7 +179,8 @@ class Groups(tabs.TableTab):
 
             instances = eval(strobj)
             for k, v in instances.items():
-                ret.append(group_models.Group(k, v))
+                projects = ', '.join(v)
+                ret.append(group_models.Group(k, projects))
         except Exception as e:
             exceptions.handle(self.request, _(e.message))
         return ret
