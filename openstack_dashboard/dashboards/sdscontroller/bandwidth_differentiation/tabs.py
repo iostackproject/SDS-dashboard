@@ -33,7 +33,7 @@ class SLAsTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(slas_models.SLA(inst['tenant_id'], inst['tenant_name'], inst['policy_id'], inst['policy_name'], inst['bandwidth']))
+            ret.append(slas_models.SLA(inst['project_id'], inst['project_name'], inst['policy_id'], inst['policy_name'], inst['bandwidth']))
         return ret
 
 
