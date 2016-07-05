@@ -18,8 +18,6 @@ from openstack_dashboard.dashboards.sdscontroller.administration.nodes import mo
 from openstack_dashboard.dashboards.sdscontroller.administration.nodes import tables as nodes_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.object_types import models as object_types_models
 from openstack_dashboard.dashboards.sdscontroller.administration.object_types import tables as object_types_tables
-from openstack_dashboard.dashboards.sdscontroller.administration.projects import models as project_models
-from openstack_dashboard.dashboards.sdscontroller.administration.projects import tables as project_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import models as registry_models
 from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import tables as registry_tables
 
@@ -163,32 +161,6 @@ class Nodes(tabs.TableTab):
         return ret
 
 
-class Projects(tabs.TableTab):
-    table_classes = (project_tables.ProjectTable,)
-    name = _("Projects")
-    slug = "projects_table"
-    template_name = "horizon/common/_detail_table.html"
-
-    def get_projects_data(self):
-        try:
-            response = api.swift_list_tenants(self.request)
-            if 200 <= response.status_code < 300:
-                strobj = response.text
-            else:
-                error_message = 'Unable to get projects. %s' % response.text
-                raise sdsexception.SdsException(error_message)
-        except Exception as e:
-            strobj = "{}"
-            exceptions.handle(self.request, _(e.message))
-
-        instances = json.loads(strobj)
-        ret = []
-        if "tenants" in instances:
-            for inst in instances["tenants"]:
-                ret.append(project_models.Project(inst['id'], inst['name'], inst['description'], inst['enabled']))
-        return ret
-
-
 class Groups(tabs.TableTab):
     table_classes = (group_tables.GroupsTable,)
     name = _("Groups")
@@ -240,5 +212,5 @@ class ObjectTypes(tabs.TableTab):
 
 class MyPanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
-    tabs = (RegistryTab, Filters, Dependencies, MetricModules, Nodes, Projects, Groups, ObjectTypes,)
+    tabs = (RegistryTab, Filters, Dependencies, MetricModules, Nodes, Groups, ObjectTypes,)
     sticky = True
