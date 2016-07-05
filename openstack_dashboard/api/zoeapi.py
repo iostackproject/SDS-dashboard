@@ -109,9 +109,11 @@ def new_execution(request, exec_name, app_name, **kwargs):
         exec_api.execution_start(exec_name, app_descr)
     elif app_name == 'mpi':
         try:
-            wm = int(kwargs['worker_memory']) * (1024 ** 3)
+            in_wm = int(kwargs['worker_memory'])
+            assert in_wm > 0
+            wm = in_wm * (1024 ** 3)
             app_descr = zapps.create_idiada_app(worker_memory=wm)
-        except KeyError:
+        except:
             app_descr = zapps.create_idiada_app()
         exec_api.execution_start('mpidynademo', app_descr)
     else:
