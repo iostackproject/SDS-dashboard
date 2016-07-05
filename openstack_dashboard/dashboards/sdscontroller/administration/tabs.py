@@ -14,6 +14,8 @@ from openstack_dashboard.dashboards.sdscontroller.administration.groups import m
 from openstack_dashboard.dashboards.sdscontroller.administration.groups import tables as group_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.metric_modules import models as metric_module_models
 from openstack_dashboard.dashboards.sdscontroller.administration.metric_modules import tables as metric_module_tables
+from openstack_dashboard.dashboards.sdscontroller.administration.nodes import models as nodes_models
+from openstack_dashboard.dashboards.sdscontroller.administration.nodes import tables as nodes_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.object_types import models as object_types_models
 from openstack_dashboard.dashboards.sdscontroller.administration.object_types import tables as object_types_tables
 from openstack_dashboard.dashboards.sdscontroller.administration.projects import models as project_models
@@ -104,7 +106,7 @@ class Dependencies(tabs.TableTab):
         dependencies = json.loads(strobj)
         ret = []
         for dep in dependencies:
-            ret.append(dependency_models.Dependency(dep["id"], dep['name'], dep['version'], dep['permissions']))
+            ret.append(dependency_models.Dependency(dep['id'], dep['name'], dep['version'], dep['permissions']))
         return ret
 
 
@@ -133,6 +135,31 @@ class MetricModules(tabs.TableTab):
             ret.append(metric_module_models.MetricModule(inst['id'], inst['name'], inst['interface_version'], inst['object_metadata'],
                                                          inst['is_put'], inst['is_get'], inst['execution_server'],
                                                          ))
+        return ret
+
+
+class Nodes(tabs.TableTab):
+    table_classes = (nodes_tables.NodesTable,)
+    name = _("Nodes")
+    slug = "nodes_table"
+    template_name = "horizon/common/_detail_table.html"
+
+    def get_nodes_data(self):
+        ret = []
+        try:
+            response = api.dsl_get_all_nodes(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get nodes.'
+                raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        nodes = json.loads(strobj)
+        for node in nodes:
+            ret.append(nodes_models.Node(node['name'], node['ip'], node['last_ping'], node['type']))
         return ret
 
 
@@ -213,5 +240,5 @@ class ObjectTypes(tabs.TableTab):
 
 class MyPanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
-    tabs = (RegistryTab, Filters, Dependencies, MetricModules, Projects, Groups, ObjectTypes,)
+    tabs = (RegistryTab, Filters, Dependencies, MetricModules, Nodes, Projects, Groups, ObjectTypes,)
     sticky = True

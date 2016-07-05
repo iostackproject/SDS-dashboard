@@ -35,7 +35,7 @@ class StaticPolicyTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(static_policies_models.Policy(inst["id"], inst['target_id'], inst['target_name'], inst['filter_name'], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
+            ret.append(static_policies_models.Policy(inst['id'], inst['target_id'], inst['target_name'], inst['filter_name'], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
         return ret
 
 
@@ -61,7 +61,7 @@ class DynamicPolicyTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(dynamic_policies_models.Policy(inst["id"], inst['policy'], inst['policy_location'], inst['alive']))
+            ret.append(dynamic_policies_models.Policy(inst['id'], inst['policy'], inst['policy_location'], inst['alive']))
         return ret
 
 
@@ -87,7 +87,7 @@ class MetricTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(metrics_models.Metric(inst["name"], inst['network_location'], inst['type']))
+            ret.append(metrics_models.Metric(inst['name'], inst['network_location'], inst['type']))
         return ret
 
 
