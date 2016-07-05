@@ -12,7 +12,7 @@ from horizon import messages
 from horizon import tables
 from models import Policy
 from openstack_dashboard.api import sds_controller as api
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.static_policies import forms as policies_forms
+from openstack_dashboard.dashboards.sdscontroller import common
 
 
 class MyFilterAction(tables.FilterAction):
@@ -133,7 +133,7 @@ class UpdateRow(tables.Row):
                         data['execution_server_reverse'], data['execution_order'], data['params'])
 
         # Overwrite choices for object_type
-        choices = policies_forms.get_object_type_choices(request)
+        choices = common.get_object_type_choices(request)
         self.table.columns['object_type'].form_field.choices = choices
 
         return policy

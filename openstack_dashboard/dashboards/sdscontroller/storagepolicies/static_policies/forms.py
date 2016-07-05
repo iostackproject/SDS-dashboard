@@ -1,5 +1,3 @@
-import json
-
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
@@ -7,26 +5,8 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller import common
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
-
-
-def get_object_type_choices(request):
-    try:
-        response = api.dsl_get_all_object_types(request)
-        if 200 <= response.status_code < 300:
-            strobj = response.text
-        else:
-            error_message = 'Unable to get object types.'
-            raise ValueError(error_message)
-    except Exception as e:
-        strobj = "[]"
-        exceptions.handle(request, _(e.message))
-    instances = json.loads(strobj)
-    choices = []
-    for inst in instances:
-        choices.append((inst['name'], inst['name']))
-    object_type_choices = (('', 'None'), ('Object types', choices))
-    return object_type_choices
 
 
 class CreatePolicyDSL(forms.SelfHandlingForm):
@@ -179,7 +159,7 @@ class UpdatePolicy(forms.SelfHandlingForm):
 
     def __init__(self, request, *args, **kwargs):
         # Obtain list of object types
-        self.object_type_choices = get_object_type_choices(request)
+        self.object_type_choices = common.get_object_type_choices(request)
         # initialization
         super(UpdatePolicy, self).__init__(request, *args, **kwargs)
         # overwrite object_type input form
