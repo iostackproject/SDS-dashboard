@@ -1,0 +1,35 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}change_swift_form{% endblock %}
+{% block form_name %}ChangeSwiftForm{% endblock %}
+{% block form_action %}{% url 'horizon:sdscontroller:bandwidth_differentiation:change_swift:change' %}{% endblock %}
+{% block form_attrs %}enctype="multipart/form-data"{% endblock %}
+
+{% block modal-header %}
+  {% blocktrans %}Change Swift{% endblocktrans %}
+{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+	<h3>{% trans "Change to: " %}</h3>
+    {% include "horizon/common/_form_fields.html" %}
+    <!---->
+	<!--<form method="get" action="changer/">-->
+		<!--<button type="submit" class= "btn btn-default" name=original_btn>Original Swift</button>-->
+		<!--<button type="submit" class= "btn btn-default" name=ioprio_btn>IOPrio Swift</button>-->
+	<!--</form>-->
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p><strong>{% trans "Original Swift:" %}</strong> {% trans "Normal version of swift" %}</p>
+    <p><strong>{% trans "IOPrio Swift:"%}</strong> {% trans "BSCs version of swift that uses kernel IOPriorities to enable bandwidth diferentiation" %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <!--<a href="{% url 'horizon:sdscontroller:bandwidth_differentiation:index' %}" class="btn btn-primary pull-right">{% trans "Done" %}</a>-->
+
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans 'Change Swift' %}" />
+  <a href="{% url 'horizon:sdscontroller:bandwidth_differentiation:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
+{% endblock %}

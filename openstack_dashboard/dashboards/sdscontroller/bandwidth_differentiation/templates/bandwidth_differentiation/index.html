@@ -4,10 +4,16 @@
 
 {% block page_header %}
    {% include "horizon/common/_page_header.html" with title=_("Bandwidth Differentiation") %}
+
+    <form method="POST" action="/sdscontroller/bandwidth_differentiation/change_swift/change">
+	    <a href="/sdscontroller/bandwidth_differentiation/change_swift/change" class= "btn btn-default ajax-modal" style="float: right;">Change Swift</a>
+	</form>
+	
 {% endblock page_header %}
 
 {% block main %}
 <div class="row">
+	
    <div class="col-sm-12">
    {{ tab_group.render }}
    </div>
