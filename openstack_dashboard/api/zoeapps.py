@@ -25,6 +25,11 @@ ENV = [
     ["LSTC_LICENSE_SERVER_PORT", "31010"]
 ]
 
+MOUNT_PATH = '/mnt/zoenfs/zoe-workspaces/iostack/zoeadmin/'
+
+import os
+
+
 def spark_master_service(mem_limit, image):
     """
     :type mem_limit: int
@@ -256,12 +261,12 @@ def create_idiada_app(app_name=MPI_APP_NAME, mpirun_image=MPIRUN_IMAGE, worker_i
         mpirun_image = docker_registry + '/' + mpirun_image
         worker_image = docker_registry + '/' + worker_image
 
-    with open('hostlist', 'w') as fp:
+    with open(os.path.join(MOUNT_PATH, 'hostlist'), 'w') as fp:
         for wc in range(worker_count):
             fp.write(
                 'mpiworker{}-mpidynademo-zoeadmin-iostack-zoe slots={} max-slots={}\n'.format(wc, cpu_count_per_worker,
                                                                                               cpu_count_per_worker))
-    print('Wrote MPI host list file in "hostlist", execution name set to "mpidynademo"')
+    print('Wrote MPI host list file in "{}", execution name set to "mpidynademo"'.format(os.path.join(MOUNT_PATH, 'hostlist')))
     return openmpi_app(app_name, mpirun_image, worker_image, mpi_commandline, worker_count, worker_memory)
 
 

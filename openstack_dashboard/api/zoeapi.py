@@ -98,6 +98,7 @@ def new_execution(request, exec_name, app_name, **kwargs):
             spark_worker_memory_limit = kwargs['worker_memory'] * (1024 ** 3)       # GB
             spark_worker_cores = kwargs['worker_cores']
             spark_worker_count = kwargs['worker_count']
+
             app_descr = zapps.create_notebook_app(notebook_memory_limit=notebook_memory_limit,
                                                   spark_master_memory_limit=spark_master_memory_limit,
                                                   spark_worker_memory_limit=spark_worker_memory_limit,
@@ -109,6 +110,9 @@ def new_execution(request, exec_name, app_name, **kwargs):
         exec_api.execution_start(exec_name, app_descr)
     elif app_name == 'mpi':
         try:
+            spark_worker_cores = kwargs['worker_cores']
+            spark_worker_count = kwargs['worker_count']
+            assert spark_worker_cores * spark_worker_count <= 8
             in_wm = int(kwargs['worker_memory'])
             assert in_wm > 0
             wm = in_wm * (1024 ** 3)
