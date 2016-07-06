@@ -87,17 +87,17 @@ def get_execution_details(exec_id):
         return vault[exec_id]
 
 
-def new_execution(request, exec_name, app_name, **kwargs):
+def new_execution(request, exec_name, app_name, dict):
     print("zoe api: new execution")
-    print("zoe api: new execution {} - {}: arguments {}".format(exec_name, app_name, kwargs))
+    print("zoe api: new execution {} - {}: arguments {}".format(exec_name, app_name, dict))
     exec_api = ZoeExecutionsAPI(ZOE_URL, ZOE_USER, ZOE_PWD)
     if app_name == 'ipython':
         try:
-            notebook_memory_limit = kwargs['notebook_mem_limit'] * (1024 ** 3)      # GB
-            spark_master_memory_limit = kwargs['master_mem_limit'] * (1024 ** 2)    # MB
-            spark_worker_memory_limit = kwargs['worker_memory'] * (1024 ** 3)       # GB
-            spark_worker_cores = kwargs['worker_cores']
-            spark_worker_count = kwargs['worker_count']
+            notebook_memory_limit = dict['notebook_mem_limit'] * (1024 ** 3)      # GB
+            spark_master_memory_limit = dict['master_mem_limit'] * (1024 ** 2)    # MB
+            spark_worker_memory_limit = dict['worker_memory'] * (1024 ** 3)       # GB
+            spark_worker_cores = dict['worker_cores']
+            spark_worker_count = dict['worker_count']
 
             app_descr = zapps.create_notebook_app(notebook_memory_limit=notebook_memory_limit,
                                                   spark_master_memory_limit=spark_master_memory_limit,
@@ -110,10 +110,10 @@ def new_execution(request, exec_name, app_name, **kwargs):
         exec_api.execution_start(exec_name, app_descr)
     elif app_name == 'mpi':
         try:
-            spark_worker_cores = kwargs['worker_cores']
-            spark_worker_count = kwargs['worker_count']
+            spark_worker_cores = dict['worker_cores']
+            spark_worker_count = dict['worker_count']
             assert spark_worker_cores * spark_worker_count <= 8
-            in_wm = int(kwargs['worker_memory'])
+            in_wm = int(dict['worker_memory'])
             assert in_wm > 0
             wm = in_wm * (1024 ** 3)
             app_descr = zapps.create_idiada_app(worker_memory=wm)

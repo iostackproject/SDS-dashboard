@@ -49,8 +49,12 @@ class CreateExecutionForm(forms.SelfHandlingForm):
                                             }), required=False)
 
     def handle(self, request, data):
+        to_pass = {}
         try:
-            zoeapi.new_execution(request, data['name'], data['app_name'], data)
+            for k in data.items():
+                to_pass[k] = data[k]
+            print("handle to_pass: {}".format(to_pass))
+            zoeapi.new_execution(request, data['name'], data['app_name'], to_pass)
             return True
         except Exception as e:
             print("zoe exception: {}".format(e))
