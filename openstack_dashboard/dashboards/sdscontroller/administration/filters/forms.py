@@ -12,20 +12,13 @@ from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexcept
 
 
 class UploadFilter(forms.SelfHandlingForm):
-    name = forms.CharField(max_length=255,
-                           label=_("Name"),
-                           help_text=_("The name of the filter to be created."),
-                           widget=forms.TextInput(
-                               attrs={"ng-model": "name", "not-blank": ""}
-                           ))
-
-    language = forms.ChoiceField(choices=common.get_filter_type_choices(),
-                                 label=_("Program Language"),
-                                 help_text=_("The written language of the filter."),
-                                 required=True,
-                                 widget=forms.Select(
-                                     attrs={"ng-model": "language", "not-blank": ""}
-                                 ))
+    filter_type = forms.ChoiceField(choices=common.get_filter_type_choices(),
+                                    label=_("Filter Type"),
+                                    help_text=_("The type of the filter."),
+                                    required=True,
+                                    widget=forms.Select(
+                                        attrs={"ng-model": "filter_type", "not-blank": ""}
+                                    ))
 
     interface_version = forms.CharField(max_length=255,
                                         label=_("Interface Version"),
@@ -50,6 +43,7 @@ class UploadFilter(forms.SelfHandlingForm):
                                       widget=forms.TextInput(
                                           attrs={"ng-model": "object_metadata"}
                                       ))
+
     main = forms.CharField(max_length=255,
                            label=_("Main Class"),
                            help_text=_("The name of the class that implements the Filters API."),
@@ -119,10 +113,10 @@ class UploadFilter(forms.SelfHandlingForm):
 
 
 class UpdateFilter(forms.SelfHandlingForm):
-    name = forms.CharField(max_length=255, label=_("Name"), help_text=_("The name of the filter to be created."))
-
-    language = forms.ChoiceField(choices=common.get_filter_type_choices(), label=_("Program Language"), help_text=_("The written language of the filter."),
-                                 required=True)
+    filter_type = forms.ChoiceField(choices=common.get_filter_type_choices(),
+                                    label=_("Filter Type"),
+                                    help_text=_("The type of the filter."),
+                                    required=True)
 
     interface_version = forms.CharField(max_length=255,
                                         label=_("Interface Version"),

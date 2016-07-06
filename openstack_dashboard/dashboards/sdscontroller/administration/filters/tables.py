@@ -80,8 +80,7 @@ class DeleteMultipleFilters(DeleteFilter):
 
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
-        return ((cell.column.name == 'name') or
-                (cell.column.name == 'language') or
+        return ((cell.column.name == 'filter_type') or
                 (cell.column.name == 'interface_version') or
                 (cell.column.name == 'dependencies') or
                 (cell.column.name == 'execution_server') or
@@ -127,8 +126,8 @@ class UpdateRow(tables.Row):
     def get_data(self, request, id):
         response = api.fil_get_filter_metadata(request, id)
         data = json.loads(response.text)
-        filter = Filter(data['id'], data['name'],
-                        data['language'], data['dependencies'],
+        filter = Filter(data['id'], data['filter_name'],
+                        data['filter_type'], data['dependencies'],
                         data['interface_version'], data['object_metadata'],
                         data['main'], data['is_put'], data['is_get'],
                         data['has_reverse'], data['execution_server'],
@@ -138,8 +137,8 @@ class UpdateRow(tables.Row):
 
 class FilterTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
-    name = tables.Column('name', verbose_name=_("Name"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    language = tables.Column('language', verbose_name=_("Filter Type"), form_field=forms.ChoiceField(choices=common.get_filter_type_choices()), update_action=UpdateCell)
+    name = tables.Column('filter_name', verbose_name=_("Name"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    language = tables.Column('filter_type', verbose_name=_("Type"), form_field=forms.ChoiceField(choices=common.get_filter_type_choices()), update_action=UpdateCell)
     interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)

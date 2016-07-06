@@ -66,7 +66,7 @@ class Filters(tabs.TableTab):
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
-                error_message = 'Unable to get instances.'
+                error_message = 'Unable to get filters.'
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
@@ -75,7 +75,7 @@ class Filters(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(filters_models.Filter(inst['id'], inst['name'], inst['language'], inst['dependencies'],
+            ret.append(filters_models.Filter(inst['id'], inst['filter_name'], inst['filter_type'], inst['dependencies'],
                                              inst['interface_version'], inst['object_metadata'], inst['main'],
                                              inst['is_put'], inst['is_get'], inst['has_reverse'],
                                              inst['execution_server'], inst['execution_server_reverse']
@@ -116,7 +116,7 @@ class MetricModules(tabs.TableTab):
 
     def get_metric_modules_data(self):
         try:
-            strobj = "[]"
+            strobj = '[]'
             # response = api.fil_list_filters(self.request)
             # if 200 <= response.status_code < 300:
             #     strobj = response.text
@@ -124,7 +124,7 @@ class MetricModules(tabs.TableTab):
             #     error_message = 'Unable to get instances.'
             #     raise sdsexception.SdsException(error_message)
         except Exception as e:
-            strobj = "[]"
+            strobj = '[]'
             exceptions.handle(self.request, _(e.message))
 
         instances = json.loads(strobj)
@@ -145,14 +145,15 @@ class Nodes(tabs.TableTab):
     def get_nodes_data(self):
         ret = []
         try:
-            response = api.dsl_get_all_nodes(self.request)
-            if 200 <= response.status_code < 300:
-                strobj = response.text
-            else:
-                error_message = 'Unable to get nodes.'
-                raise sdsexception.SdsException(error_message)
+            strobj = '[]'
+            # response = api.dsl_get_all_nodes(self.request)
+            # if 200 <= response.status_code < 300:
+            #     strobj = response.text
+            # else:
+            #     error_message = 'Unable to get nodes.'
+            #     raise sdsexception.SdsException(error_message)
         except Exception as e:
-            strobj = "[]"
+            strobj = '[]'
             exceptions.handle(self.request, _(e.message))
 
         nodes = json.loads(strobj)
