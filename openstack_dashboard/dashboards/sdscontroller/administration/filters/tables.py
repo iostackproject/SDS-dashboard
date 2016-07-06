@@ -12,18 +12,8 @@ from horizon import messages
 from horizon import tables
 from models import Filter
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller import common
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
-
-# TODO: Put this in a common file
-INTERNAL_LANGUAGES = {"java": "Storlet", "python": "Native"}
-
-
-# TODO: Put this in a common file
-def get_programming_languages():
-    programming_languages = [(u'', u'Select one')]
-    programming_languages.extend([(u'java', u'Storlet')])
-    programming_languages.extend([(u'python', u'Native')])
-    return programming_languages
 
 
 class MyFilterAction(tables.FilterAction):
@@ -149,7 +139,7 @@ class UpdateRow(tables.Row):
 class FilterTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
     name = tables.Column('name', verbose_name=_("Name"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    language = tables.Column(lambda x: INTERNAL_LANGUAGES[x.language], verbose_name=_("Filter Type"), form_field=forms.ChoiceField(choices=get_programming_languages()), update_action=UpdateCell)
+    language = tables.Column('language', verbose_name=_("Filter Type"), form_field=forms.ChoiceField(choices=common.get_filter_type_choices()), update_action=UpdateCell)
     interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)

@@ -6,6 +6,19 @@ from horizon import exceptions
 from openstack_dashboard.api import sds_controller as api
 
 
+# Administration
+# ==============
+
+# Filters
+def get_filter_type_choices():
+    """
+    Get a list of filter types
+
+    :return: list with filter types
+    """
+    return [('', 'Select one'), ('storlet', 'Storlet'), ('native', 'Native')]
+
+
 def get_object_type_choices(request):
     """
     Get a tuple of object types

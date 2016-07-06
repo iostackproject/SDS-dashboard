@@ -7,15 +7,8 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller import common
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
-
-
-# TODO: Put this in a common file
-def get_programming_languages():
-    programming_languages = [(u'', u'Select one')]
-    programming_languages.extend([(u'java', u'Storlet')])
-    programming_languages.extend([(u'python', u'Native')])
-    return programming_languages
 
 
 class UploadFilter(forms.SelfHandlingForm):
@@ -26,7 +19,7 @@ class UploadFilter(forms.SelfHandlingForm):
                                attrs={"ng-model": "name", "not-blank": ""}
                            ))
 
-    language = forms.ChoiceField(choices=get_programming_languages(),
+    language = forms.ChoiceField(choices=common.get_filter_type_choices(),
                                  label=_("Program Language"),
                                  help_text=_("The written language of the filter."),
                                  required=True,
@@ -98,7 +91,7 @@ class UploadFilter(forms.SelfHandlingForm):
 
     def __init__(self, request, *args, **kwargs):
         super(UploadFilter, self).__init__(request, *args, **kwargs)
-        get_programming_languages()
+        common.get_filter_type_choices()
 
     @staticmethod
     def handle(request, data):
@@ -128,7 +121,7 @@ class UploadFilter(forms.SelfHandlingForm):
 class UpdateFilter(forms.SelfHandlingForm):
     name = forms.CharField(max_length=255, label=_("Name"), help_text=_("The name of the filter to be created."))
 
-    language = forms.ChoiceField(choices=get_programming_languages(), label=_("Program Language"), help_text=_("The written language of the filter."),
+    language = forms.ChoiceField(choices=common.get_filter_type_choices(), label=_("Program Language"), help_text=_("The written language of the filter."),
                                  required=True)
 
     interface_version = forms.CharField(max_length=255,
@@ -172,7 +165,7 @@ class UpdateFilter(forms.SelfHandlingForm):
 
     def __init__(self, request, *args, **kwargs):
         super(UpdateFilter, self).__init__(request, *args, **kwargs)
-        get_programming_languages()
+        common.get_filter_type_choices()
 
     failure_url = 'horizon:sdscontroller:administration:index'
 
