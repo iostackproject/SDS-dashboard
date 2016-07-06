@@ -54,7 +54,7 @@ def change_version(swift_version):
 
     if swift_version == "ioprio":
         stdin, stdout, stderr = ssh.exec_command("cd switch_swift_env")
-        stdin, stodut, stderr = ssh.exec_command("ansible-playbook -s -i swift_dynamic_inventory.py bsc-env.yml")0
+        stdin, stodut, stderr = ssh.exec_command("ansible-playbook -s -i swift_dynamic_inventory.py bsc-env.yml")
     elif swift_version == 'original':
         stdin, stdout, stderr = ssh.exec_command("cd switch_swift_env")
         stdin, stdout, stderr = ssh.exec_command("ansible-playbook -s -i swift_dynamic_inventory.py ibm-env.yml")
