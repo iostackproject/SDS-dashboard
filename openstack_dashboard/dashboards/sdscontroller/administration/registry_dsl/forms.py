@@ -24,7 +24,7 @@ def get_filter_list(self, request):
     instances = json.loads(strobj)
     FILTER_IDENTIFIERS = []
     for inst in instances:
-        FILTER_IDENTIFIERS.append((inst['id'], inst['name']))
+        FILTER_IDENTIFIERS.append((inst['id'], inst['filter_name']))
     return FILTER_IDENTIFIERS
 
 
