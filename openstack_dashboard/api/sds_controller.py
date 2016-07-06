@@ -666,6 +666,19 @@ def dsl_delete_object_type(request, object_type_id):
     return r
 
 
+# # Registry DSL - Nodes
+def dsl_get_all_nodes(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/nodes"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
 
 ############################## # Filters API # ##############################
 # Filters - Filters
