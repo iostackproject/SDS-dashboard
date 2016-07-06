@@ -88,7 +88,15 @@ class CreatePolicy(forms.SelfHandlingForm):
                              help_text=_("Parameters list."))
 
     def __init__(self, request, *args, **kwargs):
+        # Obtain list of object types
+        self.object_type_choices = common.get_object_type_choices(request)
+        # initialization
         super(CreatePolicy, self).__init__(request, *args, **kwargs)
+        # overwrite object_type input form
+        self.fields['object_type'] = forms.ChoiceField(choices=self.object_type_choices,
+                                                       label=_("Object Type"),
+                                                       help_text=_("The type of object the rule will be applied to."),
+                                                       required=False)
 
     @staticmethod
     def handle(request, data):
