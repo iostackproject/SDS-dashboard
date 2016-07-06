@@ -8,16 +8,16 @@ NOTEBOOK_MEMORY_LIMIT = 4 * (1024 ** 3)  # 4GB, contains also the Spark client
 SPARK_WORKER_CORES = 6
 SPARK_WORKER_COUNT = 2
 DOCKER_REGISTRY = '172.17.131.201:5000'  # Set to None to use images from the Docker Hub
-SPARK_MASTER_IMAGE = 'iostackrepo/spark-master-ibm'
-SPARK_WORKER_IMAGE = 'iostackrepo/spark-worker-ibm'
-NOTEBOOK_IMAGE = 'iostackrepo/spark-jupyter-notebook-ibm'
+SPARK_MASTER_IMAGE = 'zapps/spark-master-ibm'
+SPARK_WORKER_IMAGE = 'zapps/spark-worker-ibm'
+NOTEBOOK_IMAGE = 'zapps/spark-jupyter-notebook-ibm'
 
 MPI_APP_NAME = 'openmpi-dyna'
 WORKER_MEMORY = 5 * (1024 ** 3)  # configurabile
 WORKER_COUNT = 4
 CPU_COUNT_PER_WORKER = 1
-MPIRUN_IMAGE = 'iostackrepo/openmpi-centos5'
-WORKER_IMAGE = 'iostackrepo/openmpi-centos5'
+MPIRUN_IMAGE = 'zapps/openmpi-centos5'
+WORKER_IMAGE = 'zapps/openmpi-centos5'
 MPIRUN_COMMANDLINE = 'mpirun --mca oob_tcp_if_include eth0 --mca btl_tcp_if_include eth0 -x LSTC_LICENSE_SERVER_PORT -x LSTC_LICENSE_SERVER -x LSTC_LICENSE -hostfile hostlist -wdir /mnt/workspace /mnt/workspace/ls-dyna_mpp_s_r7_1_2_95028_x64_redhat54_ifort131_sse2_openmpi165 i=Combine.key memory=1024m memory2=512m 32ieee=yes nowait'
 ENV = [
     ["LSTC_LICENSE", "network"],
