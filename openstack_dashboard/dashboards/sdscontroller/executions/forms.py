@@ -22,19 +22,11 @@ class CreateExecutionForm(forms.SelfHandlingForm):
 
     worker_count = forms.IntegerField(label=_('Worker count'),
                                       initial=2,
-                                      widget=forms.TextInput(attrs={
-                                          'class': 'switched',
-                                          'data-switch-on': 'app_name',
-                                          'data-app_name-ipython': _('Worker count')
-                                      }), required=False)
+                                      required=False)
 
     worker_cores = forms.IntegerField(label=_('Worker cores'),
                                       initial=6,
-                                      widget=forms.TextInput(attrs={
-                                          'class': 'switched',
-                                          'data-switch-on': 'app_name',
-                                          'data-app_name-ipython': _('Worker cores')
-                                      }), required=False)
+                                      required=False)
 
     worker_memory = forms.IntegerField(label=_('Worker memory limit (GB)'),
                                        initial=12,
@@ -56,9 +48,7 @@ class CreateExecutionForm(forms.SelfHandlingForm):
                                                 'data-app_name-ipython': _('Notebook memory limit')
                                             }), required=False)
 
-
     def handle(self, request, data):
-        print("executions form: handle")
         try:
             zoeapi.new_execution(request, data['name'], data['app_name'], data)
             return True
