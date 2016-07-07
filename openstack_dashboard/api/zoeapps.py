@@ -18,7 +18,7 @@ WORKER_COUNT = 4
 CPU_COUNT_PER_WORKER = 1
 MPIRUN_IMAGE = 'zapps/openmpi-centos5'
 WORKER_IMAGE = 'zapps/openmpi-centos5'
-MPIRUN_COMMANDLINE = 'mpirun --mca oob_tcp_if_include eth0 --mca btl_tcp_if_include eth0 -x LSTC_LICENSE_SERVER_PORT -x LSTC_LICENSE_SERVER -x LSTC_LICENSE -hostfile hostlist -wdir /mnt/workspace /mnt/workspace/ls-dyna_mpp_s_r7_1_2_95028_x64_redhat54_ifort131_sse2_openmpi165 i=Combine.key memory=1024m memory2=512m 32ieee=yes nowait'
+MPIRUN_COMMANDLINE = 'mpirun --mca oob_tcp_if_include eth0 --mca btl_tcp_if_include eth0 -x LSTC_LICENSE_SERVER_PORT -x LSTC_LICENSE_SERVER -x LSTC_LICENSE -hostfile /mnt/workspace/hostlist -wdir /mnt/workspace /mnt/workspace/ls-dyna_mpp_s_r7_1_2_95028_x64_redhat54_ifort131_sse2_openmpi165 i=Combine.key memory=1024m memory2=512m 32ieee=yes nowait'
 ENV = [
     ["LSTC_LICENSE", "network"],
     ["LSTC_LICENSE_SERVER", "10.30.1.7"],
@@ -264,7 +264,7 @@ def create_idiada_app(app_name=MPI_APP_NAME, mpirun_image=MPIRUN_IMAGE, worker_i
     with open(os.path.join(MOUNT_PATH, 'hostlist'), 'w') as fp:
         for wc in range(worker_count):
             fp.write(
-                'mpiworker{}-mpidynademo-zoeadmin-iostack-zoe slots={} max-slots={}\n'.format(wc, cpu_count_per_worker,
+                'mpiworker-{}-mpidynademo-zoeadmin-iostack-zoe slots={} max-slots={}\n'.format(wc, cpu_count_per_worker,
                                                                                               cpu_count_per_worker))
     print('Wrote MPI host list file in "{}", execution name set to "mpidynademo"'.format(os.path.join(MOUNT_PATH, 'hostlist')))
     return openmpi_app(app_name, mpirun_image, worker_image, mpi_commandline, worker_count, worker_memory)
