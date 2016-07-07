@@ -6,8 +6,8 @@ from horizon import exceptions
 from openstack_dashboard.api import sds_controller as api
 
 
-# Filter
-# ======
+# Filter Type
+# ===========
 def get_filter_type_choices():
     """
     Get a list of filter types
@@ -124,3 +124,30 @@ def get_project_list_choices(request):
     for project in projects:
         projects_list.append((project['id'], project['name']))
     return projects_list
+
+
+# Storage Policy
+# ==============
+def get_storage_policy_list_choices(request):
+    """
+    Get a list of storage policies
+
+    :param request: the request which the dashboard is using
+    :return: list with storage policies
+    """
+    try:
+        response = api.swift_list_storage_policies(request)
+        if 200 <= response.status_code < 300:
+            response_text = response.text
+        else:
+            raise ValueError('Unable to get storage policies.')
+    except Exception as exc:
+        response_text = '[]'
+        exceptions.handle(request, _(exc.message))
+
+    storage_policies_list = []
+    storage_policies = json.loads(response_text)
+    # Iterate storage policies
+    for storage_policy in storage_policies:
+        storage_policies_list.append((storage_policy['id'], storage_policy['name']))
+    return storage_policies_list

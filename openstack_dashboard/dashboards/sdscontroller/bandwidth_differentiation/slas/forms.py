@@ -5,23 +5,22 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller import common
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
 class CreateSLA(forms.SelfHandlingForm):
-    project_id = forms.CharField(max_length=255,
-                                 label=_("Project ID"),
-                                 help_text=_("Project identificator."),
-                                 widget=forms.TextInput(
-                                     attrs={"ng-model": "tenant_id", "not-blank": ""}
-                                 ))
+    project_choices = []
+    project_id = forms.ChoiceField(choices=project_choices,
+                                   label=_("Project"),
+                                   help_text=_("The project where the rule will be applied."),
+                                   required=True)
 
-    policy_id = forms.CharField(max_length=255,
-                                label=_("Policy ID"),
-                                help_text=_("The policy that you want to assign to the specific project."),
-                                widget=forms.TextInput(
-                                    attrs={"ng-model": "policy_id", "not-blank": ""}
-                                ))
+    policy_choices = []
+    policy_id = forms.ChoiceField(choices=policy_choices,
+                                  label=_("Policy"),
+                                  help_text=_("The policy that you want to assign to the specific project."),
+                                  required=True)
 
     bandwidth = forms.CharField(max_length=255,
                                 label=_("Bandwidth"),
@@ -31,7 +30,24 @@ class CreateSLA(forms.SelfHandlingForm):
                                 ))
 
     def __init__(self, request, *args, **kwargs):
+        # Obtain list of projects
+        self.project_choices = common.get_project_list_choices(request)
+        # Obtain list of storage policies
+        self.storage_policy_choices = common.get_storage_policy_list_choices(request)
+
+        # Initialization
         super(CreateSLA, self).__init__(request, *args, **kwargs)
+
+        # Overwrite target_id input form
+        self.fields['project_id'] = forms.ChoiceField(choices=self.project_choices,
+                                                      label=_("Target"),
+                                                      help_text=_("The target where the rule will be apply."),
+                                                      required=True)
+
+        self.fields['policy_id'] = forms.ChoiceField(choices=self.storage_policy_choices,
+                                                     label=_("Policy"),
+                                                     help_text=_("The policy that you want to assign to the specific project."),
+                                                     required=True)
 
     @staticmethod
     def handle(request, data):

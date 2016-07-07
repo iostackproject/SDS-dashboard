@@ -203,6 +203,21 @@ def new_storage_policy(request, data):
     return r
 
 
+# # Swift - Storage Policies
+def swift_list_storage_policies(request):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/storage_policies"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
 ############################## # Registry DSL API # ##############################
 # # Registry DSL - Storage Nodes
 
