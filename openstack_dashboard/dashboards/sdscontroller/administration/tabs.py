@@ -50,7 +50,7 @@ class RegistryTab(tabs.TableTab):
                 error_message = 'Unable to get filters.'
                 raise ValueError(error_message)
             _filter = json.loads(strobj)
-            ret.append(registry_models.Filter(inst['identifier'], inst['name'], inst['activation_url'], inst['valid_parameters'], _filter['name']))
+            ret.append(registry_models.Filter(inst['identifier'], inst['name'], inst['activation_url'], inst['valid_parameters'], _filter['filter_name']))
         return ret
 
 

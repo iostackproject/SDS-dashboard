@@ -70,15 +70,12 @@ class DeleteDslFilter(tables.DeleteAction):
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:administration:index")
             error_message = "Unable to remove filter.\t %s" % ex.message
-            exceptions.handle(request,
-                              _(error_message),
-                              redirect=redirect)
+            exceptions.handle(request, _(error_message), redirect=redirect)
 
 
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
         return ((cell.column.name == 'activation_url') or
-                # (cell.column.name== 'filter_identifier') or
                 (cell.column.name == 'valid_parameters'))
 
     def update_cell(self, request, datum, name,
@@ -107,8 +104,8 @@ class UpdateRow(tables.Row):
     def get_data(self, request, name):
         response = api.dsl_get_filter_metadata(request, name)
         data = json.loads(response.text)
-        filter = Filter(data['identifier'], name, data['activation_url'], data['valid_parameters'], 'filter name')
-        return filter
+        filter_dsl = Filter(data['identifier'], name, data['activation_url'], data['valid_parameters'], 'filter name')
+        return filter_dsl
 
 
 class DeleteMultipleDslFilters(DeleteDslFilter):
@@ -117,31 +114,12 @@ class DeleteMultipleDslFilters(DeleteDslFilter):
 
 class DslFilterTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_("Name"))
-    filter_identifier = tables.Column('filter_identifier_name', verbose_name=_("Filter Identifier"))  # , update_action=UpdateCell,  form_field=forms.ChoiceField(choices=self.get_filter_list(request)))
+    filter_identifier = tables.Column('filter_identifier_name', verbose_name=_("Filter"))
     activation_url = tables.Column('activation_url', verbose_name=_("Activation Url"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     valid_parameters = tables.Column('valid_parameters', verbose_name=_("Valid Parameters"), form_field=forms.CharField(max_length=64), update_action=UpdateCell)
 
     def __init__(self, request, data=None, needs_form_wrapper=None, **kwargs):
-        self.filter_list = self.get_filter_list(request)
         super(DslFilterTable, self).__init__(request, data=data, needs_form_wrapper=needs_form_wrapper, **kwargs)
-        self.columns['filter_identifier'].get_form_field = forms.ChoiceField(choices=[])
-
-    def get_filter_list(self, request):
-        try:
-            response = api.fil_list_filters(request)
-            if 200 <= response.status_code < 300:
-                strobj = response.text
-            else:
-                error_message = 'Unable to get filters.'
-                raise ValueError(error_message)
-        except Exception as e:
-            strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
-        instances = json.loads(strobj)
-        FILTER_IDENTIFIERS = []
-        for inst in instances:
-            FILTER_IDENTIFIERS.append((inst['id'], inst['filter_name']))
-        return FILTER_IDENTIFIERS
 
     class Meta:
         name = "dsl_filters"
@@ -149,15 +127,3 @@ class DslFilterTable(tables.DataTable):
         row_class = UpdateRow
         table_actions = (MyFilterAction, CreateFilter, DeleteMultipleDslFilters,)
         row_actions = (UpdateFilter, DeleteDslFilter,)
-
-
-class InstancesTable(tables.DataTable):
-    name = tables.Column('name', verbose_name=_("Name"))
-    status = tables.Column('status', verbose_name=_("Status"))
-    zone = tables.Column('availability_zone', verbose_name=_("Availability Zone"))
-    image_name = tables.Column('image_name', verbose_name=_("Image Name"))
-
-    class Meta:
-        name = "instances"
-        verbose_name = _("Instances")
-        table_actions = (MyFilterAction,)

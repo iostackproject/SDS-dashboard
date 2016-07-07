@@ -19,6 +19,31 @@ def get_filter_type_choices():
     return [('', 'Select one'), ('storlet', 'Storlet'), ('native', 'Native')]
 
 
+def get_filter_list_choices(request):
+    """
+    Get a list of filters
+
+    :param request: the request which the dashboard is using
+    :return: list with filters
+    """
+    try:
+        response = api.fil_list_filters(request)
+        if 200 <= response.status_code < 300:
+            response_text = response.text
+        else:
+            raise ValueError('Unable to get filters.')
+    except Exception as exc:
+        response_text = '[]'
+        exceptions.handle(request, _(exc.message))
+
+    filters_list = []
+    filters = json.loads(response_text)
+    # Iterate filters
+    for filter_ in filters:
+        filters_list.append((filter_['id'], filter_['filter_name']))
+    return filters_list
+
+
 def get_object_type_choices(request):
     """
     Get a tuple of object types
