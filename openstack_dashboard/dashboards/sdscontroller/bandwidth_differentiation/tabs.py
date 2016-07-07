@@ -64,5 +64,6 @@ class ProxySortingTab(tabs.TableTab):
 
 class MypanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
-    tabs = (SLAsTab, ProxySortingTab,)
+    #tabs = (SLAsTab, ProxySortingTab,)
+    tabs = (SLAsTab, )
     sticky = True
