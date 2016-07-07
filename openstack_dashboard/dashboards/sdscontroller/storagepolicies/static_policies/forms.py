@@ -36,17 +36,18 @@ class CreatePolicyDSL(forms.SelfHandlingForm):
 
 
 class CreatePolicy(forms.SelfHandlingForm):
-    target_id = forms.CharField(max_length=255,
-                                label=_("Target ID"),
-                                required=True,
-                                help_text=_("The target where the rule will be apply."))
+    target_choices = []
+    target_id = forms.ChoiceField(choices=target_choices,
+                                  label=_("Target"),
+                                  help_text=_("The target where the rule will be apply."),
+                                  required=True)
 
-    filter_id = forms.CharField(max_length=255,
-                                label=_("Filter ID"),
-                                required=True,
-                                help_text=_("The id of the filter which will be used."))
+    filter_dsl_choices = []
+    filter_id = forms.ChoiceField(choices=filter_dsl_choices,
+                                  label=_("Filter"),
+                                  help_text=_("The id of the filter which will be used."),
+                                  required=True)
 
-    # Empty definition
     object_type_choices = []
     object_type = forms.ChoiceField(choices=object_type_choices,
                                     label=_("Object Type"),
@@ -88,11 +89,27 @@ class CreatePolicy(forms.SelfHandlingForm):
                              help_text=_("Parameters list."))
 
     def __init__(self, request, *args, **kwargs):
+        # Obtain list of projects
+        self.target_choices = common.get_project_list_choices(request)
+        # Obtain list of dsl filters
+        self.dsl_filter_choices = common.get_dsl_filter_list_choices(request)
         # Obtain list of object types
         self.object_type_choices = common.get_object_type_choices(request)
-        # initialization
+
+        # Initialization
         super(CreatePolicy, self).__init__(request, *args, **kwargs)
-        # overwrite object_type input form
+
+        # Overwrite target_id input form
+        self.fields['target_id'] = forms.ChoiceField(choices=self.target_choices,
+                                                     label=_("Target"),
+                                                     help_text=_("The target where the rule will be apply."),
+                                                     required=True)
+        # Overwrite filter_id input form
+        self.fields['filter_id'] = forms.ChoiceField(choices=self.dsl_filter_choices,
+                                                     label=_("Filter"),
+                                                     help_text=_("The id of the filter which will be used."),
+                                                     required=True)
+        # Overwrite object_type input form
         self.fields['object_type'] = forms.ChoiceField(choices=self.object_type_choices,
                                                        label=_("Object Type"),
                                                        help_text=_("The type of object the rule will be applied to."),
@@ -115,12 +132,6 @@ class CreatePolicy(forms.SelfHandlingForm):
 
 
 class UpdatePolicy(forms.SelfHandlingForm):
-    # object_type = forms.CharField(max_length=255,
-    #                               label=_("Object Type"),
-    #                               required=False,
-    #                               help_text=_("The type of object the rule will be applied to."))
-
-    # Empty definition
     object_type_choices = []
     object_type = forms.ChoiceField(choices=object_type_choices,
                                     label=_("Object Type"),

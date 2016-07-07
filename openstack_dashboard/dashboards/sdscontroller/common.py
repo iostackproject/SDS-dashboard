@@ -6,10 +6,8 @@ from horizon import exceptions
 from openstack_dashboard.api import sds_controller as api
 
 
-# Administration
-# ==============
-
-# Filters
+# Filter
+# ======
 def get_filter_type_choices():
     """
     Get a list of filter types
@@ -19,6 +17,8 @@ def get_filter_type_choices():
     return [('', 'Select one'), ('storlet', 'Storlet'), ('native', 'Native')]
 
 
+# Filter
+# ======
 def get_filter_list_choices(request):
     """
     Get a list of filters
@@ -44,6 +44,35 @@ def get_filter_list_choices(request):
     return filters_list
 
 
+# DSL Filter
+# ==========
+def get_dsl_filter_list_choices(request):
+    """
+    Get a list of dsl filters
+
+    :param request: the request which the dashboard is using
+    :return: list with dsl filters
+    """
+    try:
+        response = api.dsl_get_all_filters(request)
+        if 200 <= response.status_code < 300:
+            response_text = response.text
+        else:
+            raise ValueError('Unable to get dsl filters.')
+    except Exception as exc:
+        response_text = '[]'
+        exceptions.handle(request, _(exc.message))
+
+    dsl_filters_list = []
+    dsl_filters = json.loads(response_text)
+    # Iterate dsl filters
+    for dsl_filter in dsl_filters:
+        dsl_filters_list.append((dsl_filter['identifier'], dsl_filter['name']))
+    return dsl_filters_list
+
+
+# Object Type
+# ===========
 def get_object_type_choices(request):
     """
     Get a tuple of object types
@@ -68,3 +97,30 @@ def get_object_type_choices(request):
         choices_list.append((choice['name'], choice['name']))
     # Return tuple of object types, or none if not exists
     return (('', 'None'), ('Object types', choices_list)) if len(choices_list) > 0 else (('', 'None'),)
+
+
+# Project
+# =======
+def get_project_list_choices(request):
+    """
+    Get a list of projects
+
+    :param request: the request which the dashboard is using
+    :return: list with projects
+    """
+    try:
+        response = api.swift_list_tenants(request)
+        if 200 <= response.status_code < 300:
+            response_text = response.text
+        else:
+            raise ValueError('Unable to get projects.')
+    except Exception as exc:
+        response_text = '[]'
+        exceptions.handle(request, _(exc.message))
+
+    projects_list = []
+    projects = json.loads(response_text)['tenants']
+    # Iterate projects
+    for project in projects:
+        projects_list.append((project['id'], project['name']))
+    return projects_list
