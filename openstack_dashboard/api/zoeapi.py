@@ -58,11 +58,15 @@ def get_user_info(exec_details):
     gateway = owner['gateway_urls'][0]
     return name, gateway
 
-
+# FIXME horribly hard coded
 def _translate_gw(gateway):
     import re
-    print("zoe gateway: {}".format(gateway))
-    return gateway
+    if re.search('\.131\.201:32768', gateway):
+        return 'socks://91.254.54.4:32111'
+    elif re.search('\.131\.202:32768', gateway):
+        return 'socks://91.254.54.4:32772'
+    else:
+        return gateway
 
 
 def get_execution_details(exec_id):
