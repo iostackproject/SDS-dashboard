@@ -59,6 +59,12 @@ def get_user_info(exec_details):
     return name, gateway
 
 
+def _translate_gw(gateway):
+    import re
+    print("zoe gateway: {}".format(gateway))
+    return gateway
+
+
 def get_execution_details(exec_id):
     print("zoe api: get_execution_details")
     try:
@@ -82,7 +88,7 @@ def get_execution_details(exec_id):
                 url = "{}://{}:{}{}".format(p['protocol'], ip, p['port_number'], p['path'])
                 tmp['details'] = {'name': p['name'], 'url': url}
             service_details.append(tmp)
-        exec_details.update({'service_details': service_details, 'owner': owner, 'gateway': gateway})
+        exec_details.update({'service_details': service_details, 'owner': owner, 'gateway': _translate_gw(gateway)})
         vault[exec_id].update(exec_details)
         return vault[exec_id]
 
