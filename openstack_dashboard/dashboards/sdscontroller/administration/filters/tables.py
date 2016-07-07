@@ -101,6 +101,8 @@ class UpdateCell(tables.UpdateAction):
             # TODO: Check only the valid keys, delete the rest
             if 'id' in data:  # PUT does not allow this key
                 del data['id']
+            if 'filter_name' in data:
+                del data['filter_name']
             if 'etag' in data:  # PUT does not allow this key
                 del data['etag']
             if 'content_length' in data:  # PUT does not allow this key
@@ -138,7 +140,7 @@ class UpdateRow(tables.Row):
 class FilterTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
     name = tables.Column('filter_name', verbose_name=_("Name"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    language = tables.Column('filter_type', verbose_name=_("Type"), form_field=forms.ChoiceField(choices=common.get_filter_type_choices()), update_action=UpdateCell)
+    filter_type = tables.Column('filter_type', verbose_name=_("Type"), form_field=forms.ChoiceField(choices=common.get_filter_type_choices()), update_action=UpdateCell)
     interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
