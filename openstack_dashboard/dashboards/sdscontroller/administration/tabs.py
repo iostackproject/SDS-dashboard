@@ -145,13 +145,12 @@ class Nodes(tabs.TableTab):
     def get_nodes_data(self):
         ret = []
         try:
-            strobj = '[]'
-            # response = api.dsl_get_all_nodes(self.request)
-            # if 200 <= response.status_code < 300:
-            #     strobj = response.text
-            # else:
-            #     error_message = 'Unable to get nodes.'
-            #     raise sdsexception.SdsException(error_message)
+            response = api.dsl_get_all_nodes(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get nodes.'
+                raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = '[]'
             exceptions.handle(self.request, _(e.message))
