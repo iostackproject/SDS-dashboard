@@ -140,8 +140,8 @@ class UpdateRow(tables.Row):
 
 
 class PoliciesTable(tables.DataTable):
-    target_id = tables.Column(lambda x: str(x.target_id).replace(':', '/'), verbose_name=_("Target ID"))
     target_name = tables.Column('target_name', verbose_name=_("Target Name"))
+    target_id = tables.Column(lambda x: str(x.target_id).replace(':', '/'), verbose_name=_("Target ID"))
     filter_name = tables.Column('filter_name', verbose_name=_("Filter"))
     object_type = tables.Column('object_type', verbose_name="Object Type", form_field=forms.ChoiceField(required=False, choices=[]), update_action=UpdateCell)
     object_size = tables.Column('object_size', verbose_name=_("Object Size"), form_field=forms.CharField(max_length=255, required=False), update_action=UpdateCell)
