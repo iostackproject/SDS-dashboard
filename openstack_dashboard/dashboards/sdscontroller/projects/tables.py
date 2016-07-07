@@ -108,16 +108,6 @@ class CreateProject(tables.LinkAction):
     def allowed(self, request, project):
         return api.keystone.keystone_can_edit_project()
 
-class CreateSDSProject(tables.LinkAction):
-    name = "sds_create"
-    verbose_name = _("Create SDS Project")
-    url = "horizon:sdscontroller:projects:sds_create"
-    classes = ("ajax-modal",)
-    icon = "plus"
-    policy_rules = (('sdscontroller', 'sdscontroller:create_sds_project'),)
-
-    def allowed(self, request, project):
-        return api.keystone.keystone_can_edit_project()
 
 class UpdateProject(tables.LinkAction):
     name = "update"
@@ -313,6 +303,6 @@ class TenantsTable(tables.DataTable):
         row_actions = (UpdateMembersLink, UpdateGroupsLink, UpdateProject,
                        UsageLink, ModifyQuotas, DeleteTenantsAction,
                        RescopeTokenToProject)
-        table_actions = (TenantFilterAction, CreateProject, CreateSDSProject,
+        table_actions = (TenantFilterAction, CreateProject,
                          CreateGroup, DeleteTenantsAction,)
         pagination_param = "tenant_marker"
