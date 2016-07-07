@@ -109,8 +109,8 @@ class DeleteMultipleSLAs(DeleteSLA):
 
 
 class SLAsTable(tables.DataTable):
-    tenant_id = tables.Column("project_id", verbose_name=_("Project ID"))
     tenant_name = tables.Column("project_name", verbose_name=_("Project Name"))
+    tenant_id = tables.Column("project_id", verbose_name=_("Project ID"))
     policy_name = tables.Column("policy_name", verbose_name=_("Policy"))
     bandwidth = tables.Column("bandwidth", verbose_name=_("Bandwidth"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
 
