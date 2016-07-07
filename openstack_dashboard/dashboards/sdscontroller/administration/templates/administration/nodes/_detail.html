@@ -1,5 +1,15 @@
 <br/>
 
+<!-- reload page every 10 seconds -->
+<script type="text/javascript">
+    setInterval(function() {
+        <!-- only if nodes table is active -->
+        if ($("#mypanel_tabs__nodes_table.active").length != 0) {
+            window.location.reload();
+        }
+    }, 10000);
+</script>
+
 <div id="proxys">
     {{ proxys_table.render }}
 </div>
