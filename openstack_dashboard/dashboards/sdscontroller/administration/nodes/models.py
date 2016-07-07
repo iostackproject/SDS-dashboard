@@ -1,9 +1,19 @@
-class Node:
+class ProxyNode:
     """
-        Node class defines a swift node. The identifier is the name of the node.
+        ProxyNode class defines a Swift Proxy node. The identifier is the name of the node.
     """
-    def __init__(self, name, ip, last_ping, type):
+    def __init__(self, name, ip, last_ping):
         self.id = name
         self.ip = ip
         self.last_ping = last_ping
-        self.type = type
+
+
+class StorageNode:
+    """
+        StorageNode class defines a Swift storage node. The identifier is the name of the node.
+    """
+    def __init__(self, name, ip, last_ping, devices):
+        self.id = name
+        self.ip = ip
+        self.last_ping = last_ping
+        self.devices = devices

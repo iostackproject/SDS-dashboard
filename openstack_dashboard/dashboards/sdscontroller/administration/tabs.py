@@ -137,12 +137,13 @@ class MetricModules(tabs.TableTab):
 
 
 class Nodes(tabs.TableTab):
-    table_classes = (nodes_tables.NodesTable,)
+    table_classes = (nodes_tables.ProxysTable, nodes_tables.StorageNodesTable,)
     name = _("Nodes")
     slug = "nodes_table"
-    template_name = "horizon/common/_detail_table.html"
+    #template_name = "horizon/common/_detail_table.html"
+    template_name = "sdscontroller/administration/nodes/_detail.html"
 
-    def get_nodes_data(self):
+    def get_proxys_data(self):
         ret = []
         try:
             response = api.dsl_get_all_nodes(self.request)
@@ -157,7 +158,32 @@ class Nodes(tabs.TableTab):
 
         nodes = json.loads(strobj)
         for node in nodes:
-            ret.append(nodes_models.Node(node['name'], node['ip'], node['last_ping'], node['type']))
+            if node['type'] == 'proxy':
+                ret.append(nodes_models.ProxyNode(node['name'], node['ip'], node['last_ping']))
+        return ret
+
+    def get_storagenodes_data(self):
+        ret = []
+        try:
+            response = api.dsl_get_all_nodes(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get nodes.'
+                raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = '[]'
+            exceptions.handle(self.request, _(e.message))
+
+        nodes = json.loads(strobj)
+        for node in nodes:
+            if node['type'] == 'object':
+                devices = []
+                # for k, v in node['devices'].iteritems():
+                #     used = v['size'] - v['free']
+                #     device_str = k + ': ' + str(float(used)/v['size']) + "% used of " + str(v['size']) + ' bytes'
+                #     devices.append(device_str)
+                ret.append(nodes_models.StorageNode(node['name'], node['ip'], node['last_ping'], node['devices']))
         return ret
 
 
