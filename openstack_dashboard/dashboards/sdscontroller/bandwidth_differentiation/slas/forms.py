@@ -18,8 +18,8 @@ class CreateSLA(forms.SelfHandlingForm):
 
     policy_choices = []
     policy_id = forms.ChoiceField(choices=policy_choices,
-                                  label=_("Policy"),
-                                  help_text=_("The policy that you want to assign to the specific project."),
+                                  label=_("Storage Policy (Ring)"),
+                                  help_text=_("The storage policy that you want to assign to the specific project."),
                                   required=True)
 
     bandwidth = forms.CharField(max_length=255,
@@ -40,13 +40,13 @@ class CreateSLA(forms.SelfHandlingForm):
 
         # Overwrite target_id input form
         self.fields['project_id'] = forms.ChoiceField(choices=self.project_choices,
-                                                      label=_("Target"),
-                                                      help_text=_("The target where the rule will be apply."),
+                                                      label=_("Project"),
+                                                      help_text=_("The project where the rule will be apply."),
                                                       required=True)
 
         self.fields['policy_id'] = forms.ChoiceField(choices=self.storage_policy_choices,
-                                                     label=_("Policy"),
-                                                     help_text=_("The policy that you want to assign to the specific project."),
+                                                     label=_("Storage Policy (Ring)"),
+                                                     help_text=_("The storage policy that you want to assign to the specific project."),
                                                      required=True)
 
     @staticmethod
