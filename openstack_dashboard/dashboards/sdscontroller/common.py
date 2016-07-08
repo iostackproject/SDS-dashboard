@@ -10,16 +10,26 @@ from openstack_dashboard.api import sds_controller as api
 # ===========
 def get_filter_type_choices():
     """
-    Get a list of filter types
+    Get a tuple of filter types
 
-    :return: list with filter types
+    :return: tuple with filter types
     """
-    return [('', 'Select one'), ('storlet', 'Storlet'), ('native', 'Native')]
+    return ('', 'Select one'), ('Filter Types', [('storlet', 'Storlet'), ('native', 'Native')])
 
 
 # Filter
 # ======
 def get_filter_list_choices(request):
+    """
+    Get a tuple of filters
+
+    :param request: the request which the dashboard is using
+    :return: tuple with filters
+    """
+    return ('', 'Select one'), ('Filters', get_filter_list(request))
+
+
+def get_filter_list(request):
     """
     Get a list of filters
 
@@ -48,6 +58,16 @@ def get_filter_list_choices(request):
 # ==========
 def get_dsl_filter_list_choices(request):
     """
+    Get a tuple of dsl filters
+
+    :param request: the request which the dashboard is using
+    :return: tuple with dsl filters
+    """
+    return ('', 'Select one'), ('DSL Filters', get_dsl_filter_list(request))
+
+
+def get_dsl_filter_list(request):
+    """
     Get a list of dsl filters
 
     :param request: the request which the dashboard is using
@@ -75,10 +95,21 @@ def get_dsl_filter_list_choices(request):
 # ===========
 def get_object_type_choices(request):
     """
-    Get a tuple of object types
+    Get a tuple of object type choices
 
     :param request: the request which the dashboard is using
     :return: tuple with object types
+    """
+    object_type_list = get_object_type_list(request)
+    return (('', 'None'), ('Object Types', object_type_list)) if len(object_type_list) > 0 else (('', 'None'),)
+
+
+def get_object_type_list(request):
+    """
+    Get a list of object types
+
+    :param request: the request which the dashboard is using
+    :return: list with object types
     """
     try:
         response = api.dsl_get_all_object_types(request)
@@ -90,18 +121,27 @@ def get_object_type_choices(request):
         response_text = '[]'
         exceptions.handle(request, _(exc.message))
 
-    choices_list = []
-    choices = json.loads(response_text)
-    # Iterate choices
-    for choice in choices:
-        choices_list.append((choice['name'], choice['name']))
-    # Return tuple of object types, or none if not exists
-    return (('', 'None'), ('Object types', choices_list)) if len(choices_list) > 0 else (('', 'None'),)
+    object_types_list = []
+    object_types = json.loads(response_text)
+    # Iterate object types
+    for object_type in object_types:
+        object_types_list.append((object_type['name'], object_type['name']))
+    return object_types_list
 
 
 # Project
 # =======
 def get_project_list_choices(request):
+    """
+    Get a tuple of project choices
+
+    :param request: the request which the dashboard is using
+    :return: tuple with project choices
+    """
+    return ('', 'Select one'), ('Projects', get_project_list(request))
+
+
+def get_project_list(request):
     """
     Get a list of projects
 
@@ -129,6 +169,16 @@ def get_project_list_choices(request):
 # Storage Policy
 # ==============
 def get_storage_policy_list_choices(request):
+    """
+    Get a tuple of storage policy choices
+
+    :param request: the request which the dashboard is using
+    :return: tuple with storage policy choices
+    """
+    return ('', 'Select one'), ('Storage Policies', get_storage_policy_list(request))
+
+
+def get_storage_policy_list(request):
     """
     Get a list of storage policies
 
