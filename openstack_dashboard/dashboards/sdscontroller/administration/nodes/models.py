@@ -1,3 +1,8 @@
+import calendar
+import time
+
+STATUS_THRESHOLD = 15
+
 class ProxyNode:
     """
         ProxyNode class defines a Swift Proxy node. The identifier is the name of the node.
@@ -6,6 +11,7 @@ class ProxyNode:
         self.id = name
         self.ip = ip
         self.last_ping = last_ping
+        self.node_status = calendar.timegm(time.gmtime()) - int(float(last_ping)) <= STATUS_THRESHOLD
 
 
 class StorageNode:
@@ -16,4 +22,5 @@ class StorageNode:
         self.id = name
         self.ip = ip
         self.last_ping = last_ping
+        self.node_status = calendar.timegm(time.gmtime()) - int(float(last_ping)) <= STATUS_THRESHOLD
         self.devices = devices
