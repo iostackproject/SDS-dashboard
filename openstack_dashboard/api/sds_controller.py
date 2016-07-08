@@ -722,6 +722,18 @@ def fil_upload_filter_data(request, filter_id, in_memory_file):
     return r
 
 
+def fil_download_filter_data(request, filter_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/filters/" + str(filter_id) + "/data"
+
+    headers["X-Auth-Token"] = str(token)
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
 def fil_delete_filter(request, filter_id):
     token = sds_controller_api(request)
     headers = {}

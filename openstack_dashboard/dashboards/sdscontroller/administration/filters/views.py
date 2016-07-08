@@ -1,5 +1,6 @@
 import json
 
+from django import http
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -22,6 +23,22 @@ class UploadView(forms.ModalFormView):
     context_object_name = 'filter'
     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
     page_title = _("Upload A Filter")
+
+
+def download_filter(request, filter_id):
+    try:
+        filter_response = api.fil_download_filter_data(request, filter_id)
+
+        # Generate response
+        response = http.StreamingHttpResponse(filter_response.content)
+        response['Content-Disposition'] = filter_response.headers['Content-Disposition']
+        response['Content-Type'] = filter_response.headers['Content-Type']
+        response['Content-Length'] = filter_response.headers['Content-Length']
+        return response
+
+    except Exception as exc:
+        redirect = reverse("horizon:sdscontroller:administration:index")
+        exceptions.handle(request, _(exc.message), redirect=redirect)
 
 
 class UpdateView(forms.ModalFormView):

@@ -28,6 +28,16 @@ class UploadFilter(tables.LinkAction):
     icon = "upload"
 
 
+class DownloadFilter(tables.LinkAction):
+    name = "download"
+    verbose_name = _("Download")
+    icon = "download"
+
+    def get_link_url(self, datum=None):
+        base_url = reverse('horizon:sdscontroller:administration:filters:download', kwargs={'filter_id': datum.id})
+        return base_url
+
+
 class DeleteFilter(tables.DeleteAction):
     @staticmethod
     def action_present(count):
@@ -155,5 +165,5 @@ class FilterTable(tables.DataTable):
         name = "filters"
         verbose_name = _("Filters")
         table_actions = (MyFilterAction, UploadFilter, DeleteMultipleFilters,)
-        row_actions = (UpdateFilter, DeleteFilter,)
+        row_actions = (UpdateFilter, DownloadFilter, DeleteFilter,)
         row_class = UpdateRow
