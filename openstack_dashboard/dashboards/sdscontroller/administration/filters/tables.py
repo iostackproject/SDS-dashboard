@@ -68,9 +68,7 @@ class DeleteFilter(tables.DeleteAction):
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:administration:index")
             error_message = "Unable to remove filter.\t %s" % ex.message
-            exceptions.handle(request,
-                              _(error_message),
-                              redirect=redirect)
+            exceptions.handle(request, _(error_message), redirect=redirect)
 
 
 class UpdateFilter(tables.LinkAction):
