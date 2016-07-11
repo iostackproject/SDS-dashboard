@@ -5,6 +5,11 @@
 
 {% block modal-header %}
     {% blocktrans %}Create a Policy (Simple){% endblocktrans %}
+    <script type="text/javascript">
+        $("#id_target_id").change(function () {
+            $("#id_container_id").load("{% url 'horizon:sdscontroller:storagepolicies:policies:get_container_by_project' %}", {'project_id': $("#id_target_id").val()});
+        });
+    </script>
 {% endblock %}
 
 {% block modal-footer %}

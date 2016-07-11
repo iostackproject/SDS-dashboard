@@ -38,9 +38,15 @@ class CreateDSLPolicy(forms.SelfHandlingForm):
 class CreateSimplePolicy(forms.SelfHandlingForm):
     target_choices = []
     target_id = forms.ChoiceField(choices=target_choices,
-                                  label=_("Target"),
-                                  help_text=_("The target where the rule will be apply."),
+                                  label=_("Project"),
+                                  help_text=_("The project where the rule will be apply."),
                                   required=True)
+
+    container_choices = [('', 'None')]
+    container_id = forms.ChoiceField(choices=container_choices,
+                                     label=_("Container"),
+                                     help_text=_("The container where the rule will be apply."),
+                                     required=False)
 
     filter_dsl_choices = []
     filter_id = forms.ChoiceField(choices=filter_dsl_choices,
@@ -101,8 +107,8 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
 
         # Overwrite target_id input form
         self.fields['target_id'] = forms.ChoiceField(choices=self.target_choices,
-                                                     label=_("Target"),
-                                                     help_text=_("The target where the rule will be apply."),
+                                                     label=_("Project"),
+                                                     help_text=_("The project where the rule will be apply."),
                                                      required=True)
         # Overwrite filter_id input form
         self.fields['filter_id'] = forms.ChoiceField(choices=self.dsl_filter_choices,

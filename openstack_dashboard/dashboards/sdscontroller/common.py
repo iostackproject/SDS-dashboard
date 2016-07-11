@@ -166,6 +166,19 @@ def get_project_list(request):
     return projects_list
 
 
+# Container
+# =========
+def get_container_list(request, project_id):
+    """
+    Get a tuple of containers
+
+    :param request: the request which the dashboard is using
+    :param project_id: id of the project
+    :return: tuple with containers
+    """
+    return ('test', 'test'),
+
+
 # Storage Policy
 # ==============
 def get_storage_policy_list_choices(request):

@@ -1,13 +1,16 @@
 import json
 
+from django import http
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
 
 from horizon import exceptions
 from horizon import forms
 from horizon.utils import memoized
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller import common
 from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies import forms as policies_forms
 
 
@@ -23,6 +26,32 @@ class CreateSimplePolicyView(forms.ModalFormView):
     content_object_name = 'policy'
     success_url = reverse_lazy('horizon:sdscontroller:storagepolicies:index')
     page_title = _("Create a Policy (Simple)")
+
+
+@csrf_exempt
+def get_container_by_project(request):
+    if request.method == 'POST':
+        project_id = request.POST.get('project_id')
+        if project_id:
+            try:
+                container_list = common.get_container_list(request, project_id)
+                if len(container_list) > 0:
+                    container_response = '<option value="">Select one</option>'
+                    container_response += '<optgroup label="Containers">'
+                    for container in container_list:
+                        value, label = container
+                        container_response += '<option value="' + str(value) + '">' + str(label) + '</option>'
+                    container_response += '</optgroup>'
+                else:
+                    container_response = '<option value="">None</option>'
+            except Exception as exc:
+                container_response = '<option value="">None</option>'
+        else:
+            container_response = '<option value="">None</option>'
+
+        # Generate response
+        response = http.StreamingHttpResponse(container_response)
+        return response
 
 
 class CreateDSLPolicyView(forms.ModalFormView):
