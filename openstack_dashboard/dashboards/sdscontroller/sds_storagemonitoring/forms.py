@@ -36,6 +36,8 @@ class SelectVolume(forms.Form):
         self.fields['volume'].choices = self.volume_list(request)
         
     def volume_list(self, request):
+        volumes = []
+        data = []
         try:
             volumes = cinder.volume_list(request)
         except Exception:
@@ -61,4 +63,6 @@ class SelectVolume(forms.Form):
                     volumeid = sserial
                     volumename = v.name
                     choices.append((volumeid, volumename))
+        if not choices:
+            choices.insert(0, ("", _("No available volumes found")))
         return choices
