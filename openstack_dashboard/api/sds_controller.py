@@ -261,12 +261,12 @@ def remove_storage_nodes(request, storage_node_id):
     return r
 
 
-# # Registry DSL - Static Policies
-def dsl_add_static_policy_dsl(request, policy):
+# # Registry DSL - Policies
+def dsl_add_policy(request, policy):
     token = sds_controller_api(request)
     headers = {}
 
-    url = URL_BASIC + "/registry/static_policy"
+    url = URL_BASIC + "/registry/dynamic_policy"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
@@ -274,7 +274,7 @@ def dsl_add_static_policy_dsl(request, policy):
     r = requests.post(url, policy, headers=headers)
     return r
 
-
+# # Registry DSL - Static Policies
 def dsl_get_all_static_policies(request):
     token = sds_controller_api(request)
     headers = {}
@@ -329,19 +329,6 @@ def dsl_delete_static_policy(request, policy_id):
 
 
 # # Registry DSL - Dynamic Policies
-def create_dynamic_policy(request, policy):
-    token = sds_controller_api(request)
-    headers = {}
-
-    url = URL_BASIC + "/registry/dynamic_policy"
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "text/plain"
-
-    r = requests.post(url, policy, headers=headers)
-    return r
-
-
 def list_dynamic_policies(request):
     token = sds_controller_api(request)
     headers = {}
