@@ -49,8 +49,7 @@ class DeleteMetricModule(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            # response = api.fil_delete_filter(request, obj_id)
-            response = None
+            response = api.mtr_delete_metric_module(request, obj_id)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully deleted metric module: %s') % obj_id)
             else:
@@ -78,18 +77,15 @@ class UpdateMetricModule(tables.LinkAction):
 
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
-        return ((cell.column.name == 'name') or
-                (cell.column.name == 'interface_version') or
-                (cell.column.name == 'object_metadata') or
-                (cell.column.name == 'is_put') or
-                (cell.column.name == 'is_get') or
+        return ((cell.column.name == 'class_name') or
+                (cell.column.name == 'out_flow') or
+                (cell.column.name == 'in_flow') or
                 (cell.column.name == 'execution_server'))
 
-    def update_cell(self, request, datum, id, cell_name, new_cell_value):
+    def update_cell(self, request, datum, metric_module_id, cell_name, new_cell_value):
         try:
             # updating changed value by new value
-            # response = api.mtr_get_metric_module_metadata(request, id)
-            response = None
+            response = api.mtr_get_metric_module(request, metric_module_id)
             data = json.loads(response.text)
             data[cell_name] = new_cell_value
 
@@ -99,7 +95,7 @@ class UpdateCell(tables.UpdateAction):
             if 'path' in data:  # PUT does not allow this key
                 del data['path']
 
-            # api.mtr_update_metric_module_metadata(request, id, data)
+            api.mtr_update_metric_module(request, id, data)
         except Conflict:
             # Returning a nice error message about name conflict. The message
             # from exception is not that clear for the user
@@ -114,22 +110,19 @@ class UpdateCell(tables.UpdateAction):
 class UpdateRow(tables.Row):
     ajax = True
 
-    def get_data(self, request, id_):
-        # response = api.mtr_get_metric_module_metadata(request, id_)
-        response = None
+    def get_data(self, request, metric_module_id):
+        response = api.mtr_get_metric_module(request, metric_module_id)
         data = json.loads(response.text)
-        filter = MetricModule(data['id'], data['name'], data['interface_version'], data['object_metadata'],
-                              data['is_put'], data['is_get'], data['execution_server'])
+        filter = MetricModule(data['id'], data['class_name'], data['out_flow'],
+                              data['in_flow'], data['execution_server'])
         return filter
 
 
 class FilterTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
-    name = tables.Column('name', verbose_name=_("Name"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    is_put = tables.Column('is_put', verbose_name=_("Is Put?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
-    is_get = tables.Column('is_get', verbose_name=_("Is Get?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    class_name = tables.Column('class_name', verbose_name=_("Class Name"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    out_flow = tables.Column('out_flow', verbose_name=_("Out Flow?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    in_flow = tables.Column('in_flow', verbose_name=_("In Flow?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
     execution_server = tables.Column('execution_server', verbose_name=_("Execution Server"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
 
     class Meta:

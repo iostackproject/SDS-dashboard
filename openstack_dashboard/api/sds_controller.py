@@ -274,6 +274,7 @@ def dsl_add_policy(request, policy):
     r = requests.post(url, policy, headers=headers)
     return r
 
+
 # # Registry DSL - Static Policies
 def dsl_get_all_static_policies(request):
     token = sds_controller_api(request)
@@ -365,6 +366,98 @@ def list_metrics(request):
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+# # Registry - Metric Modules
+def mtr_add_metric_module_metadata(request, data):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.post(url, json.dumps(data), headers=headers)
+    return r
+
+
+def mtr_get_all_metric_modules(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def mtr_update_metric_module(request, metric_module_id, data):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module/" + str(metric_module_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
+def mtr_get_metric_module(request, metric_module_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module/" + str(metric_module_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def mtr_delete_metric_module(request, metric_module_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module/" + str(metric_module_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+def mtr_upload_metric_module_data(request, metric_module_id, in_memory_file):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module/" + str(metric_module_id) + "/data"
+
+    headers["X-Auth-Token"] = str(token)
+
+    files = {'file': (in_memory_file.name, in_memory_file.read())}
+
+    r = requests.put(url, files=files, headers=headers)
+    return r
+
+
+def mtr_download_metric_module_data(request, metric_module_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module/" + str(metric_module_id) + "/data"
+
+    headers["X-Auth-Token"] = str(token)
 
     r = requests.get(url, headers=headers)
     return r

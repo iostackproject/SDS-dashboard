@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms
 from horizon.utils import memoized
+from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller.administration.metric_modules import forms as metric_modules_forms
 
 
@@ -45,9 +46,8 @@ class UpdateView(forms.ModalFormView):
     def _get_object(self, *args, **kwargs):
         metric_module_id = self.kwargs['metric_module_id']
         try:
-            # metric_module = api.mtr_get_metric_module_metadata(self.request, metric_module_id)
-            # return metric_module
-            return None
+            metric_module = api.mtr_get_metric_module(self.request, metric_module_id)
+            return metric_module
         except Exception:
             redirect = self.success_url
             msg = _('Unable to retrieve metric modules details.')

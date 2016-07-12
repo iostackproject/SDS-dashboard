@@ -116,13 +116,12 @@ class MetricModules(tabs.TableTab):
 
     def get_metric_modules_data(self):
         try:
-            strobj = '[]'
-            # response = api.fil_list_filters(self.request)
-            # if 200 <= response.status_code < 300:
-            #     strobj = response.text
-            # else:
-            #     error_message = 'Unable to get instances.'
-            #     raise sdsexception.SdsException(error_message)
+            response = api.mtr_get_all_metric_modules(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get instances.'
+                raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = '[]'
             exceptions.handle(self.request, _(e.message))
@@ -130,9 +129,7 @@ class MetricModules(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(metric_module_models.MetricModule(inst['id'], inst['name'], inst['interface_version'], inst['object_metadata'],
-                                                         inst['is_put'], inst['is_get'], inst['execution_server'],
-                                                         ))
+            ret.append(metric_module_models.MetricModule(inst['id'], inst['class_name'], inst['out_flow'], inst['in_flow'], inst['execution_server']))
         return ret
 
 
@@ -140,7 +137,7 @@ class Nodes(tabs.TableTab):
     table_classes = (nodes_tables.ProxysTable, nodes_tables.StorageNodesTable,)
     name = _("Nodes")
     slug = "nodes_table"
-    #template_name = "horizon/common/_detail_table.html"
+    # template_name = "horizon/common/_detail_table.html"
     template_name = "sdscontroller/administration/nodes/_detail.html"
 
     def get_proxys_data(self):
