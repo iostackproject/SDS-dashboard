@@ -1,9 +1,11 @@
 import json
 
 from django.utils.translation import ugettext_lazy as _
+from swiftclient import ClientException
 
 from horizon import exceptions
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.api import swift
 
 
 # Filter Type
@@ -176,7 +178,16 @@ def get_container_list(request, project_id):
     :param project_id: id of the project
     :return: tuple with containers
     """
-    return ('test', 'test'),
+    try:
+        swift_headers, swift_containers = swift.swift_api(request).get_account(full_listing=True)
+    except ClientException:
+        swift_containers = []
+
+    containers_list = []
+    # Iterate containers
+    for container in swift_containers:
+        containers_list.append((container['name'], container['name']))
+    return containers_list
 
 
 # Storage Policy
