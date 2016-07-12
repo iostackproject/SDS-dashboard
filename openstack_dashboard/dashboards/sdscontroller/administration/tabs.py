@@ -120,7 +120,7 @@ class MetricModules(tabs.TableTab):
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
-                error_message = 'Unable to get instances.'
+                error_message = 'Unable to get metric modules.'
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = '[]'
