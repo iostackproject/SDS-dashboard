@@ -103,7 +103,10 @@ class UploadFilter(forms.SelfHandlingForm):
                     messages.success(request, _('Successfully filter creation and upload.'))
                     return data
                 else:
-                    raise sdsexception.SdsException(response.text)
+                    exception_txt = response.text
+                    # Error uploading --> delete filter
+                    api.fil_delete_filter(request, filter_id)
+                    raise sdsexception.SdsException(exception_txt)
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:
