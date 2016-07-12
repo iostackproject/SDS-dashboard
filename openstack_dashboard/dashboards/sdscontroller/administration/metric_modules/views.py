@@ -1,5 +1,6 @@
 import json
 
+from django import http
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -23,13 +24,29 @@ class UploadView(forms.ModalFormView):
     page_title = _("Upload Metric Module")
 
 
+def download_metric_module(request, metric_module_id):
+    try:
+        metric_module_response = api.mtr_download_metric_module_data(request, metric_module_id)
+
+        # Generate response
+        response = http.StreamingHttpResponse(metric_module_response.content)
+        response['Content-Disposition'] = metric_module_response.headers['Content-Disposition']
+        response['Content-Type'] = metric_module_response.headers['Content-Type']
+        response['Content-Length'] = metric_module_response.headers['Content-Length']
+        return response
+
+    except Exception as exc:
+        redirect = reverse("horizon:sdscontroller:administration:index")
+        exceptions.handle(request, _(exc.message), redirect=redirect)
+
+
 class UpdateView(forms.ModalFormView):
     form_class = metric_modules_forms.UpdateMetricModule
     form_id = "update_metric_module_form"
     modal_header = _("Update Metric Module")
     submit_label = _("Update Metric Module")
     submit_url = "horizon:sdscontroller:administration:metric_modules:update_metric_module"
-    template_name = "sdscontroller/administration/filters/update_metric_module.html"
+    template_name = "sdscontroller/administration/metric_modules/update_metric_module.html"
     context_object_name = 'metric_module'
     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
     page_title = _("Update Metric Module")

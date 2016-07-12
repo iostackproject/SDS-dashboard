@@ -27,6 +27,16 @@ class UploadMetricModule(tables.LinkAction):
     icon = "upload"
 
 
+class DownloadMetricModule(tables.LinkAction):
+    name = "download"
+    verbose_name = _("Download")
+    icon = "download"
+
+    def get_link_url(self, datum=None):
+        base_url = reverse('horizon:sdscontroller:administration:metric_modules:download_metric_module', kwargs={'metric_module_id': datum.id})
+        return base_url
+
+
 class DeleteMetricModule(tables.DeleteAction):
     @staticmethod
     def action_present(count):
@@ -95,7 +105,7 @@ class UpdateCell(tables.UpdateAction):
             if 'path' in data:  # PUT does not allow this key
                 del data['path']
 
-            api.mtr_update_metric_module(request, id, data)
+            api.mtr_update_metric_module(request, metric_module_id, data)
         except Conflict:
             # Returning a nice error message about name conflict. The message
             # from exception is not that clear for the user
