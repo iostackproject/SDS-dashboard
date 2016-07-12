@@ -30,7 +30,7 @@ class ProxysTable(tables.DataTable):
     ip = tables.Column('ip', verbose_name="IP")
     last_ping = tables.Column(lambda obj: '{0} seconds ago'.format(calendar.timegm(time.gmtime()) - int(float(getattr(obj, 'last_ping', '0')))),
                               verbose_name="Last Swift ping")
-    node_status = tables.Column(lambda obj: 'UP' if obj is True else 'DOWN', verbose_name="Swift Status", status=True)
+    node_status = tables.Column(lambda obj: 'UP' if getattr(obj, 'node_status', False) is True else 'DOWN', verbose_name="Swift Status", status=True)
 
     class Meta:
         name = "proxys"
