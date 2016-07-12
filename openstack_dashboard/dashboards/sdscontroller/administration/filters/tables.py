@@ -122,7 +122,7 @@ class UpdateCell(tables.UpdateAction):
         except Conflict:
             # Returning a nice error message about name conflict. The message
             # from exception is not that clear for the user
-            message = _("Cant change value")
+            message = _("Can't change value")
             raise ValidationError(message)
         except Exception:
             exceptions.handle(request, ignore=True)
