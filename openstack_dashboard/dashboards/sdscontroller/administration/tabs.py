@@ -109,7 +109,7 @@ class Dependencies(tabs.TableTab):
 
 
 class MetricModules(tabs.TableTab):
-    table_classes = (metric_module_tables.FilterTable,)
+    table_classes = (metric_module_tables.MetricTable,)
     name = _("Workload Metric Modules")
     slug = "metric_modules_table"
     template_name = "horizon/common/_detail_table.html"
@@ -129,7 +129,7 @@ class MetricModules(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(metric_module_models.MetricModule(inst['id'], inst['class_name'], inst['out_flow'], inst['in_flow'], inst['execution_server']))
+            ret.append(metric_module_models.MetricModule(inst['id'], inst['metric_name'], inst['class_name'], inst['out_flow'], inst['in_flow'], inst['execution_server']))
         return ret
 
 

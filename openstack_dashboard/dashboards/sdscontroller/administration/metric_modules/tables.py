@@ -123,17 +123,22 @@ class UpdateRow(tables.Row):
     def get_data(self, request, metric_module_id):
         response = api.mtr_get_metric_module(request, metric_module_id)
         data = json.loads(response.text)
-        filter = MetricModule(data['id'], data['class_name'], data['out_flow'],
+        filter = MetricModule(data['id'], data['metric_name'], data['class_name'], data['out_flow'],
                               data['in_flow'], data['execution_server'])
         return filter
 
 
-class FilterTable(tables.DataTable):
+class MetricTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
+    metric_name = tables.Column('metric_name', verbose_name=_("Metric Name"))
     class_name = tables.Column('class_name', verbose_name=_("Class Name"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    out_flow = tables.Column('out_flow', verbose_name=_("Out Flow?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
-    in_flow = tables.Column('in_flow', verbose_name=_("In Flow?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
-    execution_server = tables.Column('execution_server', verbose_name=_("Execution Server"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
+    out_flow = tables.Column('out_flow', verbose_name=_("Out Flow?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+                             update_action=UpdateCell)
+    in_flow = tables.Column('in_flow', verbose_name=_("In Flow?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+                            update_action=UpdateCell)
+    execution_server = tables.Column('execution_server', verbose_name=_("Execution Server"),
+                                     form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]),
+                                     update_action=UpdateCell)
 
     class Meta:
         name = "metric_modules"
