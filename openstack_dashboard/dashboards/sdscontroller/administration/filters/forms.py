@@ -12,6 +12,10 @@ from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexcept
 
 
 class UploadFilter(forms.SelfHandlingForm):
+    filter_file = forms.FileField(label=_("File"),
+                                  required=True,
+                                  allow_empty_file=False)
+
     filter_type = forms.ChoiceField(choices=common.get_filter_type_choices(),
                                     label=_("Filter Type"),
                                     help_text=_("The type of the filter."),
@@ -78,10 +82,6 @@ class UploadFilter(forms.SelfHandlingForm):
             'data-slug': 'source'
         })
     )
-
-    filter_file = forms.FileField(label=_("File"),
-                                  required=True,
-                                  allow_empty_file=False)
 
     def __init__(self, request, *args, **kwargs):
         super(UploadFilter, self).__init__(request, *args, **kwargs)

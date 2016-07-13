@@ -11,6 +11,10 @@ from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexcept
 
 
 class UploadMetricModule(forms.SelfHandlingForm):
+    metric_module_file = forms.FileField(label=_("File"),
+                                         required=True,
+                                         allow_empty_file=False)
+
     class_name = forms.CharField(max_length=255,
                                  label=_("Class Name"),
                                  help_text=_("The main class of the metric module to be created."),
@@ -19,6 +23,7 @@ class UploadMetricModule(forms.SelfHandlingForm):
                                  ))
 
     out_flow = forms.BooleanField(required=False)
+
     in_flow = forms.BooleanField(required=False)
 
     execution_server = forms.ChoiceField(
@@ -32,10 +37,6 @@ class UploadMetricModule(forms.SelfHandlingForm):
             'data-slug': 'source'
         })
     )
-
-    metric_module_file = forms.FileField(label=_("File"),
-                                         required=True,
-                                         allow_empty_file=False)
 
     def __init__(self, request, *args, **kwargs):
         super(UploadMetricModule, self).__init__(request, *args, **kwargs)
