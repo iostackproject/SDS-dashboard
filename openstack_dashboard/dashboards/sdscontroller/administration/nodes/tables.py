@@ -13,6 +13,18 @@ from horizon import tables
 class MyProxyFilterAction(tables.FilterAction):
     name = "myproxyfilter"
 
+class UpdateNodeAction(tables.LinkAction):
+    name = "update"
+    verbose_name = _("Edit")
+    icon = "pencil"
+    classes = ("ajax-modal", "btn-update",)
+
+    def get_link_url(self, datum=None):
+        base_url = reverse("horizon:sdscontroller:administration:nodes:update", kwargs={'node_id': datum.id})
+        return base_url
+
+class UpdateProxyAction(UpdateNodeAction):
+    pass
 
 class RestartProxyAction(tables.LinkAction):
     name = "restart"
@@ -36,7 +48,7 @@ class ProxysTable(tables.DataTable):
         name = "proxys"
         verbose_name = _("Proxys")
         table_actions = (MyProxyFilterAction,)
-        row_actions = (RestartProxyAction,)
+        row_actions = (UpdateProxyAction, RestartProxyAction,)
         hidden_title = False
 
 
@@ -65,6 +77,8 @@ STATUS_DISPLAY_CHOICES = (
 class MyStorageNodeFilterAction(tables.FilterAction):
     name = "mystoragenodefilter"
 
+class UpdateStorageNodeAction(UpdateNodeAction):
+    pass
 
 class RestartStorageNodeAction(tables.LinkAction):
     name = "restart"
@@ -89,5 +103,5 @@ class StorageNodesTable(tables.DataTable):
         name = "storagenodes"
         verbose_name = _("Storage Nodes")
         table_actions = (MyStorageNodeFilterAction,)
-        row_actions = (RestartStorageNodeAction,)
+        row_actions = (UpdateStorageNodeAction, RestartStorageNodeAction,)
         hidden_title = False
