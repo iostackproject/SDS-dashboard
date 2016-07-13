@@ -67,10 +67,7 @@ class UploadMetricModule(forms.SelfHandlingForm):
 class UpdateMetricModule(forms.SelfHandlingForm):
     class_name = forms.CharField(max_length=255,
                                  label=_("Class Name"),
-                                 help_text=_("The main class of the metric module to be created."),
-                                 widget=forms.TextInput(
-                                     attrs={"ng-model": "name", "not-blank": ""}
-                                 ))
+                                 help_text=_("The main class of the metric module to be created."))
 
     out_flow = forms.BooleanField(required=False)
     in_flow = forms.BooleanField(required=False)
