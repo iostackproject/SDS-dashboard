@@ -142,5 +142,5 @@ class MetricTable(tables.DataTable):
         name = "metric_modules"
         verbose_name = _("Metric Modules")
         table_actions = (MyFilterAction, UploadMetricModule, DeleteMultipleMetricModules,)
-        row_actions = (UpdateMetricModule, DeleteMetricModule,)
+        row_actions = (UpdateMetricModule, DownloadMetricModule, DeleteMetricModule,)
         row_class = UpdateRow
