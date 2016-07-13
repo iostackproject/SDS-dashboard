@@ -129,7 +129,7 @@ class MetricModules(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(metric_module_models.MetricModule(inst['id'], inst['metric_name'], inst['class_name'], inst['out_flow'], inst['in_flow'], inst['execution_server']))
+            ret.append(metric_module_models.MetricModule(inst['id'], inst['metric_name'], inst['class_name'], inst['out_flow'], inst['in_flow'], inst['execution_server'], inst['status']))
         return ret
 
 

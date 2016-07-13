@@ -38,6 +38,9 @@ class UploadMetricModule(forms.SelfHandlingForm):
         })
     )
 
+    status = forms.BooleanField(label=_("Enable Workload Metric"),
+                                required=False)
+
     def __init__(self, request, *args, **kwargs):
         super(UploadMetricModule, self).__init__(request, *args, **kwargs)
 
@@ -83,6 +86,9 @@ class UpdateMetricModule(forms.SelfHandlingForm):
             'data-slug': 'source'
         })
     )
+
+    status = forms.BooleanField(label=_("Enable Workload Metric"),
+                                required=False)
 
     def __init__(self, request, *args, **kwargs):
         super(UpdateMetricModule, self).__init__(request, *args, **kwargs)
