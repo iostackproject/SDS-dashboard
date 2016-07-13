@@ -773,6 +773,31 @@ def dsl_get_all_nodes(request):
     return r
 
 
+def dsl_get_node_detail(request, node_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/nodes/" + str(node_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def dsl_update_node(request, node_id, data):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/nodes/" + str(node_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
 ############################## # Filters API # ##############################
 # Filters - Filters
 def fil_create_filter(request, data):
