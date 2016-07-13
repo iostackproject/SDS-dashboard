@@ -88,8 +88,7 @@ class DeleteMultipleFilters(DeleteFilter):
 
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
-        return ((cell.column.name == 'filter_type') or
-                (cell.column.name == 'interface_version') or
+        return ((cell.column.name == 'interface_version') or
                 (cell.column.name == 'dependencies') or
                 (cell.column.name == 'execution_server') or
                 (cell.column.name == 'execution_server_reverse') or
@@ -147,8 +146,8 @@ class UpdateRow(tables.Row):
 
 class FilterTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
-    name = tables.Column('filter_name', verbose_name=_("Name"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    filter_type = tables.Column('filter_type', verbose_name=_("Type"), form_field=forms.ChoiceField(choices=common.get_filter_type_choices()), update_action=UpdateCell)
+    name = tables.Column('filter_name', verbose_name=_("Name"))
+    filter_type = tables.Column('filter_type', verbose_name=_("Type"))
     interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)

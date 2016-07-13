@@ -67,13 +67,6 @@ def get_devices_info(storage_node):
     context = {"devices": ordered_devices}
     return template.loader.render_to_string(template_name, context)
 
-
-STATUS_DISPLAY_CHOICES = (
-    (True, 'UP'),
-    (False, 'DOWN'),
-)
-
-
 class MyStorageNodeFilterAction(tables.FilterAction):
     name = "mystoragenodefilter"
 

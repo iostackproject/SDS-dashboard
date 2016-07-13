@@ -116,11 +116,6 @@ class UploadFilter(forms.SelfHandlingForm):
 
 
 class UpdateFilter(forms.SelfHandlingForm):
-    filter_type = forms.ChoiceField(choices=common.get_filter_type_choices(),
-                                    label=_("Filter Type"),
-                                    help_text=_("The type of the filter."),
-                                    required=True)
-
     interface_version = forms.CharField(max_length=255,
                                         label=_("Interface Version"),
                                         required=False,
