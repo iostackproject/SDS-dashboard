@@ -136,7 +136,7 @@ class MetricTable(tables.DataTable):
     out_flow = tables.Column('out_flow', verbose_name=_("Out Flow?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
     in_flow = tables.Column('in_flow', verbose_name=_("In Flow?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
     execution_server = tables.Column('execution_server', verbose_name=_("Execution Server"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
-    status = tables.Column(lambda x: 'Enabled' if x.status == 'True' else 'Disabled', verbose_name=_("Status"), form_field=forms.ChoiceField(choices=[('True', _('Enable')), ('False', _('Disable'))]), update_action=UpdateCell)
+    status = tables.Column(lambda x: 'Enabled' if x.status == True else 'Disabled', verbose_name=_("Status"), form_field=forms.ChoiceField(choices=[('True', _('Enable')), ('False', _('Disable'))]), update_action=UpdateCell)
 
     class Meta:
         name = "metric_modules"
