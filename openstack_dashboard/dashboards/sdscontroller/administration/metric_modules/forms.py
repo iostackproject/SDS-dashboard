@@ -87,8 +87,8 @@ class UpdateMetricModule(forms.SelfHandlingForm):
         })
     )
 
-    status = forms.BooleanField(label=_("Enable Workload Metric"),
-                                required=False)
+    enabled = forms.BooleanField(label=_("Enable Workload Metric"),
+                                 required=False)
 
     def __init__(self, request, *args, **kwargs):
         super(UpdateMetricModule, self).__init__(request, *args, **kwargs)
