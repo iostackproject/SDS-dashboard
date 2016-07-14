@@ -62,7 +62,8 @@ class DeleteFilter(tables.DeleteAction):
         try:
             response = api.fil_delete_filter(request, obj_id)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully deleted filter: %s') % obj_id)
+                pass
+                # messages.success(request, _('Successfully deleted filter: %s') % obj_id)
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:

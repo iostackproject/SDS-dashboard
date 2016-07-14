@@ -60,7 +60,8 @@ class DeleteObjectType(tables.DeleteAction):
         try:
             response = api.dsl_delete_object_type(request, obj_id)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully deleted object type: %s') % obj_id)
+                pass
+                # messages.success(request, _('Successfully deleted object type: %s') % obj_id)
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:

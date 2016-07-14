@@ -104,7 +104,8 @@ class DeleteDependency(tables.DeleteAction):
         try:
             response = api.fil_delete_dependency(request, obj_id)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully deleted dependency: %s') % obj_id)
+                pass
+                # messages.success(request, _('Successfully deleted dependency: %s') % obj_id)
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:

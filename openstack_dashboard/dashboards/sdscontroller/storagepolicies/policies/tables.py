@@ -115,7 +115,8 @@ class DeleteStaticPolicy(tables.DeleteAction):
         try:
             response = api.dsl_delete_static_policy(request, obj_id)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully deleted policy/rule: %s') % obj_id)
+                pass
+                # messages.success(request, _('Successfully deleted policy/rule: %s') % obj_id)
             else:
                 raise ValueError(response.text)
         except Exception as ex:
@@ -152,7 +153,8 @@ class DeleteDynamicPolicy(tables.DeleteAction):
         try:
             response = api.remove_dynamic_policy(request, obj_id)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully deleted policy/rule: %s') % obj_id)
+                pass
+                # messages.success(request, _('Successfully deleted policy/rule: %s') % obj_id)
             else:
                 raise ValueError(response.text)
         except Exception as ex:
