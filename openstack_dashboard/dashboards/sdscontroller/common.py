@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from swiftclient import ClientException
 
 from horizon import exceptions
+from openstack_dashboard.api import keystone
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.api import swift
 
@@ -151,32 +152,38 @@ def get_project_list(request):
     :return: list with projects
     """
     try:
-        response = api.swift_list_tenants(request)
-        if 200 <= response.status_code < 300:
-            response_text = response.text
-        else:
-            raise ValueError('Unable to get projects.')
+        # admin = True (all projects), admin = False (user projects)
+        response_text = keystone.tenant_list(request, admin=True)
     except Exception as exc:
         response_text = '[]'
         exceptions.handle(request, _(exc.message))
 
     projects_list = []
-    projects = json.loads(response_text)['tenants']
+    projects = response_text[0]
     # Iterate projects
     for project in projects:
-        projects_list.append((project['id'], project['name']))
+        projects_list.append((project.__dict__['_info']['id'], project.__dict__['_info']['name']))
     return projects_list
 
 
 # Container
 # =========
-def get_container_list(request, project_id):
+def get_container_list_choices(request):
     """
-    Get a tuple of containers
+    Get a tuple of container choices
 
     :param request: the request which the dashboard is using
-    :param project_id: id of the project
-    :return: tuple with containers
+    :return: tuple with container choices
+    """
+    return ('', 'Select one'), ('Containers', get_container_list(request))
+
+
+def get_container_list(request):
+    """
+    Get a list of containers
+
+    :param request: the request which the dashboard is using
+    :return: list with containers
     """
     try:
         swift_headers, swift_containers = swift.swift_api(request).get_account(full_listing=True)

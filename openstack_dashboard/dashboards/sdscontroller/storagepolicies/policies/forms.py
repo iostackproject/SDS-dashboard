@@ -43,10 +43,10 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
                                   required=True)
 
     container_choices = [('', 'None')]
-    container_id = forms.ChoiceField(choices=container_choices,
-                                     label=_("Container"),
-                                     help_text=_("The container where the rule will be apply."),
-                                     required=False)
+    container_id = forms.CharField(label=_("Container"),
+                                   help_text=_("The container where the rule will be apply."),
+                                   required=False,
+                                   widget=forms.Select(choices=container_choices))
 
     filter_dsl_choices = []
     filter_id = forms.ChoiceField(choices=filter_dsl_choices,
@@ -125,7 +125,9 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
     def handle(request, data):
 
         try:
+            # print(data)
             response = api.fil_deploy_filter(request, data['filter_id'], data['target_id'], data)
+            # print (response)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully created simple policy/rule!'))
                 return data

@@ -32,10 +32,11 @@ class CreateSimplePolicyView(forms.ModalFormView):
 def get_container_by_project(request):
     if request.method == 'POST':
         project_id = request.POST.get('project_id')
-        if project_id:
+        if request.user.tenant_id == project_id:
             try:
-                container_list = common.get_container_list(request, project_id)
+                container_list = common.get_container_list(request)
                 if len(container_list) > 0:
+                    # If the project contains some containers
                     container_response = '<option value="">Select one</option>'
                     container_response += '<optgroup label="Containers">'
                     for container in container_list:
@@ -43,11 +44,18 @@ def get_container_by_project(request):
                         container_response += '<option value="' + str(value) + '">' + str(label) + '</option>'
                     container_response += '</optgroup>'
                 else:
+                    # If the project does not contain some containers
                     container_response = '<option value="">None</option>'
             except Exception as exc:
+                # If get_container_list raises an exception
                 container_response = '<option value="">None</option>'
         else:
-            container_response = '<option value="">None</option>'
+            if project_id:
+                # If the selected project is not the current project
+                container_response = '<option value="">Not available</option>'
+            else:
+                # If the selected project is 'Select one'
+                container_response = '<option value="">None</option>'
 
         # Generate response
         response = http.StreamingHttpResponse(container_response)
