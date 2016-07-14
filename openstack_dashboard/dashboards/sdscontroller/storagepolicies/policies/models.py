@@ -21,8 +21,10 @@ class DynamicPolicy:
         DynamicPolicy class represents the policy data
     """
 
-    def __init__(self, dynamic_policy_id, policy, policy_location, alive):
+    def __init__(self, dynamic_policy_id, policy, condition, transient, policy_location, alive):
         self.id = dynamic_policy_id
         self.policy = policy
+        self.condition = condition
+        self.transient = transient
         self.policy_location = policy_location
         self.alive = alive

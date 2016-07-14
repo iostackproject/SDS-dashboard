@@ -50,7 +50,7 @@ class Policies(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(policies_models.DynamicPolicy(inst['id'], inst['policy'], inst['policy_location'], inst['alive']))
+            ret.append(policies_models.DynamicPolicy(inst['id'], inst['policy'], inst['condition'], inst['transient'], inst['policy_location'], inst['alive']))
         return ret
 
 
