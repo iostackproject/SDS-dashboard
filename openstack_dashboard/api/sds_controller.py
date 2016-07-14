@@ -798,6 +798,7 @@ def dsl_update_node(request, node_id, data):
     r = requests.put(url, json.dumps(data), headers=headers)
     return r
 
+
 ############################## # Filters API # ##############################
 # Filters - Filters
 def fil_create_filter(request, data):
@@ -896,6 +897,20 @@ def fil_deploy_filter(request, filter_id, account_id, parameters):
     headers = {}
 
     url = URL_BASIC + "/filters/" + str(account_id) + "/deploy/" + str(filter_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(parameters), headers=headers)
+
+    return r
+
+
+def fil_deploy_filter_with_container(request, filter_id, account_id, container_id, parameters):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/filters/" + str(account_id) + "/" + str(container_id) + "/deploy/" + str(filter_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"

@@ -123,11 +123,12 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
 
     @staticmethod
     def handle(request, data):
-
         try:
-            # print(data)
-            response = api.fil_deploy_filter(request, data['filter_id'], data['target_id'], data)
-            # print (response)
+            if data['container_id'] != '':
+                response = api.fil_deploy_filter_with_container(request, data['filter_id'], data['target_id'], data['container_id'], data)
+            else:
+                response = api.fil_deploy_filter(request, data['filter_id'], data['target_id'], data)
+
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully created simple policy/rule!'))
                 return data
