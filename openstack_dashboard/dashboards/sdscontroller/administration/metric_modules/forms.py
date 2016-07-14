@@ -50,15 +50,10 @@ class UploadMetricModule(forms.SelfHandlingForm):
         del data['metric_module_file']
 
         try:
-            response = api.mtr_add_metric_module_metadata(request, data)
+            response = api.mtr_add_metric_module_metadata(request, data, metric_module_file)
             if 200 <= response.status_code < 300:
-                metric_module_id = json.loads(response.text)["id"]
-                response = api.mtr_upload_metric_module_data(request, metric_module_id, metric_module_file)
-                if 200 <= response.status_code < 300:
-                    messages.success(request, _('Successfully metric module creation and upload.'))
-                    return data
-                else:
-                    raise sdsexception.SdsException(response.text)
+                messages.success(request, _('Successfully metric module creation and upload.'))
+                return data
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:

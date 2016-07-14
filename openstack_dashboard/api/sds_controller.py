@@ -372,16 +372,19 @@ def list_metrics(request):
 
 
 # # Registry - Metric Modules
-def mtr_add_metric_module_metadata(request, data):
+def mtr_add_metric_module_metadata(request, data, in_memory_file):
     token = sds_controller_api(request)
     headers = {}
 
-    url = URL_BASIC + "/registry/metric_module"
+    url = URL_BASIC + "/registry/metric_module/data"
 
     headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
+    # Content-Type header will be set to multipart by django because a file is uploaded
 
-    r = requests.post(url, json.dumps(data), headers=headers)
+    files = {'file': (in_memory_file.name, in_memory_file.read())}
+    data_to_send = {'metadata': json.dumps(data)}
+
+    r = requests.post(url, data_to_send, files=files, headers=headers)
     return r
 
 
@@ -434,20 +437,6 @@ def mtr_delete_metric_module(request, metric_module_id):
     headers['Content-Type'] = "application/json"
 
     r = requests.delete(url, headers=headers)
-    return r
-
-
-def mtr_upload_metric_module_data(request, metric_module_id, in_memory_file):
-    token = sds_controller_api(request)
-    headers = {}
-
-    url = URL_BASIC + "/registry/metric_module/" + str(metric_module_id) + "/data"
-
-    headers["X-Auth-Token"] = str(token)
-
-    files = {'file': (in_memory_file.name, in_memory_file.read())}
-
-    r = requests.put(url, files=files, headers=headers)
     return r
 
 
@@ -800,6 +789,8 @@ def dsl_update_node(request, node_id, data):
 
 
 ############################## # Filters API # ##############################
+
+
 # Filters - Filters
 def fil_create_filter(request, data):
     token = sds_controller_api(request)
