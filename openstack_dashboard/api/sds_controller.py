@@ -175,7 +175,7 @@ def swift_list_tenants(request):
     return r
 
 
-def tenant_create(request, tenant_name, admin_user, admin_pass):
+def enable_sds(request, tenant_name):
     token = sds_controller_api(request)
     headers = {}
 
@@ -184,7 +184,7 @@ def tenant_create(request, tenant_name, admin_user, admin_pass):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"tenant_name": tenant_name, "user_name": admin_user, "user_password": admin_pass}
+    parameters = {"tenant_name": tenant_name}
 
     r = requests.post(url, json.dumps(parameters), headers=headers)
     return r
