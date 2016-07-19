@@ -449,8 +449,7 @@ class CreateProject(CommonQuotaWorkflow):
                                                      domain=domain_id)
 
             if data['sds_project']:
-                self.object = sds_controller.enable_sds(request,
-                                                        data['name'])
+                sds_controller.enable_sds(request, data['name'])
             return self.object
         except exceptions.Conflict:
             msg = _('Project name "%s" is already used.') % data['name']
