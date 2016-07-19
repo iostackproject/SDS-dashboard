@@ -17,8 +17,7 @@ class CreateFilter(forms.SelfHandlingForm):
                                attrs={"ng-model": "name", "not-blank": ""}
                            ))
 
-    filter_list = []
-    filter_identifier = forms.ChoiceField(choices=filter_list,
+    filter_identifier = forms.ChoiceField(choices=[],
                                           label=_("Filter"),
                                           help_text=_("Filter to be used."),
                                           required=False,
