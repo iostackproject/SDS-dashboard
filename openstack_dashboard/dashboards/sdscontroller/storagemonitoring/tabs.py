@@ -12,7 +12,7 @@ class ProxyTab(tabs.TableTab):
 class SwiftTab(tabs.TableTab):
     name = _("Swift")
     slug = "swift_plots"
-    template_name = "horizon/sdscontroller/storagemonitoring/system/_swift_plots.html"
+    template_name = "horizon/sdscontroller/storagemonitoring/system/_swift_project_plots.html"
 
 
 # class PlotEditor(tabs.TableTab):
@@ -39,20 +39,23 @@ class MypanelTabs(tabs.TabGroup):
     sticky = True
 """
 
-class SystemTab(tabs.Tab):
-    name = _("System")
-    slug = "proxy_plots"
-    template_name = "horizon/sdscontroller/storagemonitoring/system/_system_plots2.html"
 
-class SwiftTab(tabs.Tab):
-    name = _("Swift")
-    slug = "swift_plots"
-    template_name = "horizon/sdscontroller/storagemonitoring/system/_swift_plots.html"
-
-class MypanelTabs(tabs.TabGroup):
-    slug = "monitoring_tabs"
-    tabs = (SystemTab, SwiftTab)
-    sticky = True
+# class SystemTab(tabs.Tab):
+#     name = _("System")
+#     slug = "proxy_plots"
+#     template_name = "horizon/sdscontroller/storagemonitoring/system/_system_plots2.html"
+#
+#
+# class SwiftTab(tabs.Tab):
+#     name = _("Swift")
+#     slug = "swift_plots"
+#     template_name = "horizon/sdscontroller/storagemonitoring/system/_swift_project_plots.html"
+#
+#
+# class MypanelTabs(tabs.TabGroup):
+#     slug = "monitoring_tabs"
+#     tabs = (SystemTab, SwiftTab)
+#     sticky = True
 
 # from django.utils.translation import ugettext_lazy as _
 #

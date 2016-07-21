@@ -154,6 +154,9 @@ class CreateProjectInfoAction(workflows.Action):
     enabled = forms.BooleanField(label=_("Enabled"),
                                  required=False,
                                  initial=True)
+    sds_project = forms.BooleanField(label=_("SDS project"),
+                                     required=False,
+                                     initial=False)
 
     def __init__(self, request, *args, **kwargs):
         super(CreateProjectInfoAction, self).__init__(request,
@@ -170,7 +173,6 @@ class CreateProjectInfoAction(workflows.Action):
         help_text = _("Create a project to organize users.")
 
 
-
 class CreateProjectInfo(workflows.Step):
     action_class = CreateProjectInfoAction
     template_name = COMMON_HORIZONTAL_TEMPLATE
@@ -179,34 +181,8 @@ class CreateProjectInfo(workflows.Step):
                    "project_id",
                    "name",
                    "description",
-                   "enabled")
-
-class CreateSDSProjectInfoAction(workflows.Action):
-    # Hide the domain_id and domain_name by default
-    name = forms.CharField(label=_("Name"),
-                           max_length=64)
-    user_admin = forms.CharField(label=_("Admin user"),
-                           max_length=64)
-    user_password = forms.CharField(label=_("Admin password"),
-                           max_length=64)
-
-    def __init__(self, request, *args, **kwargs):
-        super(CreateSDSProjectInfoAction, self).__init__(request,
-                                                      *args,
-                                                      **kwargs)
-    class Meta(object):
-        name = _("Project Information")
-        help_text = _("Create a project to organize users.")
-
-class CreateSDSProjectInfo(workflows.Step):
-    action_class = CreateSDSProjectInfoAction
-    template_name = COMMON_HORIZONTAL_TEMPLATE
-    contributes = ("project_id",
-                   "name",
-                   "user_admin",
-                   "user_password")
-
-
+                   "enabled",
+                   "sds_project")
 
 
 class UpdateProjectMembersAction(workflows.MembershipAction):
@@ -471,6 +447,9 @@ class CreateProject(CommonQuotaWorkflow):
                                                      description=desc,
                                                      enabled=data['enabled'],
                                                      domain=domain_id)
+
+            if data['sds_project']:
+                sds_controller.enable_sds(request, data['name'])
             return self.object
         except exceptions.Conflict:
             msg = _('Project name "%s" is already used.') % data['name']
@@ -562,56 +541,6 @@ class CreateProject(CommonQuotaWorkflow):
         if PROJECT_GROUP_ENABLED:
             self._update_project_groups(request, data, project_id)
         self._update_project_quota(request, data, project_id)
-        return True
-
-class CreateSDSProject(workflows.Workflow):
-    slug = "create_sds_project"
-    name = _("Create SDS Project")
-    finalize_button_name = _("Create SDS Project")
-    success_message = _('Created new project "%s".')
-    failure_message = _('Unable to create sds project "%s".')
-    success_url = "horizon:sdscontroller:projects:index"
-    default_steps = (CreateSDSProjectInfo,)
-
-    def __init__(self, request=None, context_seed=None, entry_point=None,
-                 *args, **kwargs):
-        if PROJECT_GROUP_ENABLED:
-            self.default_steps = (CreateSDSProjectInfo,)
-        super(CreateSDSProject, self).__init__(request=request,
-                                            context_seed=context_seed,
-                                            entry_point=entry_point,
-                                            *args,
-                                            **kwargs)
-
-    def format_status_message(self, message):
-        if "%s" in message:
-            return message % self.context.get('name', 'unknown project')
-        else:
-            return message
-
-    def _create_project(self, request, data):
-        # create the project
-        print 'data!!!', data
-        try:
-
-	    self.object = sds_controller.tenant_create(request,
-                                                     data['name'],
-                                                     data['user_admin'],
-                                                     data['user_password'])
-                                                     
-            return self.object
-        except exceptions.Conflict:
-            msg = _('Project name "%s" is already used.') % data['name']
-            self.failure_message = msg
-            return
-        except Exception:
-            exceptions.handle(request, ignore=True)
-            return
-
-    def handle(self, request, data):
-        project = self._create_project(request, data)
-        if not project:
-            return False
         return True
 
 

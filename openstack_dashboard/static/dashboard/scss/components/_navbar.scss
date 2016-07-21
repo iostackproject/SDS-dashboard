@@ -1,4 +1,11 @@
+.navbar-brand {
+  padding: 0 $padding-small-horizontal;
+  margin: 0;
+  display: block;
+}
+
 .navbar-brand img {
+  display: inline-block;
   max-height: $navbar-height;
   vertical-align: middle;
 }

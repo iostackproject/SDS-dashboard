@@ -1,21 +1,3 @@
-# Copyright 2012 United States Government as represented by the
-# Administrator of the National Aeronautics and Space Administration.
-# All Rights Reserved.
-#
-# Copyright 2012 Nebula, Inc.
-#
-#    Licensed under the Apache License, Version 2.0 (the "License"); you may
-#    not use this file except in compliance with the License. You may obtain
-#    a copy of the License at
-#
-#         http://www.apache.org/licenses/LICENSE-2.0
-#
-#    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-#    License for the specific language governing permissions and limitations
-#    under the License.
-
 import json
 
 from django.core.urlresolvers import reverse
@@ -25,30 +7,22 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller import common
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
-def get_programming_languages():
-    programming_languages = [(u'', u'Select one')]
-    programming_languages.extend([(u'java', u'Java')])
-    return programming_languages
-
-
 class UploadFilter(forms.SelfHandlingForm):
-    name = forms.CharField(max_length=255,
-                           label=_("Name"),
-                           help_text=_("The name of the filter to be created."),
-                           widget=forms.TextInput(
-                               attrs={"ng-model": "name", "not-blank": ""}
-                           ))
+    filter_file = forms.FileField(label=_("File"),
+                                  required=True,
+                                  allow_empty_file=False)
 
-    language = forms.ChoiceField(choices=get_programming_languages(),
-                                 label=_("Program Language"),
-                                 help_text=_("The written language of the filter."),
-                                 required=True,
-                                 widget=forms.Select(
-                                     attrs={"ng-model": "language", "not-blank": ""}
-                                 ))
+    filter_type = forms.ChoiceField(choices=common.get_filter_type_choices(),
+                                    label=_("Filter Type"),
+                                    help_text=_("The type of the filter."),
+                                    required=True,
+                                    widget=forms.Select(
+                                        attrs={"ng-model": "filter_type", "not-blank": ""}
+                                    ))
 
     interface_version = forms.CharField(max_length=255,
                                         label=_("Interface Version"),
@@ -73,6 +47,7 @@ class UploadFilter(forms.SelfHandlingForm):
                                       widget=forms.TextInput(
                                           attrs={"ng-model": "object_metadata"}
                                       ))
+
     main = forms.CharField(max_length=255,
                            label=_("Main Class"),
                            help_text=_("The name of the class that implements the Filters API."),
@@ -108,13 +83,9 @@ class UploadFilter(forms.SelfHandlingForm):
         })
     )
 
-    filter_file = forms.FileField(label=_("File"),
-                                  required=True,
-                                  allow_empty_file=False)
-
     def __init__(self, request, *args, **kwargs):
         super(UploadFilter, self).__init__(request, *args, **kwargs)
-        get_programming_languages()
+        common.get_filter_type_choices()
 
     @staticmethod
     def handle(request, data):
@@ -132,7 +103,10 @@ class UploadFilter(forms.SelfHandlingForm):
                     messages.success(request, _('Successfully filter creation and upload.'))
                     return data
                 else:
-                    raise sdsexception.SdsException(response.text)
+                    exception_txt = response.text
+                    # Error uploading --> delete filter
+                    api.fil_delete_filter(request, filter_id)
+                    raise sdsexception.SdsException(exception_txt)
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:
@@ -142,11 +116,6 @@ class UploadFilter(forms.SelfHandlingForm):
 
 
 class UpdateFilter(forms.SelfHandlingForm):
-    name = forms.CharField(max_length=255, label=_("Name"), help_text=_("The name of the filter to be created."))
-
-    language = forms.ChoiceField(choices=get_programming_languages(), label=_("Program Language"), help_text=_("The written language of the filter."),
-                                 required=True)
-
     interface_version = forms.CharField(max_length=255,
                                         label=_("Interface Version"),
                                         required=False,
@@ -188,7 +157,7 @@ class UpdateFilter(forms.SelfHandlingForm):
 
     def __init__(self, request, *args, **kwargs):
         super(UpdateFilter, self).__init__(request, *args, **kwargs)
-        get_programming_languages()
+        common.get_filter_type_choices()
 
     failure_url = 'horizon:sdscontroller:administration:index'
 

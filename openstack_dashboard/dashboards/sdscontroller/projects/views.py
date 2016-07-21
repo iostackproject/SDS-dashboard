@@ -163,18 +163,6 @@ class CreateProjectView(workflows.WorkflowView):
 
         return initial
 
-class CreateSDSProjectView(workflows.WorkflowView):
-    workflow_class = project_workflows.CreateSDSProject
-
-    def get_initial(self):
-        initial = super(CreateSDSProjectView, self).get_initial()
-
-        # Set the domain of the project
-        domain = api.keystone.get_default_domain(self.request)
-        initial["domain_id"] = domain.id
-        initial["domain_name"] = domain.name
-
-        return initial
 
 class UpdateProjectView(workflows.WorkflowView):
     workflow_class = project_workflows.UpdateProject

@@ -33,8 +33,8 @@ class UpdateDependency(tables.LinkAction):
     icon = "pencil"
     classes = ("ajax-modal", "btn-update",)
 
-    def get_link_url(self, dependency):
-        base_url = reverse("horizon:sdscontroller:administration:dependencies:update", kwargs={'dependency_id': dependency.id})
+    def get_link_url(self, datum=None):
+        base_url = reverse("horizon:sdscontroller:administration:dependencies:update", kwargs={'dependency_id': datum.id})
         return base_url
 
 
@@ -104,7 +104,8 @@ class DeleteDependency(tables.DeleteAction):
         try:
             response = api.fil_delete_dependency(request, obj_id)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully deleted dependency: %s') % obj_id)
+                pass
+                # messages.success(request, _('Successfully deleted dependency: %s') % obj_id)
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:

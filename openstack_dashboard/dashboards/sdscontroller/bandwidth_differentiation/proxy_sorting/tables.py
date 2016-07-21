@@ -95,7 +95,8 @@ class DeleteSortedMethod(tables.DeleteAction):
         try:
             response = api.bw_delete_sort_method(request, obj_id)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully deleted sorted method: %s') % obj_id)
+                pass
+                # messages.success(request, _('Successfully deleted sorted method: %s') % obj_id)
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:

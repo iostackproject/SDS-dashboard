@@ -12,13 +12,8 @@ from horizon import messages
 from horizon import tables
 from models import Filter
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller import common
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
-
-
-def get_programming_languages():
-    programming_languages = [(u'', u'Select one')]
-    programming_languages.extend([(u'java', u'Java')])
-    return programming_languages
 
 
 class MyFilterAction(tables.FilterAction):
@@ -31,6 +26,16 @@ class UploadFilter(tables.LinkAction):
     url = "horizon:sdscontroller:administration:filters:upload"
     classes = ("ajax-modal",)
     icon = "upload"
+
+
+class DownloadFilter(tables.LinkAction):
+    name = "download"
+    verbose_name = _("Download")
+    icon = "download"
+
+    def get_link_url(self, datum=None):
+        base_url = reverse('horizon:sdscontroller:administration:filters:download', kwargs={'filter_id': datum.id})
+        return base_url
 
 
 class DeleteFilter(tables.DeleteAction):
@@ -57,15 +62,14 @@ class DeleteFilter(tables.DeleteAction):
         try:
             response = api.fil_delete_filter(request, obj_id)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully deleted filter: %s') % obj_id)
+                pass
+                # messages.success(request, _('Successfully deleted filter: %s') % obj_id)
             else:
                 raise sdsexception.SdsException(response.text)
         except Exception as ex:
             redirect = reverse("horizon:sdscontroller:administration:index")
             error_message = "Unable to remove filter.\t %s" % ex.message
-            exceptions.handle(request,
-                              _(error_message),
-                              redirect=redirect)
+            exceptions.handle(request, _(error_message), redirect=redirect)
 
 
 class UpdateFilter(tables.LinkAction):
@@ -74,8 +78,8 @@ class UpdateFilter(tables.LinkAction):
     icon = "pencil"
     classes = ("ajax-modal", "btn-update",)
 
-    def get_link_url(self, filter):
-        base_url = reverse("horizon:sdscontroller:administration:filters:update", kwargs={'filter_id': filter.id})
+    def get_link_url(self, datum=None):
+        base_url = reverse("horizon:sdscontroller:administration:filters:update", kwargs={'filter_id': datum.id})
         return base_url
 
 
@@ -85,9 +89,7 @@ class DeleteMultipleFilters(DeleteFilter):
 
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
-        return ((cell.column.name == 'name') or
-                (cell.column.name == 'language') or
-                (cell.column.name == 'interface_version') or
+        return ((cell.column.name == 'interface_version') or
                 (cell.column.name == 'dependencies') or
                 (cell.column.name == 'execution_server') or
                 (cell.column.name == 'execution_server_reverse') or
@@ -107,6 +109,8 @@ class UpdateCell(tables.UpdateAction):
             # TODO: Check only the valid keys, delete the rest
             if 'id' in data:  # PUT does not allow this key
                 del data['id']
+            if 'filter_name' in data:
+                del data['filter_name']
             if 'etag' in data:  # PUT does not allow this key
                 del data['etag']
             if 'content_length' in data:  # PUT does not allow this key
@@ -118,7 +122,7 @@ class UpdateCell(tables.UpdateAction):
         except Conflict:
             # Returning a nice error message about name conflict. The message
             # from exception is not that clear for the user
-            message = _("Cant change value")
+            message = _("Can't change value")
             raise ValidationError(message)
         except Exception:
             exceptions.handle(request, ignore=True)
@@ -132,8 +136,8 @@ class UpdateRow(tables.Row):
     def get_data(self, request, id):
         response = api.fil_get_filter_metadata(request, id)
         data = json.loads(response.text)
-        filter = Filter(data['id'], data['name'],
-                        data['language'], data['dependencies'],
+        filter = Filter(data['id'], data['filter_name'],
+                        data['filter_type'], data['dependencies'],
                         data['interface_version'], data['object_metadata'],
                         data['main'], data['is_put'], data['is_get'],
                         data['has_reverse'], data['execution_server'],
@@ -143,8 +147,8 @@ class UpdateRow(tables.Row):
 
 class FilterTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
-    name = tables.Column('name', verbose_name=_("Name"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    language = tables.Column('language', verbose_name=_("Language"), form_field=forms.ChoiceField(choices=get_programming_languages()), update_action=UpdateCell)
+    name = tables.Column('filter_name', verbose_name=_("Name"))
+    filter_type = tables.Column('filter_type', verbose_name=_("Type"))
     interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
@@ -159,5 +163,5 @@ class FilterTable(tables.DataTable):
         name = "filters"
         verbose_name = _("Filters")
         table_actions = (MyFilterAction, UploadFilter, DeleteMultipleFilters,)
-        row_actions = (UpdateFilter, DeleteFilter,)
+        row_actions = (UpdateFilter, DownloadFilter, DeleteFilter,)
         row_class = UpdateRow
