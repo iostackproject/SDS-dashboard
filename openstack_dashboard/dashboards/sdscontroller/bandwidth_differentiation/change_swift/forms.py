@@ -8,9 +8,7 @@ from horizon import forms
 from horizon import messages
 
 current_version = 'original'
-proxy = 'proxy_ip'
-proxy_username = 'user'
-proxy_password = 'password'
+proxy = 'proxy'
 
 class SelectSwiftVersion(forms.SelfHandlingForm):
 
@@ -29,7 +27,6 @@ class SelectSwiftVersion(forms.SelfHandlingForm):
     def __init__(self, request, *args, **kwargs):
         super(SelectSwiftVersion, self).__init__(request, *args, **kwargs)
         self.initial['swift_version'] = get_current_version()
-       
 
     @staticmethod
     def handle(request, data):
@@ -50,14 +47,14 @@ class SelectSwiftVersion(forms.SelfHandlingForm):
 def change_version(swift_version):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(proxy, username=proxy_username, password=proxy_password)
+    ssh.load_system_host_keys()
+    ssh.connect(proxy)
 
     if swift_version == "ioprio":
-        stdin, stdout, stderr = ssh.exec_command("cd switch_swift_env")
-        stdin, stodut, stderr = ssh.exec_command("ansible-playbook -s -i swift_dynamic_inventory.py bsc-env.yml")
-    elif swift_version == 'original':
-        stdin, stdout, stderr = ssh.exec_command("cd switch_swift_env")
-        stdin, stdout, stderr = ssh.exec_command("ansible-playbook -s -i swift_dynamic_inventory.py ibm-env.yml")
+        stdin, stdout, stderr = ssh.exec_command("cd switch_swift_env; ansible-playbook -s -i swift_dynamic_inventory.py bsc-env.yml")
+    elif swift_version == "original":
+        stdin, stdout, stderr = ssh.exec_command("cd switch_swift_env; ansible-playbook -s -i swift_dynamic_inventory.py ibm-env.yml")
+
     response = stdout.readlines()
     print response
     set_current_version(swift_version)
