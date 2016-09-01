@@ -16,16 +16,25 @@ from openstack_dashboard.dashboards.sdscontroller import common
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
-class MyFilterAction(tables.FilterAction):
-    name = "myfilter"
+class MyStorletFilterAction(tables.FilterAction):
+    name = "my_storlet_filter"
+
+class MyNativeFilterAction(tables.FilterAction):
+    name = "my_native_filter"
 
 
 class UploadFilter(tables.LinkAction):
     name = "upload"
-    verbose_name = _("Upload Filter")
-    url = "horizon:sdscontroller:administration:filters:upload"
     classes = ("ajax-modal",)
     icon = "upload"
+
+class UploadStorletFilter(UploadFilter):
+    verbose_name = _("Upload Storlet")
+    url = "horizon:sdscontroller:administration:filters:upload_storlet"
+
+class UploadNativeFilter(UploadFilter):
+    verbose_name = _("Upload Native Filter")
+    url = "horizon:sdscontroller:administration:filters:upload_native"
 
 
 class DownloadFilter(tables.LinkAction):
@@ -36,6 +45,12 @@ class DownloadFilter(tables.LinkAction):
     def get_link_url(self, datum=None):
         base_url = reverse('horizon:sdscontroller:administration:filters:download', kwargs={'filter_id': datum.id})
         return base_url
+
+class DownloadStorletFilter(DownloadFilter):
+    pass
+
+class DownloadNativeFilter(DownloadFilter):
+    pass
 
 
 class DeleteFilter(tables.DeleteAction):
@@ -72,6 +87,14 @@ class DeleteFilter(tables.DeleteAction):
             exceptions.handle(request, _(error_message), redirect=redirect)
 
 
+class DeleteStorletFilter(DeleteFilter):
+    pass
+
+
+class DeleteNativeFilter(DeleteFilter):
+    pass
+
+
 class UpdateFilter(tables.LinkAction):
     name = "update"
     verbose_name = _("Edit")
@@ -83,9 +106,24 @@ class UpdateFilter(tables.LinkAction):
         return base_url
 
 
+class UpdateStorletFilter(UpdateFilter):
+    pass
+
+
+class UpdateNativeFilter(UpdateFilter):
+    pass
+
+
 class DeleteMultipleFilters(DeleteFilter):
     name = "delete_multiple_filters"
 
+
+class DeleteMultipleStorletFilters(DeleteMultipleFilters):
+    pass
+
+
+class DeleteMultipleNativeFilters(DeleteMultipleFilters):
+    pass
 
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
@@ -145,10 +183,10 @@ class UpdateRow(tables.Row):
         return filter
 
 
-class FilterTable(tables.DataTable):
+class StorletFilterTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
     name = tables.Column('filter_name', verbose_name=_("Name"))
-    filter_type = tables.Column('filter_type', verbose_name=_("Type"))
+    # filter_type = tables.Column('filter_type', verbose_name=_("Type"))
     interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
@@ -160,8 +198,38 @@ class FilterTable(tables.DataTable):
     execution_server_reverse = tables.Column('execution_server_reverse', verbose_name=_("Execution Server Reverse"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
 
     class Meta:
-        name = "filters"
-        verbose_name = _("Filters")
-        table_actions = (MyFilterAction, UploadFilter, DeleteMultipleFilters,)
-        row_actions = (UpdateFilter, DownloadFilter, DeleteFilter,)
+        name = "storlet_filters"
+        verbose_name = _("Storlet Filters")
+        table_actions = (MyStorletFilterAction, UploadStorletFilter, DeleteMultipleStorletFilters,)
+        row_actions = (UpdateStorletFilter, DownloadStorletFilter, DeleteStorletFilter,)
         row_class = UpdateRow
+        hidden_title = False
+
+
+class NativeFilterTable(tables.DataTable):
+    id = tables.Column('id', verbose_name=_("ID"))
+    name = tables.Column('filter_name', verbose_name=_("Name"))
+    # filter_type = tables.Column('filter_type', verbose_name=_("Type"))
+    interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    main = tables.Column('main', verbose_name=_("Main"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    is_pre_put = tables.Column('is_pre_put', verbose_name=_("Is pre-PUT?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+                               update_action=UpdateCell)
+    is_post_put = tables.Column('is_post_put', verbose_name=_("Is post-PUT?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+                               update_action=UpdateCell)
+    is_pre_get = tables.Column('is_pre_get', verbose_name=_("Is pre-GET?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+                               update_action=UpdateCell)
+    is_post_get = tables.Column('is_post_get', verbose_name=_("Is post-GET?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+                                update_action=UpdateCell)
+    has_reverse = tables.Column('has_reverse', verbose_name=_("Has Reverse?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    execution_server = tables.Column('execution_server', verbose_name=_("Execution Server"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
+    execution_server_reverse = tables.Column('execution_server_reverse', verbose_name=_("Execution Server Reverse"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
+
+    class Meta:
+        name = "native_filters"
+        verbose_name = _("Native Filters")
+        table_actions = (MyNativeFilterAction, UploadNativeFilter, DeleteMultipleNativeFilters,)
+        row_actions = (UpdateNativeFilter, DownloadNativeFilter, DeleteNativeFilter,)
+        row_class = UpdateRow
+        hidden_title = False

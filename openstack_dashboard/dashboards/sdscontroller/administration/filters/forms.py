@@ -7,7 +7,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 from openstack_dashboard.api import sds_controller as api
-from openstack_dashboard.dashboards.sdscontroller import common
+# from openstack_dashboard.dashboards.sdscontroller import common
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
@@ -16,13 +16,13 @@ class UploadFilter(forms.SelfHandlingForm):
                                   required=True,
                                   allow_empty_file=False)
 
-    filter_type = forms.ChoiceField(choices=common.get_filter_type_choices(),
-                                    label=_("Filter Type"),
-                                    help_text=_("The type of the filter."),
-                                    required=True,
-                                    widget=forms.Select(
-                                        attrs={"ng-model": "filter_type", "not-blank": ""}
-                                    ))
+    # filter_type = forms.ChoiceField(choices=common.get_filter_type_choices(),
+    #                                 label=_("Filter Type"),
+    #                                 help_text=_("The type of the filter."),
+    #                                 required=True,
+    #                                 widget=forms.Select(
+    #                                     attrs={"ng-model": "filter_type", "not-blank": ""}
+    #                                 ))
 
     interface_version = forms.CharField(max_length=255,
                                         label=_("Interface Version"),
@@ -55,10 +55,6 @@ class UploadFilter(forms.SelfHandlingForm):
                                attrs={"ng-model": "main", "not-blank": ""}
                            ))
 
-    is_put = forms.BooleanField(required=False)
-    is_get = forms.BooleanField(required=False)
-    has_reverse = forms.BooleanField(required=False)
-
     execution_server = forms.ChoiceField(
         label=_('Execution Server'),
         choices=[
@@ -85,12 +81,52 @@ class UploadFilter(forms.SelfHandlingForm):
 
     def __init__(self, request, *args, **kwargs):
         super(UploadFilter, self).__init__(request, *args, **kwargs)
-        common.get_filter_type_choices()
+        # common.get_filter_type_choices()
+
+    # @staticmethod
+    # def handle(request, data):
+    #     filter_file = data['filter_file']
+    #     del data['filter_file']
+    #
+    #     data['filter_type'] = 'native'
+    #
+    #     try:
+    #         response = api.fil_create_filter(request, data)
+    #
+    #         if 200 <= response.status_code < 300:
+    #             filter_id = json.loads(response.text)["id"]
+    #             response = api.fil_upload_filter_data(request, filter_id, filter_file)
+    #
+    #             if 200 <= response.status_code < 300:
+    #                 messages.success(request, _('Successfully filter creation and upload.'))
+    #                 return data
+    #             else:
+    #                 exception_txt = response.text
+    #                 # Error uploading --> delete filter
+    #                 api.fil_delete_filter(request, filter_id)
+    #                 raise sdsexception.SdsException(exception_txt)
+    #         else:
+    #             raise sdsexception.SdsException(response.text)
+    #     except Exception as ex:
+    #         redirect = reverse("horizon:sdscontroller:administration:index")
+    #         error_message = "Unable to create filter.\t %s" % ex.message
+    #         exceptions.handle(request, _(error_message), redirect=redirect)
+
+
+class UploadStorletFilter(UploadFilter):
+    is_put = forms.BooleanField(required=False)
+    is_get = forms.BooleanField(required=False)
+    has_reverse = forms.BooleanField(required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(UploadStorletFilter, self).__init__(request, *args, **kwargs)
 
     @staticmethod
     def handle(request, data):
         filter_file = data['filter_file']
         del data['filter_file']
+
+        data['filter_type'] = 'storlet'
 
         try:
             response = api.fil_create_filter(request, data)
@@ -100,7 +136,47 @@ class UploadFilter(forms.SelfHandlingForm):
                 response = api.fil_upload_filter_data(request, filter_id, filter_file)
 
                 if 200 <= response.status_code < 300:
-                    messages.success(request, _('Successfully filter creation and upload.'))
+                    messages.success(request, _('Storlet filter successfully created.'))
+                    return data
+                else:
+                    exception_txt = response.text
+                    # Error uploading --> delete filter
+                    api.fil_delete_filter(request, filter_id)
+                    raise sdsexception.SdsException(exception_txt)
+            else:
+                raise sdsexception.SdsException(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:administration:index")
+            error_message = "Unable to create filter.\t %s" % ex.message
+            exceptions.handle(request, _(error_message), redirect=redirect)
+
+
+class UploadNativeFilter(UploadFilter):
+    is_pre_put = forms.BooleanField(required=False)
+    is_post_put = forms.BooleanField(required=False)
+    is_pre_get = forms.BooleanField(required=False)
+    is_post_get = forms.BooleanField(required=False)
+    has_reverse = forms.BooleanField(required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(UploadNativeFilter, self).__init__(request, *args, **kwargs)
+
+    @staticmethod
+    def handle(request, data):
+        filter_file = data['filter_file']
+        del data['filter_file']
+
+        data['filter_type'] = 'native'
+
+        try:
+            response = api.fil_create_filter(request, data)
+
+            if 200 <= response.status_code < 300:
+                filter_id = json.loads(response.text)["id"]
+                response = api.fil_upload_filter_data(request, filter_id, filter_file)
+
+                if 200 <= response.status_code < 300:
+                    messages.success(request, _('Native filter successfully created.'))
                     return data
                 else:
                     exception_txt = response.text
@@ -157,7 +233,7 @@ class UpdateFilter(forms.SelfHandlingForm):
 
     def __init__(self, request, *args, **kwargs):
         super(UpdateFilter, self).__init__(request, *args, **kwargs)
-        common.get_filter_type_choices()
+        # common.get_filter_type_choices()
 
     failure_url = 'horizon:sdscontroller:administration:index'
 
@@ -167,7 +243,7 @@ class UpdateFilter(forms.SelfHandlingForm):
             # print "\n#################\n", request, "\n#################\n", data, "\n#################\n"
             response = api.fil_update_filter_metadata(request, filter_id, data)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully filter updated.'))
+                messages.success(request, _('Filter successfully updated.'))
                 return data
             else:
                 raise sdsexception.SdsException(response.text)
