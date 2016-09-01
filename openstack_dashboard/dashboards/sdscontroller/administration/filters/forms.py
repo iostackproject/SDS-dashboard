@@ -211,11 +211,6 @@ class UpdateFilter(forms.SelfHandlingForm):
                            label=_("Main Class"),
                            help_text=_("The name of the class that implements the Filters API."))
 
-    # TODO: Check this, not works properly on update
-    is_put = forms.BooleanField(required=False)
-    is_get = forms.BooleanField(required=False)
-    has_reverse = forms.BooleanField(required=False)
-
     execution_server = forms.ChoiceField(
         label=_('Execution Server'),
         choices=[
@@ -230,10 +225,6 @@ class UpdateFilter(forms.SelfHandlingForm):
             ('object', _('Object Storage Servers'))
         ]
     )
-
-    def __init__(self, request, *args, **kwargs):
-        super(UpdateFilter, self).__init__(request, *args, **kwargs)
-        # common.get_filter_type_choices()
 
     failure_url = 'horizon:sdscontroller:administration:index'
 
@@ -251,3 +242,25 @@ class UpdateFilter(forms.SelfHandlingForm):
             redirect = reverse("horizon:sdscontroller:administration:index")
             error_message = "Unable to update filter.\t %s" % ex.message
             exceptions.handle(request, _(error_message), redirect=redirect)
+
+
+class UpdateStorletFilter(UpdateFilter):
+    # TODO: Check this, does not work properly on update
+    is_put = forms.BooleanField(required=False)
+    is_get = forms.BooleanField(required=False)
+    has_reverse = forms.BooleanField(required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(UpdateStorletFilter, self).__init__(request, *args, **kwargs)
+
+
+class UpdateNativeFilter(UpdateFilter):
+    # TODO: Check this, does not work properly on update
+    is_pre_put = forms.BooleanField(required=False)
+    is_post_put = forms.BooleanField(required=False)
+    is_pre_get = forms.BooleanField(required=False)
+    is_post_get = forms.BooleanField(required=False)
+    has_reverse = forms.BooleanField(required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(UpdateNativeFilter, self).__init__(request, *args, **kwargs)

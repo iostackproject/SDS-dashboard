@@ -16,13 +16,13 @@ class UploadStorletView(forms.ModalFormView):
     form_class = filters_forms.UploadStorletFilter
     form_id = "upload_filter_form"
 
-    modal_header = _("Upload Storlet")
-    submit_label = _("Upload Storlet")
+    modal_header = _("Upload Storlet Filter")
+    submit_label = _("Upload Storlet filter")
     submit_url = reverse_lazy('horizon:sdscontroller:administration:filters:upload_storlet')
     template_name = "sdscontroller/administration/filters/upload_storlet.html"
     context_object_name = 'filter'
     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
-    page_title = _("Upload Storlet")
+    page_title = _("Upload Storlet filter")
 
 class UploadNativeView(forms.ModalFormView):
     form_class = filters_forms.UploadNativeFilter
@@ -53,11 +53,11 @@ def download_filter(request, filter_id):
 
 
 class UpdateView(forms.ModalFormView):
-    form_class = filters_forms.UpdateFilter
+    # form_class = filters_forms.UpdateFilter
     form_id = "update_filter_form"
     modal_header = _("Update A Filter")
     submit_label = _("Update Filter")
-    submit_url = "horizon:sdscontroller:administration:filters:update"
+    # submit_url = "horizon:sdscontroller:administration:filters:update"
     template_name = "sdscontroller/administration/filters/update.html"
     context_object_name = 'filter'
     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
@@ -88,5 +88,13 @@ class UpdateView(forms.ModalFormView):
         # initial['name'] = "my filter name"
         return initial
 
+
+class UpdateStorletView(UpdateView):
+    form_class = filters_forms.UpdateStorletFilter
+    submit_url = "horizon:sdscontroller:administration:filters:update_storlet"
+
+class UpdateNativeView(UpdateView):
+    form_class = filters_forms.UpdateNativeFilter
+    submit_url = "horizon:sdscontroller:administration:filters:update_native"
 
 classes = ("ajax-modal",)

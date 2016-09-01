@@ -29,7 +29,7 @@ class UploadFilter(tables.LinkAction):
     icon = "upload"
 
 class UploadStorletFilter(UploadFilter):
-    verbose_name = _("Upload Storlet")
+    verbose_name = _("Upload Storlet Filter")
     url = "horizon:sdscontroller:administration:filters:upload_storlet"
 
 class UploadNativeFilter(UploadFilter):
@@ -101,17 +101,16 @@ class UpdateFilter(tables.LinkAction):
     icon = "pencil"
     classes = ("ajax-modal", "btn-update",)
 
+class UpdateStorletFilter(UpdateFilter):
     def get_link_url(self, datum=None):
-        base_url = reverse("horizon:sdscontroller:administration:filters:update", kwargs={'filter_id': datum.id})
+        base_url = reverse("horizon:sdscontroller:administration:filters:update_storlet", kwargs={'filter_id': datum.id})
         return base_url
 
 
-class UpdateStorletFilter(UpdateFilter):
-    pass
-
-
 class UpdateNativeFilter(UpdateFilter):
-    pass
+    def get_link_url(self, datum=None):
+        base_url = reverse("horizon:sdscontroller:administration:filters:update_native", kwargs={'filter_id': datum.id})
+        return base_url
 
 
 class DeleteMultipleFilters(DeleteFilter):
@@ -127,15 +126,8 @@ class DeleteMultipleNativeFilters(DeleteMultipleFilters):
 
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
-        return ((cell.column.name == 'interface_version') or
-                (cell.column.name == 'dependencies') or
-                (cell.column.name == 'execution_server') or
-                (cell.column.name == 'execution_server_reverse') or
-                (cell.column.name == 'object_metadata') or
-                (cell.column.name == 'is_put') or
-                (cell.column.name == 'is_get') or
-                (cell.column.name == 'has_reverse') or
-                (cell.column.name == 'main'))
+        return (cell.column.name in ['interface_version', 'dependencies', 'execution_server', 'execution_server_reverse', 'object_metadata',
+                                     'is_put', 'is_get', 'is_pre_put', 'is_post_put', 'is_pre_get', 'is_post_get', 'has_reverse', 'main'])
 
     def update_cell(self, request, datum, id, cell_name, new_cell_value):
         try:
@@ -155,6 +147,8 @@ class UpdateCell(tables.UpdateAction):
                 del data['content_length']
             if 'path' in data:  # PUT does not allow this key
                 del data['path']
+            if 'filter_type' in data:  # PUT does not allow this key
+                del data['filter_type']
 
             api.fil_update_filter_metadata(request, id, data)
         except Conflict:
@@ -168,7 +162,7 @@ class UpdateCell(tables.UpdateAction):
         return True
 
 
-class UpdateRow(tables.Row):
+class UpdateStorletRow(tables.Row):
     ajax = True
 
     def get_data(self, request, id):
@@ -179,7 +173,24 @@ class UpdateRow(tables.Row):
                         data['interface_version'], data['object_metadata'],
                         data['main'], data['is_put'], data['is_get'],
                         data['has_reverse'], data['execution_server'],
-                        data['execution_server_reverse'])
+                        data['execution_server_reverse'], False, False, False, False)
+        return filter
+
+
+class UpdateNativeRow(tables.Row):
+    ajax = True
+
+    def get_data(self, request, id):
+        response = api.fil_get_filter_metadata(request, id)
+        data = json.loads(response.text)
+        filter = Filter(data['id'], data['filter_name'],
+                        data['filter_type'], data['dependencies'],
+                        data['interface_version'], data['object_metadata'],
+                        data['main'], False, False,
+                        data['has_reverse'], data['execution_server'],
+                        data['execution_server_reverse'],
+                        data['is_pre_put'], data['is_post_put'], data['is_pre_get'], data['is_post_get']
+                        )
         return filter
 
 
@@ -202,7 +213,7 @@ class StorletFilterTable(tables.DataTable):
         verbose_name = _("Storlet Filters")
         table_actions = (MyStorletFilterAction, UploadStorletFilter, DeleteMultipleStorletFilters,)
         row_actions = (UpdateStorletFilter, DownloadStorletFilter, DeleteStorletFilter,)
-        row_class = UpdateRow
+        row_class = UpdateStorletRow
         hidden_title = False
 
 
@@ -231,5 +242,5 @@ class NativeFilterTable(tables.DataTable):
         verbose_name = _("Native Filters")
         table_actions = (MyNativeFilterAction, UploadNativeFilter, DeleteMultipleNativeFilters,)
         row_actions = (UpdateNativeFilter, DownloadNativeFilter, DeleteNativeFilter,)
-        row_class = UpdateRow
+        row_class = UpdateNativeRow
         hidden_title = False
