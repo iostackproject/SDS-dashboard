@@ -78,10 +78,9 @@ class Filters(tabs.TableTab):
         for inst in instances:
             if inst['filter_type'] == 'storlet':
                 ret.append(filters_models.Filter(inst['id'], inst['filter_name'], inst['filter_type'], inst['dependencies'],
-                                                 inst['interface_version'], inst['object_metadata'], inst['main'],
-                                                 inst['is_put'], inst['is_get'], inst['has_reverse'],
+                                                 inst['interface_version'], inst['object_metadata'], inst['main'], inst['has_reverse'],
                                                  inst['execution_server'], inst['execution_server_reverse'],
-                                                 False, False, False, False
+                                                 inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get']
                                                  ))
         return ret
 
@@ -102,8 +101,7 @@ class Filters(tabs.TableTab):
         for inst in instances:
             if inst['filter_type'] == 'native':
                 ret.append(filters_models.Filter(inst['id'], inst['filter_name'], inst['filter_type'], inst['dependencies'],
-                                                 inst['interface_version'], inst['object_metadata'], inst['main'],
-                                                 False, False, inst['has_reverse'],
+                                                 inst['interface_version'], inst['object_metadata'], inst['main'], inst['has_reverse'],
                                                  inst['execution_server'], inst['execution_server_reverse'],
                                                  inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get']
                                                  ))

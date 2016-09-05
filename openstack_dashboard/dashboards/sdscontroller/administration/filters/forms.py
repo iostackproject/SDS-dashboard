@@ -44,7 +44,7 @@ class UploadFilter(forms.SelfHandlingForm):
                                       label=_("Object Metadata"),
                                       required=False,
                                       help_text=_("Currently, not in use, but must appear. Use the value 'no'"),
-                                      widget=forms.TextInput(
+                                      widget=forms.HiddenInput( # hidden
                                           attrs={"ng-model": "object_metadata"}
                                       ))
 
@@ -114,8 +114,10 @@ class UploadFilter(forms.SelfHandlingForm):
 
 
 class UploadStorletFilter(UploadFilter):
-    is_put = forms.BooleanField(required=False)
-    is_get = forms.BooleanField(required=False)
+    is_pre_put = forms.BooleanField(required=False, label="PUT")
+    is_post_get = forms.BooleanField(required=False, label="GET")
+    is_post_put = forms.BooleanField(required=False, widget=forms.HiddenInput)
+    is_pre_get = forms.BooleanField(required=False, widget=forms.HiddenInput)
     has_reverse = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
@@ -152,10 +154,10 @@ class UploadStorletFilter(UploadFilter):
 
 
 class UploadNativeFilter(UploadFilter):
-    is_pre_put = forms.BooleanField(required=False)
-    is_post_put = forms.BooleanField(required=False)
-    is_pre_get = forms.BooleanField(required=False)
-    is_post_get = forms.BooleanField(required=False)
+    is_pre_put = forms.BooleanField(required=False, label="Pre-PUT")
+    is_post_put = forms.BooleanField(required=False, label="Post-PUT")
+    is_pre_get = forms.BooleanField(required=False, label="Pre-GET")
+    is_post_get = forms.BooleanField(required=False, label="Post-GET")
     has_reverse = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
@@ -205,7 +207,8 @@ class UpdateFilter(forms.SelfHandlingForm):
     object_metadata = forms.CharField(max_length=255,
                                       label=_("Object Metadata"),
                                       required=False,
-                                      help_text=_("Currently, not in use, but must appear. Use the value 'no'"))
+                                      help_text=_("Currently, not in use, but must appear. Use the value 'no'"),
+                                      widget=forms.HiddenInput)
 
     main = forms.CharField(max_length=255,
                            label=_("Main Class"),
@@ -246,8 +249,10 @@ class UpdateFilter(forms.SelfHandlingForm):
 
 class UpdateStorletFilter(UpdateFilter):
     # TODO: Check this, does not work properly on update
-    is_put = forms.BooleanField(required=False)
-    is_get = forms.BooleanField(required=False)
+    is_pre_put = forms.BooleanField(required=False, label="PUT")
+    is_post_get = forms.BooleanField(required=False, label="GET")
+    is_post_put = forms.BooleanField(required=False, widget=forms.HiddenInput)
+    is_pre_get = forms.BooleanField(required=False, widget=forms.HiddenInput)
     has_reverse = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
@@ -256,10 +261,10 @@ class UpdateStorletFilter(UpdateFilter):
 
 class UpdateNativeFilter(UpdateFilter):
     # TODO: Check this, does not work properly on update
-    is_pre_put = forms.BooleanField(required=False)
-    is_post_put = forms.BooleanField(required=False)
-    is_pre_get = forms.BooleanField(required=False)
-    is_post_get = forms.BooleanField(required=False)
+    is_pre_put = forms.BooleanField(required=False, label="Pre-PUT")
+    is_post_put = forms.BooleanField(required=False, label="Post-PUT")
+    is_pre_get = forms.BooleanField(required=False, label="Pre-GET")
+    is_post_get = forms.BooleanField(required=False, label="Post-GET")
     has_reverse = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):

@@ -126,8 +126,8 @@ class DeleteMultipleNativeFilters(DeleteMultipleFilters):
 
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
-        return (cell.column.name in ['interface_version', 'dependencies', 'execution_server', 'execution_server_reverse', 'object_metadata',
-                                     'is_put', 'is_get', 'is_pre_put', 'is_post_put', 'is_pre_get', 'is_post_get', 'has_reverse', 'main'])
+        return (cell.column.name in ['interface_version', 'dependencies', 'execution_server', 'execution_server_reverse',
+                                     'is_pre_put', 'is_post_put', 'is_pre_get', 'is_post_get', 'has_reverse', 'main'])
 
     def update_cell(self, request, datum, id, cell_name, new_cell_value):
         try:
@@ -171,9 +171,10 @@ class UpdateStorletRow(tables.Row):
         filter = Filter(data['id'], data['filter_name'],
                         data['filter_type'], data['dependencies'],
                         data['interface_version'], data['object_metadata'],
-                        data['main'], data['is_put'], data['is_get'],
+                        data['main'],
                         data['has_reverse'], data['execution_server'],
-                        data['execution_server_reverse'], False, False, False, False)
+                        data['execution_server_reverse'],
+                        data['is_pre_put'], data['is_post_put'], data['is_pre_get'], data['is_post_get'])
         return filter
 
 
@@ -186,7 +187,7 @@ class UpdateNativeRow(tables.Row):
         filter = Filter(data['id'], data['filter_name'],
                         data['filter_type'], data['dependencies'],
                         data['interface_version'], data['object_metadata'],
-                        data['main'], False, False,
+                        data['main'],
                         data['has_reverse'], data['execution_server'],
                         data['execution_server_reverse'],
                         data['is_pre_put'], data['is_post_put'], data['is_pre_get'], data['is_post_get']
@@ -200,10 +201,9 @@ class StorletFilterTable(tables.DataTable):
     # filter_type = tables.Column('filter_type', verbose_name=_("Type"))
     interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     main = tables.Column('main', verbose_name=_("Main"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    is_put = tables.Column('is_put', verbose_name=_("Is Put?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
-    is_get = tables.Column('is_get', verbose_name=_("Is Get?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    is_pre_put = tables.Column('is_pre_put', verbose_name=_("Is Put?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    is_post_get = tables.Column('is_post_get', verbose_name=_("Is Get?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
     has_reverse = tables.Column('has_reverse', verbose_name=_("Has Reverse?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
     execution_server = tables.Column('execution_server', verbose_name=_("Execution Server"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
     execution_server_reverse = tables.Column('execution_server_reverse', verbose_name=_("Execution Server Reverse"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
@@ -223,7 +223,6 @@ class NativeFilterTable(tables.DataTable):
     # filter_type = tables.Column('filter_type', verbose_name=_("Type"))
     interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     dependencies = tables.Column('dependencies', verbose_name=_("Dependencies"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
-    object_metadata = tables.Column('object_metadata', verbose_name=_("Object Metadata"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     main = tables.Column('main', verbose_name=_("Main"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     is_pre_put = tables.Column('is_pre_put', verbose_name=_("Is pre-PUT?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
                                update_action=UpdateCell)
