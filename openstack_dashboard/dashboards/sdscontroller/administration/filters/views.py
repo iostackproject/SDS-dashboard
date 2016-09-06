@@ -24,6 +24,7 @@ class UploadStorletView(forms.ModalFormView):
     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
     page_title = _("Upload Storlet filter")
 
+
 class UploadNativeView(forms.ModalFormView):
     form_class = filters_forms.UploadNativeFilter
     form_id = "upload_filter_form"
@@ -35,6 +36,20 @@ class UploadNativeView(forms.ModalFormView):
     context_object_name = 'filter'
     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
     page_title = _("Upload Native Filter")
+
+
+class UploadGlobalView(forms.ModalFormView):
+    form_class = filters_forms.UploadGlobalFilter
+    form_id = "upload_filter_form"
+
+    modal_header = _("Upload Global Native Filter")
+    submit_label = _("Upload Global Native Filter")
+    submit_url = reverse_lazy('horizon:sdscontroller:administration:filters:upload_global')
+    template_name = "sdscontroller/administration/filters/upload_global.html"
+    context_object_name = 'filter'
+    success_url = reverse_lazy('horizon:sdscontroller:administration:index')
+    page_title = _("Upload Global Native Filter")
+
 
 def download_filter(request, filter_id):
     try:
@@ -96,5 +111,9 @@ class UpdateStorletView(UpdateView):
 class UpdateNativeView(UpdateView):
     form_class = filters_forms.UpdateNativeFilter
     submit_url = "horizon:sdscontroller:administration:filters:update_native"
+
+class UpdateGlobalView(UpdateView):
+    form_class = filters_forms.UpdateGlobalFilter
+    submit_url = "horizon:sdscontroller:administration:filters:update_global"
 
 classes = ("ajax-modal",)

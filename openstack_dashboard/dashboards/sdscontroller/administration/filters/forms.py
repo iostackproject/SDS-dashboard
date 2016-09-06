@@ -7,7 +7,6 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 from openstack_dashboard.api import sds_controller as api
-# from openstack_dashboard.dashboards.sdscontroller import common
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
@@ -193,6 +192,46 @@ class UploadNativeFilter(UploadFilter):
             exceptions.handle(request, _(error_message), redirect=redirect)
 
 
+class UploadGlobalFilter(UploadFilter):
+    is_pre_put = forms.BooleanField(required=False, label="Pre-PUT")
+    is_post_put = forms.BooleanField(required=False, label="Post-PUT")
+    is_pre_get = forms.BooleanField(required=False, label="Pre-GET")
+    is_post_get = forms.BooleanField(required=False, label="Post-GET")
+    has_reverse = forms.BooleanField(required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(UploadGlobalFilter, self).__init__(request, *args, **kwargs)
+
+    @staticmethod
+    def handle(request, data):
+        filter_file = data['filter_file']
+        del data['filter_file']
+
+        data['filter_type'] = 'global'
+
+        try:
+            response = api.fil_create_filter(request, data)
+
+            if 200 <= response.status_code < 300:
+                filter_id = json.loads(response.text)["id"]
+                response = api.fil_upload_filter_data(request, filter_id, filter_file)
+
+                if 200 <= response.status_code < 300:
+                    messages.success(request, _('Global Native filter successfully created.'))
+                    return data
+                else:
+                    exception_txt = response.text
+                    # Error uploading --> delete filter
+                    api.fil_delete_filter(request, filter_id)
+                    raise sdsexception.SdsException(exception_txt)
+            else:
+                raise sdsexception.SdsException(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:administration:index")
+            error_message = "Unable to create filter.\t %s" % ex.message
+            exceptions.handle(request, _(error_message), redirect=redirect)
+
+
 class UpdateFilter(forms.SelfHandlingForm):
     interface_version = forms.CharField(max_length=255,
                                         label=_("Interface Version"),
@@ -269,3 +308,15 @@ class UpdateNativeFilter(UpdateFilter):
 
     def __init__(self, request, *args, **kwargs):
         super(UpdateNativeFilter, self).__init__(request, *args, **kwargs)
+
+
+class UpdateGlobalFilter(UpdateFilter):
+    # TODO: Check this, does not work properly on update
+    is_pre_put = forms.BooleanField(required=False, label="Pre-PUT")
+    is_post_put = forms.BooleanField(required=False, label="Post-PUT")
+    is_pre_get = forms.BooleanField(required=False, label="Pre-GET")
+    is_post_get = forms.BooleanField(required=False, label="Post-GET")
+    has_reverse = forms.BooleanField(required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(UpdateGlobalFilter, self).__init__(request, *args, **kwargs)
