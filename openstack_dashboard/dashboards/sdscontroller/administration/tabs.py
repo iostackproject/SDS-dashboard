@@ -80,7 +80,7 @@ class Filters(tabs.TableTab):
                 ret.append(filters_models.Filter(inst['id'], inst['filter_name'], inst['filter_type'], inst['dependencies'],
                                                  inst['interface_version'], inst['object_metadata'], inst['main'], inst['has_reverse'],
                                                  inst['execution_server'], inst['execution_server_reverse'],
-                                                 inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get']
+                                                 inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get'], 0, False
                                                  ))
         return ret
 
@@ -103,7 +103,7 @@ class Filters(tabs.TableTab):
                 ret.append(filters_models.Filter(inst['id'], inst['filter_name'], inst['filter_type'], inst['dependencies'],
                                                  inst['interface_version'], inst['object_metadata'], inst['main'], inst['has_reverse'],
                                                  inst['execution_server'], inst['execution_server_reverse'],
-                                                 inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get']
+                                                 inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get'], 0, False
                                                  ))
         return ret
 
@@ -126,7 +126,8 @@ class Filters(tabs.TableTab):
                 ret.append(filters_models.Filter(inst['id'], inst['filter_name'], inst['filter_type'], inst['dependencies'],
                                                  inst['interface_version'], inst['object_metadata'], inst['main'], inst['has_reverse'],
                                                  inst['execution_server'], inst['execution_server_reverse'],
-                                                 inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get']
+                                                 inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get'], inst['order'],
+                                                 inst['enable']
                                                  ))
         return ret
 

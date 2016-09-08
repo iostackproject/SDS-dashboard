@@ -199,6 +199,12 @@ class UploadGlobalFilter(UploadFilter):
     is_post_get = forms.BooleanField(required=False, label="Post-GET")
     has_reverse = forms.BooleanField(required=False)
 
+    order = forms.CharField(max_length=255,
+                            label=_("Order"),
+                            required=False,
+                            help_text=_("Order of execution"))
+    enable = forms.BooleanField(required=False)
+
     def __init__(self, request, *args, **kwargs):
         super(UploadGlobalFilter, self).__init__(request, *args, **kwargs)
 
@@ -317,6 +323,12 @@ class UpdateGlobalFilter(UpdateFilter):
     is_pre_get = forms.BooleanField(required=False, label="Pre-GET")
     is_post_get = forms.BooleanField(required=False, label="Post-GET")
     has_reverse = forms.BooleanField(required=False)
+
+    order = forms.CharField(max_length=255,
+                            label=_("Order"),
+                            required=False,
+                            help_text=_("Order of execution"))
+    enable = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
         super(UpdateGlobalFilter, self).__init__(request, *args, **kwargs)

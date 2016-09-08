@@ -160,7 +160,8 @@ class DeleteMultipleGlobalFilters(DeleteMultipleFilters):
 class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
         return (cell.column.name in ['interface_version', 'dependencies', 'execution_server', 'execution_server_reverse',
-                                     'is_pre_put', 'is_post_put', 'is_pre_get', 'is_post_get', 'has_reverse', 'main'])
+                                     'is_pre_put', 'is_post_put', 'is_pre_get', 'is_post_get', 'has_reverse', 'main',
+                                     'order', 'enable'])
 
     def update_cell(self, request, datum, id, cell_name, new_cell_value):
         try:
@@ -168,6 +169,7 @@ class UpdateCell(tables.UpdateAction):
             response = api.fil_get_filter_metadata(request, id)
             data = json.loads(response.text)
             data[cell_name] = new_cell_value
+
 
             # TODO: Check only the valid keys, delete the rest
             if 'id' in data:  # PUT does not allow this key
@@ -181,6 +183,11 @@ class UpdateCell(tables.UpdateAction):
             if 'path' in data:  # PUT does not allow this key
                 del data['path']
             if 'filter_type' in data:  # PUT does not allow this key
+                if data['filter_type'] == 'native' or data['filter_type'] == 'storlet':
+                    if 'order' in data:
+                        del data['order']
+                    if 'enable' in data:
+                        del data['enable']
                 del data['filter_type']
 
             api.fil_update_filter_metadata(request, id, data)
@@ -207,7 +214,9 @@ class UpdateStorletRow(tables.Row):
                         data['main'],
                         data['has_reverse'], data['execution_server'],
                         data['execution_server_reverse'],
-                        data['is_pre_put'], data['is_post_put'], data['is_pre_get'], data['is_post_get'])
+                        data['is_pre_put'], data['is_post_put'], data['is_pre_get'], data['is_post_get'],
+                        0, False
+                        )
         return filter
 
 
@@ -223,7 +232,8 @@ class UpdateNativeRow(tables.Row):
                         data['main'],
                         data['has_reverse'], data['execution_server'],
                         data['execution_server_reverse'],
-                        data['is_pre_put'], data['is_post_put'], data['is_pre_get'], data['is_post_get']
+                        data['is_pre_put'], data['is_post_put'], data['is_pre_get'], data['is_post_get'],
+                        0, False
                         )
         return filter
 
@@ -240,7 +250,8 @@ class UpdateGlobalRow(tables.Row):
                         data['main'],
                         data['has_reverse'], data['execution_server'],
                         data['execution_server_reverse'],
-                        data['is_pre_put'], data['is_post_put'], data['is_pre_get'], data['is_post_get']
+                        data['is_pre_put'], data['is_post_put'], data['is_pre_get'], data['is_post_get'],
+                        data['order'], data['enable']
                         )
         return filter
 
@@ -295,7 +306,7 @@ class NativeFilterTable(tables.DataTable):
 
 
 class GlobalFilterTable(tables.DataTable):
-    id = tables.Column('id', verbose_name=_("ID"))
+    # id = tables.Column('id', verbose_name=_("ID"))
     name = tables.Column('filter_name', verbose_name=_("Name"))
     # filter_type = tables.Column('filter_type', verbose_name=_("Type"))
     interface_version = tables.Column('interface_version', verbose_name=_("Interface Version"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
@@ -312,6 +323,10 @@ class GlobalFilterTable(tables.DataTable):
     has_reverse = tables.Column('has_reverse', verbose_name=_("Has Reverse?"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
     execution_server = tables.Column('execution_server', verbose_name=_("Execution Server"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
     execution_server_reverse = tables.Column('execution_server_reverse', verbose_name=_("Execution Server Reverse"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
+
+    order = tables.Column('order', verbose_name=_("Order"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    enable = tables.Column('enable', verbose_name=_("Enabled"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+                                update_action=UpdateCell)
 
     class Meta:
         name = "global_filters"
