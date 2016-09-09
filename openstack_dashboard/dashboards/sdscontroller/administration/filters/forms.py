@@ -199,9 +199,9 @@ class UploadGlobalFilter(UploadFilter):
     is_post_get = forms.BooleanField(required=False, label="Post-GET")
     has_reverse = forms.BooleanField(required=False)
 
-    order = forms.CharField(max_length=255,
+    execution_order = forms.CharField(max_length=255,
                             label=_("Order"),
-                            required=False,
+                            required=True,
                             help_text=_("Order of execution"))
     enable = forms.BooleanField(required=False)
 
@@ -324,9 +324,9 @@ class UpdateGlobalFilter(UpdateFilter):
     is_post_get = forms.BooleanField(required=False, label="Post-GET")
     has_reverse = forms.BooleanField(required=False)
 
-    order = forms.CharField(max_length=255,
+    execution_order = forms.CharField(max_length=255,
                             label=_("Order"),
-                            required=False,
+                            required=True,
                             help_text=_("Order of execution"))
     enable = forms.BooleanField(required=False)
 

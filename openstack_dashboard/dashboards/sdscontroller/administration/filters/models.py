@@ -4,7 +4,7 @@ class Filter:
     """
 
     def __init__(self, filter_id, filter_name, filter_type, dependencies, interface_version, object_metadata, main, has_reverse,
-                 execution_server, execution_server_reverse, is_pre_put, is_post_put, is_pre_get, is_post_get, order, enable):
+                 execution_server, execution_server_reverse, is_pre_put, is_post_put, is_pre_get, is_post_get, execution_order, enable):
         """
 
         :param filter_id:
@@ -21,7 +21,7 @@ class Filter:
         :param is_post_put:
         :param is_pre_get:
         :param is_post_get:
-        :param order:
+        :param execution_order:
         :param enable:
         """
         self.id = filter_id
@@ -40,5 +40,5 @@ class Filter:
         self.is_pre_get = is_pre_get
         self.is_post_get = is_post_get
 
-        self.order = order
+        self.execution_order = execution_order
         self.enable = enable
