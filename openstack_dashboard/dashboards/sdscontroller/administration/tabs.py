@@ -127,7 +127,7 @@ class Filters(tabs.TableTab):
                                                  inst['interface_version'], inst['object_metadata'], inst['main'], inst['has_reverse'],
                                                  inst['execution_server'], inst['execution_server_reverse'],
                                                  inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get'],
-                                                 inst['execution_order'], inst['enable']
+                                                 inst['execution_order'], inst['enabled']
                                                  ))
         sorted_list = sorted(ret, key=lambda x: int(x.execution_order))
         return sorted_list

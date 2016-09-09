@@ -161,7 +161,7 @@ class UpdateCell(tables.UpdateAction):
     def allowed(self, request, project, cell):
         return (cell.column.name in ['interface_version', 'dependencies', 'execution_server', 'execution_server_reverse',
                                      'is_pre_put', 'is_post_put', 'is_pre_get', 'is_post_get', 'has_reverse', 'main',
-                                     'execution_order', 'enable'])
+                                     'execution_order', 'enabled'])
 
     def update_cell(self, request, datum, id, cell_name, new_cell_value):
         try:
@@ -186,8 +186,8 @@ class UpdateCell(tables.UpdateAction):
                 if data['filter_type'] == 'native' or data['filter_type'] == 'storlet':
                     if 'execution_order' in data:
                         del data['execution_order']
-                    if 'enable' in data:
-                        del data['enable']
+                    if 'enabled' in data:
+                        del data['enabled']
                 del data['filter_type']
 
             api.fil_update_filter_metadata(request, id, data)
@@ -251,7 +251,7 @@ class UpdateGlobalRow(tables.Row):
                         data['has_reverse'], data['execution_server'],
                         data['execution_server_reverse'],
                         data['is_pre_put'], data['is_post_put'], data['is_pre_get'], data['is_post_get'],
-                        data['execution_order'], data['enable']
+                        data['execution_order'], data['enabled']
                         )
         return filter
 
@@ -325,7 +325,7 @@ class GlobalFilterTable(tables.DataTable):
     execution_server = tables.Column('execution_server', verbose_name=_("Execution Server"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
     execution_server_reverse = tables.Column('execution_server_reverse', verbose_name=_("Execution Server Reverse"), form_field=forms.ChoiceField(choices=[('proxy', _('Proxy Server')), ('object', _('Object Storage Servers'))]), update_action=UpdateCell)
 
-    enable = tables.Column('enable', verbose_name=_("Enabled"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+    enabled = tables.Column('enabled', verbose_name=_("Enabled"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
                                 update_action=UpdateCell)
 
     class Meta:

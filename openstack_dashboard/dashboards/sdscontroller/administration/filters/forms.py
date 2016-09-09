@@ -203,7 +203,7 @@ class UploadGlobalFilter(UploadFilter):
                             label=_("Order"),
                             required=True,
                             help_text=_("Order of execution"))
-    enable = forms.BooleanField(required=False)
+    enabled = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
         super(UploadGlobalFilter, self).__init__(request, *args, **kwargs)
@@ -328,7 +328,7 @@ class UpdateGlobalFilter(UpdateFilter):
                             label=_("Order"),
                             required=True,
                             help_text=_("Order of execution"))
-    enable = forms.BooleanField(required=False)
+    enabled = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
         super(UpdateGlobalFilter, self).__init__(request, *args, **kwargs)
