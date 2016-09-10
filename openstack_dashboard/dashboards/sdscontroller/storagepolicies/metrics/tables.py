@@ -13,7 +13,7 @@ from openstack_dashboard.api import sds_controller as api
 # class CreatePolicy(tables.LinkAction):
 #     name = "create"
 #     verbose_name = _("Create Policy")
-#     url = "horizon:sdscontroller:storagepolicies:policies:create_policy"
+#     url = "horizon:sdscontroller:storagepolicies:dynamic_policies:create_policy"
 #     classes = ("ajax-modal",)
 #     icon = "plus"
 #
@@ -65,7 +65,6 @@ class MetricTable(tables.DataTable):
     class Meta:
         name = "workload_metrics"
         verbose_name = _("Workload Metrics")
-        #table_actions = (CreatePolicy, DeleteMultiplePolicies,)
+        # table_actions = (CreatePolicy, DeleteMultiplePolicies,)
         # table_actions = (CreatePolicy,)
         # row_actions = (DeletePolicy,)
-

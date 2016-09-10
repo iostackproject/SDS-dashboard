@@ -1,26 +1,17 @@
-# Copyright 2012 Nebula, Inc.
-#
-#    Licensed under the Apache License, Version 2.0 (the "License"); you may
-#    not use this file except in compliance with the License. You may obtain
-#    a copy of the License at
-#
-#         http://www.apache.org/licenses/LICENSE-2.0
-#
-#    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-#    License for the specific language governing permissions and limitations
-#    under the License.
-
 from django.conf.urls import patterns
 from django.conf.urls import url
 
 from openstack_dashboard.dashboards.sdscontroller.administration.filters import views
 
-
-VIEWS_MOD = ('openstack_dashboard.dashboards.sdscontroller.administration.filters.views')
+VIEWS_MOD = 'openstack_dashboard.dashboards.sdscontroller.administration.filters.views'
 
 urlpatterns = patterns(
     VIEWS_MOD,
-    url(r'^upload/$', views.UploadView.as_view(), name='upload'),
+    url(r'^upload_storlet/$', views.UploadStorletView.as_view(), name='upload_storlet'),
+    url(r'^upload_native/$', views.UploadNativeView.as_view(), name='upload_native'),
+    url(r'^upload_global/$', views.UploadGlobalView.as_view(), name='upload_global'),
+    url(r'^download/(?P<filter_id>[^/]+)/$', views.download_filter, name='download'),
+    url(r'^update_storlet/(?P<filter_id>[^/]+)/$', views.UpdateStorletView.as_view(), name='update_storlet'),
+    url(r'^update_native/(?P<filter_id>[^/]+)/$', views.UpdateNativeView.as_view(), name='update_native'),
+    url(r'^update_global/(?P<filter_id>[^/]+)/$', views.UpdateGlobalView.as_view(), name='update_global'),
 )

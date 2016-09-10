@@ -1,32 +1,29 @@
-from django.utils.translation import ugettext_lazy as _
-
-from horizon import tabs
-from horizon import exceptions
-
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies import tables as policies_tables
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies import models as policies_models
-
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import tables as metrics_tables
-from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import models as metrics_models
-
-from openstack_dashboard.api import sds_controller as api
 import json
 
+from django.utils.translation import ugettext_lazy as _
 
-class PolicyTab(tabs.TableTab):
-    name = _("Policy Tab")
-    slug = "policy_tab"
-    table_classes = (policies_tables.PoliciesTable,)
-    template_name = ("horizon/common/_detail_table.html")
-    preload = False
+from horizon import exceptions
+from horizon import tabs
+from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import models as metrics_models
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.metrics import tables as metrics_tables
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies import models as policies_models
+from openstack_dashboard.dashboards.sdscontroller.storagepolicies.policies import tables as policies_tables
 
-    def get_policies_data(self):
+
+class Policies(tabs.TableTab):
+    table_classes = (policies_tables.StaticPoliciesTable, policies_tables.DynamicPoliciesTable,)
+    name = _("Policies")
+    slug = "policies_table"
+    template_name = "sdscontroller/storagepolicies/policies/_detail.html"
+
+    def get_static_policies_data(self):
         try:
-            response = api.list_policies(self.request)
+            response = api.dsl_get_all_static_policies(self.request)
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
-                error_message = 'Unable to retrieve policies information.'
+                error_message = 'Unable to retrieve static_policies information.'
                 raise ValueError(error_message)
         except Exception as e:
             strobj = "[]"
@@ -35,7 +32,25 @@ class PolicyTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(policies_models.Policy(inst["id"], inst['policy_description'], inst['policy_location'], inst['alive']))
+            ret.append(policies_models.StaticPolicy(inst['id'], inst['target_id'], inst['target_name'], inst['filter_name'], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
+        return ret
+
+    def get_dynamic_policies_data(self):
+        try:
+            response = api.list_dynamic_policies(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to retrieve dynamic_policies information.'
+                raise ValueError(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        instances = json.loads(strobj)
+        ret = []
+        for inst in instances:
+            ret.append(policies_models.DynamicPolicy(inst['id'], inst['policy'], inst['condition'], inst['transient'], inst['policy_location'], inst['alive']))
         return ret
 
 
@@ -61,10 +76,11 @@ class MetricTab(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(metrics_models.Metric(inst["name"], inst['network_location'], inst['type']))
+            ret.append(metrics_models.Metric(inst['name'], inst['network_location'], inst['type']))
         return ret
+
 
 class PoliciesGroupTabs(tabs.TabGroup):
     slug = "policies_group_tabs"
-    tabs = (PolicyTab, MetricTab)
+    tabs = (Policies, MetricTab,)
     sticky = True

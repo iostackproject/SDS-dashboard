@@ -9,7 +9,7 @@ class MyFilterAction(tables.FilterAction):
 
 class GroupsTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("ID"))
-    tenants = tables.Column('tenants', verbose_name=_("Tenants"))
+    tenants = tables.Column('projects', verbose_name=_("Projects"))
 
     class Meta:
         name = "groups"

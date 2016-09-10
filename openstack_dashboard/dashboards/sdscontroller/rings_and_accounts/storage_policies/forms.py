@@ -104,10 +104,12 @@ class CreateStoragePolicy(forms.SelfHandlingForm):
             if storage_nodes_response.text:
                 storage_nodes = json.loads(storage_nodes_response.text)
                 storage_nodes_form = data['storage_node'].split(',')
-                data["storage_nodes"] = {}
+		data["storage_node"] = {}
                 for i in range(0, len(storage_nodes_form), 2):
-                    location = str(storage_nodes[int(storage_nodes_form[i])]['location'])
-                    data["storage_nodes"][location] = storage_nodes_form[i+1]
+                    for storage_node in storage_nodes:
+			if storage_node["id"] == storage_nodes_form[i]:
+			    location = storage_node['location']
+                            data["storage_node"][location] = storage_nodes_form[i+1]
             else:
                 raise Exception
         except Exception, e:
@@ -230,10 +232,11 @@ class CreateECStoragePolicy(forms.SelfHandlingForm):
             if storage_nodes_response.text:
                 storage_nodes = json.loads(storage_nodes_response.text)
                 storage_nodes_form = data['storage_node'].split(',')
-                data["storage_nodes"] = {}
+                data["storage_node"] = {}
                 for i in range(0, len(storage_nodes_form), 2):
-                    location = str(storage_nodes[int(storage_nodes_form[i])]['location'])
-                    data["storage_nodes"][location] = storage_nodes_form[i+1]
+
+                    location = str(storage_nodes[int(storage_nodes_form[i])-1]['location'])
+                    data["storage_node"][location] = storage_nodes_form[i+1]
             else:
                 raise Exception
         except Exception, e:
@@ -265,7 +268,7 @@ class BindStorageNode(forms.SelfHandlingForm):
                            widget=forms.TextInput(
                                attrs={"ng-model": "name", "not-blank": ""}
                            ))
-    location = forms.CharField(max_length=5,
+    location = forms.CharField(max_length=255,
                                 label=_("Location"),
                                 help_text=_("The location from new storage node. Example: r1z1-STORAGE_NODE_MANAGEMENT_INTERFACE_IP_ADDRESS:6000/DEVICE_NAME"),
                                 widget=forms.TextInput(

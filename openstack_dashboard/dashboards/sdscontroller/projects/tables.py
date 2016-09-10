@@ -21,11 +21,14 @@ from openstack_auth import utils as auth_utils
 
 from horizon import exceptions
 from horizon import forms
+from horizon import messages
 from horizon import tables
 from keystoneclient.exceptions import Conflict  # noqa
 
 from openstack_dashboard import api
 from openstack_dashboard import policy
+from openstack_dashboard.api import sds_controller as sds_controller_api
+from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
 class RescopeTokenToProject(tables.LinkAction):
@@ -105,16 +108,6 @@ class CreateProject(tables.LinkAction):
     def allowed(self, request, project):
         return api.keystone.keystone_can_edit_project()
 
-class CreateSDSProject(tables.LinkAction):
-    name = "sds_create"
-    verbose_name = _("Create SDS Project")
-    url = "horizon:sdscontroller:projects:sds_create"
-    classes = ("ajax-modal",)
-    icon = "plus"
-    policy_rules = (('sdscontroller', 'sdscontroller:create_sds_project'),)
-
-    def allowed(self, request, project):
-        return api.keystone.keystone_can_edit_project()
 
 class UpdateProject(tables.LinkAction):
     name = "update"
@@ -187,6 +180,40 @@ class TenantFilterAction(tables.FilterAction):
             return False
 
         return filter(comp, tenants)
+
+
+class CreateGroup(tables.BatchAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Create Group",
+            u"Create Group",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Create Group",
+            u"Create Group",
+            count
+        )
+
+    name = "createGroup"
+    icon = "plus"
+    success_url = "horizon:sdscontroller:administration:index"
+
+    def handle(self, data_table, request, obj_ids):
+        try:
+            response = sds_controller_api.dsl_create_tenants_group(request, None, obj_ids)
+            if 200 <= response.status_code < 300:
+                messages.success(request, _('Successfully created group.'))
+            else:
+                raise sdsexception.SdsException(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:administration:index")
+            error_message = "Unable to create group.\t %s" % ex.message
+            exceptions.handle(request, _(error_message), redirect=redirect)
 
 
 class UpdateRow(tables.Row):
@@ -276,6 +303,6 @@ class TenantsTable(tables.DataTable):
         row_actions = (UpdateMembersLink, UpdateGroupsLink, UpdateProject,
                        UsageLink, ModifyQuotas, DeleteTenantsAction,
                        RescopeTokenToProject)
-        table_actions = (TenantFilterAction, CreateProject, CreateSDSProject,
-                         DeleteTenantsAction)
+        table_actions = (TenantFilterAction, CreateProject,
+                         CreateGroup, DeleteTenantsAction,)
         pagination_param = "tenant_marker"

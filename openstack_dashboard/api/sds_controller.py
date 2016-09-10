@@ -1,21 +1,166 @@
 # encoding: utf-8
 from __future__ import unicode_literals
 
-import requests
 import json
+
+import requests
+
 from horizon.utils.memoized import memoized  # noqa
 
-
 # TODO: Take parameters from a config file
-URL_BASIC = "http://127.0.0.1:8000"
+URL_BASIC = "http://10.30.102.240:18000"
+
 
 @memoized
 def sds_controller_api(request):
     return request.user.token.id
 
+
 ############################## # Swift API # ##############################
 
+# # Swift - SLAs
+def bw_add_sla(request, data):
+    token = sds_controller_api(request)
 
+    headers = {}
+
+    url = URL_BASIC + "/bw/slas"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.post(url, json.dumps(data), headers=headers)
+    return r
+
+
+def bw_get_all_slas(request):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/bw/slas"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def bw_update_sla(request, sla_id, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/bw/sla/" + str(sla_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
+def bw_get_sla(request, sla_id):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/bw/sla/" + str(sla_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def bw_delete_sla(request, sla_id):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/bw/sla/" + str(sla_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+# # Swift - Sorting Methods
+def bw_add_sort_method(request, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/sort_nodes"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.post(url, json.dumps(data), headers=headers)
+    return r
+
+
+def bw_get_all_sort_method(request):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/sort_nodes"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def bw_update_sort_method(request, name, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/sort_nodes/" + str(name)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
+def bw_get_sort_method(request, name):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/sort_nodes/" + str(name)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def bw_delete_sort_method(request, name):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/sort_nodes/" + str(name)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+# # Swift - Tenants
 def swift_list_tenants(request):
     token = sds_controller_api(request)
 
@@ -29,19 +174,26 @@ def swift_list_tenants(request):
     r = requests.get(url, headers=headers)
     return r
 
-def tenant_create(request, tenant_name, admin_user, admin_pass):
+
+def enable_sds(request, tenant_name):
     token = sds_controller_api(request)
     headers = {}
+
     url = URL_BASIC + "/swift/tenants"
-    parameters = {"tenant_name": tenant_name, "user_name": admin_user, "user_password": admin_pass}
+
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
+
+    parameters = {"tenant_name": tenant_name}
+
     r = requests.post(url, json.dumps(parameters), headers=headers)
     return r
+
 
 def new_storage_policy(request, data):
     token = sds_controller_api(request)
     headers = {}
+
     url = URL_BASIC + "/swift/sdspolicies"
 
     headers["X-Auth-Token"] = str(token)
@@ -50,20 +202,35 @@ def new_storage_policy(request, data):
     r = requests.post(url, json.dumps(data), headers=headers)
     return r
 
+
+# # Swift - Storage Policies
+def swift_list_storage_policies(request):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/swift/storage_policies"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
 ############################## # Registry DSL API # ##############################
-# # Registry DSL - Policies
+# # Registry DSL - Storage Nodes
 
 def registry_storage_node(request, data):
     token = sds_controller_api(request)
     headers = {}
-    print 'api data', data
+
     url = URL_BASIC + "/registry/snode"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
 
     r = requests.post(url, json.dumps(data), headers=headers)
-    print r.text
     return r
 
 
@@ -80,11 +247,26 @@ def list_storage_nodes(request):
     return r
 
 
-def create_policy(request, policy):
+def remove_storage_nodes(request, storage_node_id):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/registry/snode/" + str(storage_node_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+# # Registry DSL - Policies
+def dsl_add_policy(request, policy):
     token = sds_controller_api(request)
     headers = {}
 
-    url = URL_BASIC + "/registry/policy"
+    url = URL_BASIC + "/registry/dynamic_policy"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
@@ -93,11 +275,12 @@ def create_policy(request, policy):
     return r
 
 
-def list_policies(request):
+# # Registry DSL - Static Policies
+def dsl_get_all_static_policies(request):
     token = sds_controller_api(request)
     headers = {}
 
-    url = URL_BASIC + "/registry/policy"
+    url = URL_BASIC + "/registry/static_policy"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -106,6 +289,75 @@ def list_policies(request):
     return r
 
 
+def dsl_update_static_policy(request, policy_id, data):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/static_policy/" + str(policy_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
+def dsl_get_static_policy(request, policy_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/static_policy/" + str(policy_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def dsl_delete_static_policy(request, policy_id):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/registry/static_policy/" + str(policy_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+# # Registry DSL - Dynamic Policies
+def list_dynamic_policies(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/dynamic_policy"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def remove_dynamic_policy(request, policy_id):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = URL_BASIC + "/registry/dynamic_policy/" + str(policy_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+# TODO: Search usages and change it to dsl_get_all_workload_metris
 def list_metrics(request):
     token = sds_controller_api(request)
     headers = {}
@@ -119,18 +371,84 @@ def list_metrics(request):
     return r
 
 
-# TODO confirm
-def remove_policy(request, policy_id):
+# # Registry - Metric Modules
+def mtr_add_metric_module_metadata(request, data, in_memory_file):
     token = sds_controller_api(request)
-
     headers = {}
 
-    url = URL_BASIC + "/registry/policy/" + str(policy_id)
+    url = URL_BASIC + "/registry/metric_module/data"
+
+    headers["X-Auth-Token"] = str(token)
+    # Content-Type header will be set to multipart by django because a file is uploaded
+
+    files = {'file': (in_memory_file.name, in_memory_file.read())}
+    data_to_send = {'metadata': json.dumps(data)}
+
+    r = requests.post(url, data_to_send, files=files, headers=headers)
+    return r
+
+
+def mtr_get_all_metric_modules(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def mtr_update_metric_module(request, metric_module_id, data):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module/" + str(metric_module_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
+def mtr_get_metric_module(request, metric_module_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module/" + str(metric_module_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def mtr_delete_metric_module(request, metric_module_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module/" + str(metric_module_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
     r = requests.delete(url, headers=headers)
+    return r
+
+
+def mtr_download_metric_module_data(request, metric_module_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/metric_module/" + str(metric_module_id) + "/data"
+
+    headers["X-Auth-Token"] = str(token)
+
+    r = requests.get(url, headers=headers)
     return r
 
 
@@ -212,7 +530,7 @@ def dsl_delete_workload_metric(request, metric_name):
 
 
 # # Registry DSL - Filters
-def dsl_add_filter(request, name, identifier, activation_url, valid_parameters):
+def dsl_add_filter(request, data):
     token = sds_controller_api(request)
     headers = {}
 
@@ -221,9 +539,7 @@ def dsl_add_filter(request, name, identifier, activation_url, valid_parameters):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"name": str(name), "identifier": str(identifier), "activation_url": str(activation_url), "valid_parameters": str(valid_parameters)}
-
-    r = requests.post(url, json.dumps(parameters), headers=headers)
+    r = requests.post(url, json.dumps(data), headers=headers)
     return r
 
 
@@ -240,7 +556,7 @@ def dsl_get_all_filters(request):
     return r
 
 
-def dsl_update_filter(request, name, activation_url, valid_parameters):
+def dsl_update_filter(request, name, data):
     token = sds_controller_api(request)
     headers = {}
 
@@ -249,18 +565,7 @@ def dsl_update_filter(request, name, activation_url, valid_parameters):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {}
-    if name is not None:
-        parameters["name"] = str(name)
-    if activation_url is not None:
-        parameters["activation_url"] = str(activation_url)
-    if valid_parameters is not None:
-        parameters["valid_parameters"] = str(valid_parameters)
-
-    if len(parameters) == 0:
-        raise ValueError
-
-    r = requests.put(url, json.dumps(parameters), headers=headers)
+    r = requests.put(url, json.dumps(data), headers=headers)
     return r
 
 
@@ -375,7 +680,117 @@ def dsl_delete_tenant_group_member(request, group_name, tenant_id):
     return r
 
 
+# # Registry DSL - Object Types
+def dsl_get_all_object_types(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/object_type"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def dsl_create_object_type(request, name, extensions):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/object_type"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    parameters = {"name": str(name), "types_list": extensions}
+
+    r = requests.post(url, json.dumps(parameters), headers=headers)
+    return r
+
+
+def dsl_get_object_type(request, object_type_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/object_type/" + str(object_type_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def dsl_update_object_type(request, object_type_id, extensions):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/object_type/" + str(object_type_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(extensions), headers=headers)
+    return r
+
+
+def dsl_delete_object_type(request, object_type_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/object_type/" + str(object_type_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+# # Registry DSL - Nodes
+def dsl_get_all_nodes(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/nodes"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def dsl_get_node_detail(request, node_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/nodes/" + str(node_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def dsl_update_node(request, node_id, data):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/registry/nodes/" + str(node_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
 ############################## # Filters API # ##############################
+
+
 # Filters - Filters
 def fil_create_filter(request, data):
     token = sds_controller_api(request)
@@ -401,6 +816,18 @@ def fil_upload_filter_data(request, filter_id, in_memory_file):
     files = {'file': (in_memory_file.name, in_memory_file.read())}
 
     r = requests.put(url, files=files, headers=headers)
+    return r
+
+
+def fil_download_filter_data(request, filter_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/filters/" + str(filter_id) + "/data"
+
+    headers["X-Auth-Token"] = str(token)
+
+    r = requests.get(url, headers=headers)
     return r
 
 
@@ -443,7 +870,7 @@ def fil_list_filters(request):
     return r
 
 
-def fil_update_filter_metadata(request, filter_id, language, interface_version, main, dependencies="", object_metadata="no"):
+def fil_update_filter_metadata(request, filter_id, data):
     token = sds_controller_api(request)
     headers = {}
 
@@ -452,10 +879,7 @@ def fil_update_filter_metadata(request, filter_id, language, interface_version, 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"language": str(language), "interface_version": str(interface_version),
-                  "main": str(main), "dependencies": str(dependencies), "object_metadata": str(object_metadata)}
-
-    r = requests.put(url, json.dumps(parameters), headers=headers)
+    r = requests.put(url, json.dumps(data), headers=headers)
     return r
 
 
@@ -468,7 +892,19 @@ def fil_deploy_filter(request, filter_id, account_id, parameters):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"params": str(parameters)}
+    r = requests.put(url, json.dumps(parameters), headers=headers)
+
+    return r
+
+
+def fil_deploy_filter_with_container(request, filter_id, account_id, container_id, parameters):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = URL_BASIC + "/filters/" + str(account_id) + "/" + str(container_id) + "/deploy/" + str(filter_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
 
     r = requests.put(url, json.dumps(parameters), headers=headers)
     return r
@@ -501,7 +937,7 @@ def fil_list_deployed_filters(request, account_id):
 
 
 # # Filters - Dependencies
-def fil_create_dependency(request, name, version, permissions):
+def fil_create_dependency(request, data):
     token = sds_controller_api(request)
     headers = {}
 
@@ -510,26 +946,20 @@ def fil_create_dependency(request, name, version, permissions):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"name": str(name), "version": str(version), "permissions": str(permissions)}
-
-    r = requests.post(url, json.dumps(parameters), headers=headers)
+    r = requests.post(url, json.dumps(data), headers=headers)
     return r
 
 
-def fil_upload_dependency_data(request, dependency_id, filter_path):
+def fil_upload_dependency_data(request, dependency_id, in_memory_file):
     token = sds_controller_api(request)
     headers = {}
 
     url = URL_BASIC + "/filters/dependencies/" + str(dependency_id) + "/data"
 
     headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "multipart/form-data"
+    files = {'file': (in_memory_file.name, in_memory_file.read())}
 
-    # TODO?
-    with open(filter_path, "r") as my_file:
-        data = my_file.read()
-
-    r = requests.put(url, data=data, headers=headers)
+    r = requests.put(url, files=files, headers=headers)
     return r
 
 

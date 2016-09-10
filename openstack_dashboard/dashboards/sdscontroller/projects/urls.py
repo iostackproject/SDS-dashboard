@@ -27,7 +27,6 @@ urlpatterns = patterns(
     '',
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^create$', views.CreateProjectView.as_view(), name='create'),
-    url(r'^sds_create$', views.CreateSDSProjectView.as_view(), name='sds_create'),
     url(r'^(?P<tenant_id>[^/]+)/update/$',
         views.UpdateProjectView.as_view(), name='update'),
     url(r'^(?P<project_id>[^/]+)/usage/$',
