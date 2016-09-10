@@ -55,12 +55,13 @@ class RegistryTab(tabs.TableTab):
 
 
 class Filters(tabs.TableTab):
-    table_classes = (filter_tables.FilterTable,)
+    table_classes = (filter_tables.StorletFilterTable, filter_tables.NativeFilterTable, filter_tables.GlobalFilterTable)
     name = _("Filters")
     slug = "filters_table"
-    template_name = "horizon/common/_detail_table.html"
+    #template_name = "horizon/common/_detail_table.html"
+    template_name = "sdscontroller/administration/filters/_detail.html"
 
-    def get_filters_data(self):
+    def get_storlet_filters_data(self):
         try:
             response = api.fil_list_filters(self.request)
             if 200 <= response.status_code < 300:
@@ -75,12 +76,61 @@ class Filters(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(filters_models.Filter(inst['id'], inst['filter_name'], inst['filter_type'], inst['dependencies'],
-                                             inst['interface_version'], inst['object_metadata'], inst['main'],
-                                             inst['is_put'], inst['is_get'], inst['has_reverse'],
-                                             inst['execution_server'], inst['execution_server_reverse']
-                                             ))
+            if inst['filter_type'] == 'storlet':
+                ret.append(filters_models.Filter(inst['id'], inst['filter_name'], inst['filter_type'], inst['dependencies'],
+                                                 inst['interface_version'], inst['object_metadata'], inst['main'], inst['has_reverse'],
+                                                 inst['execution_server'], inst['execution_server_reverse'],
+                                                 inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get'], 0, False
+                                                 ))
         return ret
+
+    def get_native_filters_data(self):
+        try:
+            response = api.fil_list_filters(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get filters.'
+                raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        instances = json.loads(strobj)
+        ret = []
+        for inst in instances:
+            if inst['filter_type'] == 'native':
+                ret.append(filters_models.Filter(inst['id'], inst['filter_name'], inst['filter_type'], inst['dependencies'],
+                                                 inst['interface_version'], inst['object_metadata'], inst['main'], inst['has_reverse'],
+                                                 inst['execution_server'], inst['execution_server_reverse'],
+                                                 inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get'], 0, False
+                                                 ))
+        return ret
+
+    def get_global_filters_data(self):
+        try:
+            response = api.fil_list_filters(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get filters.'
+                raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        instances = json.loads(strobj)
+        ret = []
+        for inst in instances:
+            if inst['filter_type'] == 'global':
+                ret.append(filters_models.Filter(inst['id'], inst['filter_name'], inst['filter_type'], inst['dependencies'],
+                                                 inst['interface_version'], inst['object_metadata'], inst['main'], inst['has_reverse'],
+                                                 inst['execution_server'], inst['execution_server_reverse'],
+                                                 inst['is_pre_put'], inst['is_post_put'], inst['is_pre_get'], inst['is_post_get'],
+                                                 inst['execution_order'], inst['enabled']
+                                                 ))
+        sorted_list = sorted(ret, key=lambda x: int(x.execution_order))
+        return sorted_list
 
 
 class Dependencies(tabs.TableTab):
