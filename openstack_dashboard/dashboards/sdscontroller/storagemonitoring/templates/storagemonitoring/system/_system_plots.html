@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block page_header %}
-    {% include "sdscontroller/storagemonitoring/index.html" with title=_("Monitoring System") %}
+    {% include "sdscontroller/storagemonitoring/index.html" with title=_("Monitoring System") active="system_plots" %}
 {% endblock page_header %}
 {% block main %}
     <iframe src="http://{{ ip_host }}:8089/goto/50d8436d3d900eaca7c45c23a5495ab4" height="1120" width=100%></iframe>
