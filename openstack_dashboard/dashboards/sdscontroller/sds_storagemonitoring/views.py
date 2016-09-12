@@ -34,5 +34,5 @@ class IndexView(FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request, *args, **kwargs)
         volume = request.POST['volume']
-        ip ='10.30.1.6:5601'
+        ip ='https://testbed.iostack.eu'
         return render(request, self.template_name, {'form': form, 'ip': ip, 'volume': volume})
