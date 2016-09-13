@@ -21,7 +21,7 @@ class MyFilterAction(tables.FilterAction):
 
 class CreateFilter(tables.LinkAction):
     name = "create"
-    verbose_name = _("Create Filter")
+    verbose_name = _("Register Filter")
     url = "horizon:sdscontroller:administration:registry_dsl:create_filter"
     classes = ("ajax-modal",)
     icon = "plus"
