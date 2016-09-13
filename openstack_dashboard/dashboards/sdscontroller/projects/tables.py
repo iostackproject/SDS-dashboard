@@ -10,6 +10,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+from django.conf import settings
 from django.core.exceptions import ValidationError  # noqa
 from django.core.urlresolvers import reverse
 from django.template import defaultfilters as filters
@@ -24,6 +25,7 @@ from horizon import forms
 from horizon import messages
 from horizon import tables
 from keystoneclient.exceptions import Conflict  # noqa
+from swiftclient import client
 
 from openstack_dashboard import api
 from openstack_dashboard import policy
@@ -259,6 +261,16 @@ class UpdateCell(tables.UpdateAction):
         return True
 
 
+def is_sds_project(project_name):
+    keystone_admin_url = settings.OPENSTACK_KEYSTONE_URL
+    admin_user = settings.IOSTACK_KEYSTONE_ADMIN_USER
+    admin_password = settings.IOSTACK_KEYSTONE_ADMIN_PASSWORD
+    os_options = {'tenant_name': project_name}
+    url, token = client.get_auth(keystone_admin_url, admin_user, admin_password, os_options=os_options, auth_version="2.0")
+    head = client.head_account(url, token)
+    return 'storlet-enabled' in head
+
+
 class TenantsTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_('Name'),
                          link=("horizon:sdscontroller:projects:detail"),
@@ -277,6 +289,10 @@ class TenantsTable(tables.DataTable):
                                 label=_('Enabled'),
                                 required=False),
                             update_action=UpdateCell)
+    sds_project = tables.Column(lambda obj: is_sds_project(getattr(obj, 'name', None)),
+                                verbose_name=_('SDS'), status=True,
+                                filters=(filters.yesno, filters.capfirst))
+
 
     def get_project_detail_link(self, project):
         # this method is an ugly monkey patch, needed because

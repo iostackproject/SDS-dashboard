@@ -690,3 +690,7 @@ REST_API_REQUIRED_SETTINGS = ['OPENSTACK_HYPERVISOR_FEATURES']
 # For more information see:
 # http://tinyurl.com/anticlickjack
 #DISALLOW_IFRAME_EMBED = True
+
+# IOStack settings
+IOSTACK_KEYSTONE_ADMIN_USER = 'changeme'
+IOSTACK_KEYSTONE_ADMIN_PASSWORD = 'changeme'  # noqa
