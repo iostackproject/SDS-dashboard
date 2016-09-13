@@ -262,13 +262,17 @@ class UpdateCell(tables.UpdateAction):
 
 
 def is_sds_project(project_name):
-    keystone_admin_url = settings.OPENSTACK_KEYSTONE_URL
-    admin_user = settings.IOSTACK_KEYSTONE_ADMIN_USER
-    admin_password = settings.IOSTACK_KEYSTONE_ADMIN_PASSWORD
-    os_options = {'tenant_name': project_name}
-    url, token = client.get_auth(keystone_admin_url, admin_user, admin_password, os_options=os_options, auth_version="2.0")
-    head = client.head_account(url, token)
-    return 'storlet-enabled' in head
+    try:
+        keystone_admin_url = settings.OPENSTACK_KEYSTONE_URL
+        admin_user = settings.IOSTACK_KEYSTONE_ADMIN_USER
+        admin_password = settings.IOSTACK_KEYSTONE_ADMIN_PASSWORD
+        os_options = {'tenant_name': project_name}
+        url, token = client.get_auth(keystone_admin_url, admin_user, admin_password, os_options=os_options, auth_version="2.0")
+        head = client.head_account(url, token)
+        return 'storlet-enabled' in head
+    except Exception:
+        # If the admin user is not assigned to the project (auth exception), then is not a SDS project
+        return False
 
 
 class TenantsTable(tables.DataTable):
