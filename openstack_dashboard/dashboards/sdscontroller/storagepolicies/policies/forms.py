@@ -97,6 +97,8 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
     def __init__(self, request, *args, **kwargs):
         # Obtain list of projects
         self.target_choices = common.get_project_list_choices(request)
+        self.container_choices = common.get_container_list_choices(request)  # Default: containers from current project
+
         # Obtain list of dsl filters
         self.dsl_filter_choices = common.get_dsl_filter_list_choices(request)
         # Obtain list of object types
@@ -107,9 +109,17 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
 
         # Overwrite target_id input form
         self.fields['target_id'] = forms.ChoiceField(choices=self.target_choices,
+                                                     initial=request.user.project_id,  # Default project is the current one
                                                      label=_("Project"),
                                                      help_text=_("The project where the rule will be apply."),
                                                      required=True)
+
+        # Overwrite contained_id input form
+        self.fields['container_id'] = forms.ChoiceField(choices=self.container_choices,
+                                                        label=_("Container"),
+                                                        help_text=_("The container where the rule will be apply."),
+                                                        required=False)
+
         # Overwrite filter_id input form
         self.fields['filter_id'] = forms.ChoiceField(choices=self.dsl_filter_choices,
                                                      label=_("Filter"),
