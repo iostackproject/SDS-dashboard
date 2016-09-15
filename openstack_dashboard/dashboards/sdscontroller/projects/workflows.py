@@ -591,7 +591,8 @@ class UpdateProjectInfo(workflows.Step):
                    "domain_name",
                    "name",
                    "description",
-                   "enabled")
+                   "enabled",
+                   "sds_project")
 
 
 class UpdateProject(CommonQuotaWorkflow):
