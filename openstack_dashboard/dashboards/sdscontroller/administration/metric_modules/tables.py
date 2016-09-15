@@ -75,6 +75,62 @@ class DeleteMultipleMetricModules(DeleteMetricModule):
     name = "delete_multiple_metric_modules"
 
 
+class EnableMetricModule(tables.BatchAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Enable Metric Module",
+            u"Enable Metric Modules",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Enabled Metric Module",
+            u"Enabled Metric Modules",
+            count
+        )
+
+    name = "enable_metric_module"
+    success_url = "horizon:sdscontroller:administration:index"
+
+    def action(self, request, datum_id):
+        data = {'enabled': True}
+        api.mtr_update_metric_module(request, datum_id, data)
+
+class EnableMultipleMetricModules(EnableMetricModule):
+    name = "enable_multiple_metric_modules"
+
+
+class DisableMetricModule(tables.BatchAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Disable Metric Module",
+            u"Disable Metric Modules",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Disabled Metric Module",
+            u"Disabled Metric Modules",
+            count
+        )
+
+    name = "disable_metric_module"
+    success_url = "horizon:sdscontroller:administration:index"
+
+    def action(self, request, datum_id):
+        data = {'enabled': False}
+        api.mtr_update_metric_module(request, datum_id, data)
+
+class DisableMultipleMetricModules(DisableMetricModule):
+    name = "disable_multiple_metric_modules"
+
+
 class UpdateMetricModule(tables.LinkAction):
     name = "update_metric_module"
     verbose_name = _("Edit")
@@ -151,6 +207,7 @@ class MetricTable(tables.DataTable):
     class Meta:
         name = "metric_modules"
         verbose_name = _("Metric Modules")
-        table_actions = (MyFilterAction, UploadMetricModule, DeleteMultipleMetricModules,)
+        table_actions_menu = (EnableMultipleMetricModules,DisableMultipleMetricModules,)  # dropdown menu
+        table_actions = (MyFilterAction, UploadMetricModule,DeleteMultipleMetricModules,)
         row_actions = (UpdateMetricModule, DownloadMetricModule, DeleteMetricModule,)
         row_class = UpdateRow
