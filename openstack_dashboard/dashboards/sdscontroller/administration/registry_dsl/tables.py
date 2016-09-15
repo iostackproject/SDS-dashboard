@@ -116,7 +116,7 @@ class DeleteMultipleDslFilters(DeleteDslFilter):
 class DslFilterTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_("Name"))
     filter_identifier = tables.Column('filter_identifier_name', verbose_name=_("Filter"))
-    activation_url = tables.Column('activation_url', verbose_name=_("Activation Url"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
+    activation_url = tables.Column('activation_url', verbose_name=_("API Activation Url"), form_field=forms.CharField(max_length=255), update_action=UpdateCell)
     valid_parameters = tables.Column('valid_parameters', verbose_name=_("Valid Parameters"), form_field=forms.CharField(max_length=64), update_action=UpdateCell)
 
     def __init__(self, request, data=None, needs_form_wrapper=None, **kwargs):
