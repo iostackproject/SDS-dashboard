@@ -41,7 +41,7 @@ class DeleteMetricModule(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Metric Module",
+            u"Delete",
             u"Delete Metric Modules",
             count
         )
@@ -49,8 +49,8 @@ class DeleteMetricModule(tables.DeleteAction):
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Delete Metric Module",
-            u"Delete Metric Modules",
+            u"Deleted Metric Module",
+            u"Deleted Metric Modules",
             count
         )
 
@@ -79,7 +79,7 @@ class EnableMetricModule(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Enable Metric Module",
+            u"Enable",
             u"Enable Metric Modules",
             count
         )
@@ -95,6 +95,9 @@ class EnableMetricModule(tables.BatchAction):
     name = "enable_metric_module"
     success_url = "horizon:sdscontroller:administration:index"
 
+    def allowed(self, request, instance):
+        return (instance is None) or (instance.enabled in ("False", False))
+
     def action(self, request, datum_id):
         data = {'enabled': True}
         api.mtr_update_metric_module(request, datum_id, data)
@@ -107,7 +110,7 @@ class DisableMetricModule(tables.BatchAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Disable Metric Module",
+            u"Disable",
             u"Disable Metric Modules",
             count
         )
@@ -122,6 +125,9 @@ class DisableMetricModule(tables.BatchAction):
 
     name = "disable_metric_module"
     success_url = "horizon:sdscontroller:administration:index"
+
+    def allowed(self, request, instance):
+        return (instance is None) or (instance.enabled in ("True", True))
 
     def action(self, request, datum_id):
         data = {'enabled': False}
@@ -207,7 +213,8 @@ class MetricTable(tables.DataTable):
     class Meta:
         name = "metric_modules"
         verbose_name = _("Metric Modules")
+        status_columns = ['enabled', ]
         table_actions_menu = (EnableMultipleMetricModules,DisableMultipleMetricModules,)  # dropdown menu
         table_actions = (MyFilterAction, UploadMetricModule,DeleteMultipleMetricModules,)
-        row_actions = (UpdateMetricModule, DownloadMetricModule, DeleteMetricModule,)
+        row_actions = (EnableMetricModule,DisableMetricModule,UpdateMetricModule, DownloadMetricModule, DeleteMetricModule,)
         row_class = UpdateRow
