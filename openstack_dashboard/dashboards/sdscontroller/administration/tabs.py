@@ -27,6 +27,7 @@ class RegistryTab(tabs.TableTab):
     name = _("Registry DSL")
     slug = "registry_table"
     template_name = "horizon/common/_detail_table.html"
+    preload = False
 
     def get_dsl_filters_data(self):
         try:
@@ -60,6 +61,7 @@ class Filters(tabs.TableTab):
     slug = "filters_table"
     #template_name = "horizon/common/_detail_table.html"
     template_name = "sdscontroller/administration/filters/_detail.html"
+    preload = False
 
     def get_storlet_filters_data(self):
         try:
@@ -138,6 +140,7 @@ class Dependencies(tabs.TableTab):
     name = _("Dependencies")
     slug = "dependencies_table"
     template_name = "horizon/common/_detail_table.html"
+    preload = False
 
     def get_dependencies_data(self):
         try:
@@ -163,6 +166,7 @@ class MetricModules(tabs.TableTab):
     name = _("Workload Metric Modules")
     slug = "metric_modules_table"
     template_name = "horizon/common/_detail_table.html"
+    preload = False
 
     def get_metric_modules_data(self):
         try:
@@ -190,6 +194,7 @@ class Nodes(tabs.TableTab):
     slug = "nodes_table"
     # template_name = "horizon/common/_detail_table.html"
     template_name = "sdscontroller/administration/nodes/_detail.html"
+    preload = False
 
     def get_proxys_data(self):
         ret = []
@@ -240,6 +245,7 @@ class Groups(tabs.TableTab):
     name = _("Groups")
     slug = "groups_table"
     template_name = "horizon/common/_detail_table.html"
+    preload = False
 
     def get_groups_data(self):
         ret = []
@@ -265,6 +271,7 @@ class ObjectTypes(tabs.TableTab):
     name = _("Object Types")
     slug = "object_types_table"
     template_name = "horizon/common/_detail_table.html"
+    preload = False
 
     def get_object_types_data(self):
         ret = []
