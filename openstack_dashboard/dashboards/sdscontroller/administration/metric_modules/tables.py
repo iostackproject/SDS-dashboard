@@ -99,7 +99,7 @@ class EnableMetricModule(tables.BatchAction):
         return (instance is None) or (instance.enabled in ("False", False))
 
     def action(self, request, datum_id):
-        data = {'enabled': True}
+        data = {'enabled': 'True'}
         api.mtr_update_metric_module(request, datum_id, data)
 
 class EnableMultipleMetricModules(EnableMetricModule):
@@ -130,7 +130,7 @@ class DisableMetricModule(tables.BatchAction):
         return (instance is None) or (instance.enabled in ("True", True))
 
     def action(self, request, datum_id):
-        data = {'enabled': False}
+        data = {'enabled': 'False'}
         api.mtr_update_metric_module(request, datum_id, data)
 
 class DisableMultipleMetricModules(DisableMetricModule):
