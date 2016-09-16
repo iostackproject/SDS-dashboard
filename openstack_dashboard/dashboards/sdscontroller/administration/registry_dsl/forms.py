@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
@@ -26,11 +27,10 @@ class CreateFilter(forms.SelfHandlingForm):
                                           ))
 
     activation_url = forms.CharField(max_length=255,
-                                     label=_("Activation Url"),
-                                     help_text=_("Activation Url"),
-                                     widget=forms.TextInput(
-                                         attrs={"ng-model": "activation_url", "not-blank": ""}
-                                     ))
+                                     label=_("API Activation Url"),
+                                     help_text=_("API Activation Url"),
+                                     initial= settings.IOSTACK_CONTROLLER_FILTERS_ENDPOINT
+                                     )
 
     valid_parameters = forms.CharField(max_length=255,
                                        label=_("valid_parameters"),
@@ -76,8 +76,8 @@ class UpdateFilter(forms.SelfHandlingForm):
                            )
 
     activation_url = forms.CharField(max_length=255,
-                                     label=_("Activation Url"),
-                                     help_text=_("Activation Url")
+                                     label=_("API Activation Url"),
+                                     help_text=_("API Activation Url")
                                      )
 
     valid_parameters = forms.CharField(max_length=255,

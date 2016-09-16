@@ -41,7 +41,7 @@ class DeleteMetricModule(tables.DeleteAction):
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
-            u"Delete Metric Module",
+            u"Delete",
             u"Delete Metric Modules",
             count
         )
@@ -49,8 +49,8 @@ class DeleteMetricModule(tables.DeleteAction):
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Delete Metric Module",
-            u"Delete Metric Modules",
+            u"Deleted Metric Module",
+            u"Deleted Metric Modules",
             count
         )
 
@@ -73,6 +73,68 @@ class DeleteMetricModule(tables.DeleteAction):
 
 class DeleteMultipleMetricModules(DeleteMetricModule):
     name = "delete_multiple_metric_modules"
+
+
+class EnableMetricModule(tables.BatchAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Enable",
+            u"Enable Metric Modules",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Enabled Metric Module",
+            u"Enabled Metric Modules",
+            count
+        )
+
+    name = "enable_metric_module"
+    success_url = "horizon:sdscontroller:administration:index"
+
+    def allowed(self, request, instance):
+        return (instance is None) or (instance.enabled in ("False", False))
+
+    def action(self, request, datum_id):
+        data = {'enabled': True}
+        api.mtr_update_metric_module(request, datum_id, data)
+
+class EnableMultipleMetricModules(EnableMetricModule):
+    name = "enable_multiple_metric_modules"
+
+
+class DisableMetricModule(tables.BatchAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Disable",
+            u"Disable Metric Modules",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Disabled Metric Module",
+            u"Disabled Metric Modules",
+            count
+        )
+
+    name = "disable_metric_module"
+    success_url = "horizon:sdscontroller:administration:index"
+
+    def allowed(self, request, instance):
+        return (instance is None) or (instance.enabled in ("True", True))
+
+    def action(self, request, datum_id):
+        data = {'enabled': False}
+        api.mtr_update_metric_module(request, datum_id, data)
+
+class DisableMultipleMetricModules(DisableMetricModule):
+    name = "disable_multiple_metric_modules"
 
 
 class UpdateMetricModule(tables.LinkAction):
@@ -143,14 +205,14 @@ class MetricTable(tables.DataTable):
                                      update_action=UpdateCell)
     enabled = tables.Column('enabled',
                             verbose_name=_("Enabled"),
-                            status=True,
-                            form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
-                            update_action=UpdateCell)
+                            status=True)
 
 
     class Meta:
         name = "metric_modules"
         verbose_name = _("Metric Modules")
-        table_actions = (MyFilterAction, UploadMetricModule, DeleteMultipleMetricModules,)
-        row_actions = (UpdateMetricModule, DownloadMetricModule, DeleteMetricModule,)
+        status_columns = ['enabled', ]
+        table_actions_menu = (EnableMultipleMetricModules,DisableMultipleMetricModules,)  # dropdown menu
+        table_actions = (MyFilterAction, UploadMetricModule,DeleteMultipleMetricModules,)
+        row_actions = (EnableMetricModule,DisableMetricModule,UpdateMetricModule, DownloadMetricModule, DeleteMetricModule,)
         row_class = UpdateRow

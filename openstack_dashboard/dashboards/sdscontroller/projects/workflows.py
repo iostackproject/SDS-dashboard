@@ -17,7 +17,6 @@
 #    under the License.
 
 
-
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -37,6 +36,9 @@ from openstack_dashboard.api import keystone
 from openstack_dashboard.api import nova
 from openstack_dashboard.usage import quotas
 from openstack_dashboard.api import sds_controller
+
+from openstack_dashboard.dashboards.sdscontroller.projects import tables
+
 INDEX_URL = "horizon:sdscontroller:projects:index"
 ADD_USER_URL = "horizon:sdscontroller:projects:create_user"
 PROJECT_GROUP_ENABLED = keystone.VERSIONS.active >= 3
@@ -547,6 +549,9 @@ class CreateProject(CommonQuotaWorkflow):
 class UpdateProjectInfoAction(CreateProjectInfoAction):
     enabled = forms.BooleanField(required=False, label=_("Enabled"))
 
+    sds_project = forms.BooleanField(label=_("SDS project"),
+                                     required=False)
+
     def __init__(self, request, initial, *args, **kwargs):
         super(UpdateProjectInfoAction, self).__init__(
             request, initial, *args, **kwargs)
@@ -554,6 +559,10 @@ class UpdateProjectInfoAction(CreateProjectInfoAction):
             self.fields['enabled'].widget.attrs['disabled'] = True
             self.fields['enabled'].help_text = _(
                 'You cannot disable your current project')
+
+        initial['sds_project'] = tables.is_sds_project(initial['name'])
+        if initial['sds_project'] is True:
+            self.fields['sds_project'].widget.attrs['disabled'] = True
 
     def clean(self):
         cleaned_data = super(UpdateProjectInfoAction, self).clean()
@@ -565,6 +574,7 @@ class UpdateProjectInfoAction(CreateProjectInfoAction):
         # restore the original `True` value of 'enabled' field here.
         if self.fields['enabled'].widget.attrs.get('disabled', False):
             cleaned_data['enabled'] = True
+        # For the 'sds_project' field it is not necessary
         return cleaned_data
 
     class Meta(object):
@@ -581,7 +591,8 @@ class UpdateProjectInfo(workflows.Step):
                    "domain_name",
                    "name",
                    "description",
-                   "enabled")
+                   "enabled",
+                   "sds_project")
 
 
 class UpdateProject(CommonQuotaWorkflow):
@@ -623,12 +634,15 @@ class UpdateProject(CommonQuotaWorkflow):
         # update project info
         try:
             project_id = data['project_id']
-            return api.keystone.tenant_update(
+            updated_tenant = api.keystone.tenant_update(
                 request,
                 project_id,
                 name=data['name'],
                 description=data['description'],
                 enabled=data['enabled'])
+            if data['sds_project']:
+                sds_controller.enable_sds(request, data['name'])
+            return updated_tenant
         except exceptions.Conflict:
             msg = _('Project name "%s" is already used.') % data['name']
             self.failure_message = msg

@@ -16,6 +16,7 @@ class Policies(tabs.TableTab):
     name = _("Policies")
     slug = "policies_table"
     template_name = "sdscontroller/storagepolicies/policies/_detail.html"
+    preload = False
 
     def get_static_policies_data(self):
         try:

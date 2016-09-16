@@ -13,12 +13,12 @@ from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl im
 
 class CreateFilterView(forms.ModalFormView):
     form_class = policies_forms.CreateFilter
-    modal_header = _("Create Filter")
+    modal_header = _("Register Filter")
     modal_id = "create_filter_modal"
     template_name = 'sdscontroller/administration/registry_dsl/create_filter.html'
     success_url = reverse_lazy('horizon:sdscontroller:administration:index')
-    page_title = _("Create a Filter")
-    submit_label = _("Create")
+    page_title = _("Register a Filter")
+    submit_label = _("Register")
     submit_url = reverse_lazy(
         "horizon:sdscontroller:administration:registry_dsl:create_filter")
 
