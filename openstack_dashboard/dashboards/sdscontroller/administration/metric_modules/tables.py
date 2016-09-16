@@ -99,7 +99,7 @@ class EnableMetricModule(tables.BatchAction):
         return (instance is None) or (instance.enabled in ("False", False))
 
     def action(self, request, datum_id):
-        data = {'enabled': 'True'}
+        data = {'enabled': True}
         api.mtr_update_metric_module(request, datum_id, data)
 
 class EnableMultipleMetricModules(EnableMetricModule):
@@ -130,7 +130,7 @@ class DisableMetricModule(tables.BatchAction):
         return (instance is None) or (instance.enabled in ("True", True))
 
     def action(self, request, datum_id):
-        data = {'enabled': 'False'}
+        data = {'enabled': False}
         api.mtr_update_metric_module(request, datum_id, data)
 
 class DisableMultipleMetricModules(DisableMetricModule):
@@ -205,9 +205,7 @@ class MetricTable(tables.DataTable):
                                      update_action=UpdateCell)
     enabled = tables.Column('enabled',
                             verbose_name=_("Enabled"),
-                            status=True,
-                            form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
-                            update_action=UpdateCell)
+                            status=True)
 
 
     class Meta:
