@@ -16,19 +16,18 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.core.urlresolvers import reverse
 from django.core import validators
+from django.core.urlresolvers import reverse
 from django.utils.encoding import force_text
 from django.utils.translation import pgettext_lazy
 from django.utils.translation import ugettext_lazy as _
 
+from dashboards.sdscontroller import common
 from horizon import exceptions
 from horizon import forms
 from horizon import messages
-
 from openstack_dashboard import api
 from openstack_dashboard.dashboards.sdscontroller.containers import utils
-
 
 no_slash_validator = validators.RegexValidator(r'^(?u)[^/]+$',
                                                _("Slash is not an allowed "
@@ -55,26 +54,45 @@ class CreateContainer(forms.SelfHandlingForm):
                            label=_("Container Name"),
                            validators=[no_slash_validator])
 
-    policy_name = forms.CharField(max_length=255,
-                                  label=_("Policy Name"),
-                                  required=False,
-                                  validators=[no_slash_validator])
+    # policy_name = forms.CharField(max_length=255,
+    #                               label=_("Policy Name"),
+    #                               required=False,
+    #                               validators=[no_slash_validator])
+
+    policy_choices = []
+    policy_name = forms.ChoiceField(choices=policy_choices,
+                                    label=_("Policy Name"),
+                                    help_text=_("The storage policy that you want to assign to the specific project."),
+                                    required=True)
 
     access = forms.ChoiceField(label=_("Container Access"),
                                choices=ACCESS_CHOICES)
+
+    def __init__(self, request, *args, **kwargs):
+        # Obtain list of storage policies
+        self.storage_policy_choices = common.get_storage_policy_list_choices(request, common.ListOptions.by_name())
+
+        # Initialization
+        super(CreateContainer, self).__init__(request, *args, **kwargs)
+
+        # Overwrite policy_id input form
+        self.fields['policy_name'] = forms.ChoiceField(choices=self.storage_policy_choices,
+                                                       label=_("Policy Name"),
+                                                       help_text=_("The storage policy that you want to assign to the specific project."),
+                                                       required=True)
 
     def handle(self, request, data):
         try:
             if not data['parent']:
                 is_public = data["access"] == "public"
                 policy_name = data["policy_name"]
-                print policy_name
+                print(policy_name)
                 if policy_name:
                     metadata = ({'is_public': is_public, "policy_name": policy_name})
                 else:
                     metadata = ({'is_public': is_public})
                 # Create a container
-                print 'metadata',metadata
+                print('metadata', metadata)
                 api.swift.swift_create_container(request,
                                                  data["name"],
                                                  metadata=metadata)
@@ -227,7 +245,7 @@ class CopyObject(forms.SelfHandlingForm):
         new_object = data['new_object_name']
         path = data['path']
         if path and not path.endswith("/"):
-            path = path + "/"
+            path += "/"
         new_path = "%s%s" % (path, new_object)
 
         # Now copy the object itself.
