@@ -8,7 +8,6 @@ from keystoneclient.exceptions import Conflict
 
 from horizon import exceptions
 from horizon import forms
-from horizon import messages
 from horizon import tables
 from models import MetricModule
 from openstack_dashboard.api import sds_controller as api
@@ -102,7 +101,17 @@ class EnableMetricModule(tables.BatchAction):
         data = {'enabled': True}
         api.mtr_update_metric_module(request, datum_id, data)
 
+
 class EnableMultipleMetricModules(EnableMetricModule):
+    def handle(self, table, request, obj_ids):
+        allowed_ids = []
+        for obj_id in obj_ids:
+            if not table.get_object_by_id(obj_id).enabled:
+                allowed_ids.append(obj_id)
+
+        # Call to super with allowed_ids
+        return super(EnableMultipleMetricModules, self).handle(table, request, allowed_ids)
+
     name = "enable_multiple_metric_modules"
 
 
@@ -133,7 +142,17 @@ class DisableMetricModule(tables.BatchAction):
         data = {'enabled': False}
         api.mtr_update_metric_module(request, datum_id, data)
 
+
 class DisableMultipleMetricModules(DisableMetricModule):
+    def handle(self, table, request, obj_ids):
+        allowed_ids = []
+        for obj_id in obj_ids:
+            if table.get_object_by_id(obj_id).enabled:
+                allowed_ids.append(obj_id)
+
+        # Call to super with allowed_ids
+        return super(DisableMultipleMetricModules, self).handle(table, request, allowed_ids)
+
     name = "disable_multiple_metric_modules"
 
 
@@ -207,12 +226,11 @@ class MetricTable(tables.DataTable):
                             verbose_name=_("Enabled"),
                             status=True)
 
-
     class Meta:
         name = "metric_modules"
         verbose_name = _("Metric Modules")
         status_columns = ['enabled', ]
-        table_actions_menu = (EnableMultipleMetricModules,DisableMultipleMetricModules,)  # dropdown menu
-        table_actions = (MyFilterAction, UploadMetricModule,DeleteMultipleMetricModules,)
-        row_actions = (EnableMetricModule,DisableMetricModule,UpdateMetricModule, DownloadMetricModule, DeleteMetricModule,)
+        table_actions_menu = (EnableMultipleMetricModules, DisableMultipleMetricModules,)  # dropdown menu
+        table_actions = (MyFilterAction, UploadMetricModule, DeleteMultipleMetricModules,)
+        row_actions = (EnableMetricModule, DisableMetricModule, UpdateMetricModule, DownloadMetricModule, DeleteMetricModule,)
         row_class = UpdateRow
