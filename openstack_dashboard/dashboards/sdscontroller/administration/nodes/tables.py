@@ -4,14 +4,17 @@ import time
 
 from django import template
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import register  # noqa
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 
 from horizon import tables
+from openstack_dashboard.api import sds_controller as api
 
 
 class MyProxyFilterAction(tables.FilterAction):
     name = "myproxyfilter"
+
 
 class UpdateNodeAction(tables.LinkAction):
     name = "update"
@@ -23,12 +26,15 @@ class UpdateNodeAction(tables.LinkAction):
         base_url = reverse("horizon:sdscontroller:administration:nodes:update", kwargs={'node_id': datum.id})
         return base_url
 
+
 class UpdateProxyAction(UpdateNodeAction):
     pass
+
 
 class RestartProxyAction(tables.LinkAction):
     name = "restart"
     verbose_name = _("Restart Swift")
+
     # icon = "refresh"
 
     def get_link_url(self, datum=None):
@@ -67,21 +73,38 @@ def get_devices_info(storage_node):
     context = {"devices": ordered_devices}
     return template.loader.render_to_string(template_name, context)
 
+
 class MyStorageNodeFilterAction(tables.FilterAction):
     name = "mystoragenodefilter"
+
 
 class UpdateStorageNodeAction(UpdateNodeAction):
     pass
 
-class RestartStorageNodeAction(tables.LinkAction):
+
+class RestartStorageNodeAction(tables.BatchAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Restart Swift Node",
+            u"Restart Swift Nodes",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Swift Node Restarted",
+            u"Swift Nodes Restarted",
+            count
+        )
+
     name = "restart"
     verbose_name = _("Restart Swift")
-    # icon = "refresh"
+    success_url = "horizon:sdscontroller:administration:index"
 
-    def get_link_url(self, datum=None):
-        # Dummy URL
-        base_url = reverse('horizon:sdscontroller:administration:index')
-        return base_url
+    def action(self, request, datum_id):
+        api.dsl_restart_node(request, datum_id)
 
 
 class StorageNodesTable(tables.DataTable):
@@ -90,7 +113,7 @@ class StorageNodesTable(tables.DataTable):
     last_ping = tables.Column(lambda obj: '{0} seconds ago'.format(calendar.timegm(time.gmtime()) - int(float(getattr(obj, 'last_ping', '0')))),
                               verbose_name="Last Swift ping")
     node_status = tables.Column(lambda obj: 'UP' if getattr(obj, 'node_status', False) is True else 'DOWN', verbose_name="Swift Status", status=True)
-    devices = tables.Column(get_devices_info, verbose_name=_("Devices"), classes=('nowrap-col', ), sortable=False)
+    devices = tables.Column(get_devices_info, verbose_name=_("Devices"), classes=('nowrap-col',), sortable=False)
 
     class Meta:
         name = "storagenodes"

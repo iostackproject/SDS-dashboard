@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 import json
 
 import requests
-
 from django.conf import settings
+
 from horizon.utils.memoized import memoized  # noqa
 
 
@@ -783,6 +783,19 @@ def dsl_update_node(request, node_id, data):
     headers['Content-Type'] = "application/json"
 
     r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
+def dsl_restart_node(request, node_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + '/registry/nodes/' + str(node_id) + '/restart'
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, headers=headers)
     return r
 
 
