@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
@@ -33,7 +34,7 @@ class Policies(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            if self.request.META['OS_TENANT_NAME'] == 'admin' or self.request.META['OS_TENANT_NAME'] == 'manager':
+            if self.request.META['OS_TENANT_NAME'] == settings.IOSTACK_KEYSTONE_ADMIN_TENANT:
                 ret.append(policies_models.StaticPolicy(inst['id'], inst['target_id'], inst['target_name'], inst['filter_name'], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
             elif self.request.META['OS_TENANT_NAME'] == inst['target_name']:
                 ret.append(policies_models.StaticPolicy(inst['id'], inst['target_id'], inst['target_name'], inst['filter_name'], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
