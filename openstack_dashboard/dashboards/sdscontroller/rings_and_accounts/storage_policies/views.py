@@ -17,7 +17,7 @@
 #    under the License.
 
 """
-Views for managing SDS Filters.
+Views for managing Ring & Storage Policies.
 """
 
 from django.utils.translation import ugettext_lazy as _

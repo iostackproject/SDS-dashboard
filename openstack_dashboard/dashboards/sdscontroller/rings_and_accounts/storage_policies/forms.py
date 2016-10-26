@@ -104,11 +104,11 @@ class CreateStoragePolicy(forms.SelfHandlingForm):
             if storage_nodes_response.text:
                 storage_nodes = json.loads(storage_nodes_response.text)
                 storage_nodes_form = data['storage_node'].split(',')
-		data["storage_node"] = {}
+                data["storage_node"] = {}
                 for i in range(0, len(storage_nodes_form), 2):
                     for storage_node in storage_nodes:
-			if storage_node["id"] == storage_nodes_form[i]:
-			    location = storage_node['location']
+                        if storage_node["id"] == storage_nodes_form[i]:
+                            location = storage_node['location']
                             data["storage_node"][location] = storage_nodes_form[i+1]
             else:
                 raise Exception

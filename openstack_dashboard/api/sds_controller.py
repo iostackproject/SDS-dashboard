@@ -192,7 +192,7 @@ def new_storage_policy(request, data):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/swift/sdspolicies"
+    url = settings.IOSTACK_CONTROLLER_URL + "/swift/spolicies"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -354,21 +354,6 @@ def remove_dynamic_policy(request, policy_id):
     r = requests.delete(url, headers=headers)
     return r
 
-
-# TODO: Search usages and change it to dsl_get_all_workload_metris
-def list_metrics(request):
-    token = sds_controller_api(request)
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metrics"
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.get(url, headers=headers)
-    return r
-
-
 # # Registry - Metric Modules
 def mtr_add_metric_module_metadata(request, data, in_memory_file):
     token = sds_controller_api(request)
@@ -460,7 +445,7 @@ def dsl_add_workload_metric(request, name, network_location, metric_type):
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
 
-    parameters = {"name": str(name), "network_location": str(network_location), "metric_type": str(metric_type)}
+    parameters = {"name": str(name), "network_location": str(network_location), "type": str(metric_type)}
 
     r = requests.post(url, json.dumps(parameters), headers=headers)
     return r
@@ -492,7 +477,7 @@ def dsl_update_workload_metric(request, metric_name, network_location=None, metr
     if network_location is not None:
         parameters["network_location"] = str(network_location)
     if metric_type is not None:
-        parameters["metric_type"] = str(metric_type)
+        parameters["type"] = str(metric_type)
 
     if len(parameters) == 0:
         raise ValueError

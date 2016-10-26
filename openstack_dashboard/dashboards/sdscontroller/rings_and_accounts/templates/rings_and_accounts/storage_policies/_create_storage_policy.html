@@ -7,7 +7,7 @@
 {% block form_attrs %}enctype="multipart/form-data"{% endblock %}
 
 {% block modal-header %}
-  {% blocktrans %}Upload Filter{% endblocktrans %}
+  {% blocktrans %}Create new policy{% endblocktrans %}
 {% endblock %}
 
 {% block modal-body %}
@@ -18,11 +18,11 @@
 </div>
 <div class="right">
     <h3>{% trans "Description:" %}</h3>
-    <p><strong>{% trans "Filter:" %}</strong> {% trans "Openstack Swift Storage Policies." %}</p>
+    <p>{% trans "Openstack Swift Storage Policies." %}</p>
 </div>
 {% endblock %}
 
 {% block modal-footer %}
-  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Create Storage Policy" %}" />
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans 'Create Storage Policy' %}" />
   <a href="{% url 'horizon:sdscontroller:rings_and_accounts:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}
