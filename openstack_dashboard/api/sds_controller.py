@@ -918,20 +918,6 @@ def fil_undeploy_filter(request, filter_id, account_id):
     r = requests.put(url, headers=headers)
     return r
 
-
-def fil_list_deployed_filters(request, account_id):
-    token = sds_controller_api(request)
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + "/filters/" + str(account_id) + "/deploy"
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.get(url, headers=headers)
-    return r
-
-
 # # Filters - Dependencies
 def fil_create_dependency(request, data):
     token = sds_controller_api(request)
