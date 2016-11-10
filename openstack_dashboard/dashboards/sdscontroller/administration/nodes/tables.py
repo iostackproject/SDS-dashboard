@@ -31,16 +31,29 @@ class UpdateProxyAction(UpdateNodeAction):
     pass
 
 
-class RestartProxyAction(tables.LinkAction):
+class RestartProxyAction(tables.BatchAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Restart Swift Node",
+            u"Restart Swift Nodes",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Swift Node Restarted",
+            u"Swift Nodes Restarted",
+            count
+        )
+
     name = "restart"
     verbose_name = _("Restart Swift")
+    success_url = "horizon:sdscontroller:administration:index"
 
-    # icon = "refresh"
-
-    def get_link_url(self, datum=None):
-        # Dummy URL
-        base_url = reverse('horizon:sdscontroller:administration:index')
-        return base_url
+    def action(self, request, datum_id):
+        api.dsl_restart_node(request, datum_id)
 
 
 class ProxysTable(tables.DataTable):
