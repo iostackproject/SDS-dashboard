@@ -43,7 +43,7 @@ class UploadFilter(forms.SelfHandlingForm):
                                       label=_("Object Metadata"),
                                       required=False,
                                       help_text=_("Currently, not in use, but must appear. Use the value 'no'"),
-                                      widget=forms.HiddenInput( # hidden
+                                      widget=forms.HiddenInput(  # hidden
                                           attrs={"ng-model": "object_metadata"}
                                       ))
 
@@ -200,9 +200,9 @@ class UploadGlobalFilter(UploadFilter):
     has_reverse = forms.BooleanField(required=False)
 
     execution_order = forms.CharField(max_length=255,
-                            label=_("Order"),
-                            required=True,
-                            help_text=_("Order of execution"))
+                                      label=_("Order"),
+                                      required=True,
+                                      help_text=_("Order of execution"))
     enabled = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
@@ -239,6 +239,10 @@ class UploadGlobalFilter(UploadFilter):
 
 
 class UpdateFilter(forms.SelfHandlingForm):
+    filter_file = forms.FileField(label=_("File"),
+                                  required=False,
+                                  allow_empty_file=False)
+
     interface_version = forms.CharField(max_length=255,
                                         label=_("Interface Version"),
                                         required=False,
@@ -277,9 +281,15 @@ class UpdateFilter(forms.SelfHandlingForm):
     failure_url = 'horizon:sdscontroller:administration:index'
 
     def handle(self, request, data):
+
+        filter_file = data['filter_file']
+        del data['filter_file']
+
         try:
             filter_id = self.initial['id']
             # print "\n#################\n", request, "\n#################\n", data, "\n#################\n"
+            if filter_file is not None:
+                api.fil_upload_filter_data(request, filter_id, filter_file)
             response = api.fil_update_filter_metadata(request, filter_id, data)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Filter successfully updated.'))
@@ -325,9 +335,9 @@ class UpdateGlobalFilter(UpdateFilter):
     has_reverse = forms.BooleanField(required=False)
 
     execution_order = forms.CharField(max_length=255,
-                            label=_("Order"),
-                            required=True,
-                            help_text=_("Order of execution"))
+                                      label=_("Order"),
+                                      required=True,
+                                      help_text=_("Order of execution"))
     enabled = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
