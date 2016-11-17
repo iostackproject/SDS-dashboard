@@ -8,7 +8,6 @@ from keystoneclient.exceptions import Conflict
 
 from horizon import exceptions
 from horizon import forms
-from horizon import messages
 from horizon import tables
 from models import StaticPolicy
 from openstack_dashboard.api import sds_controller as api

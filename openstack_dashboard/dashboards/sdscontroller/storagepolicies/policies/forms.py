@@ -68,8 +68,12 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
     execution_server = forms.ChoiceField(
         label=_('Execution Server'),
         choices=[
-            ('proxy', _('Proxy Server')),
-            ('object', _('Object Storage Servers'))
+            ('', _('Select one')),
+            ('Execution Servers', [
+                ('default', _('Default')),
+                ('proxy', _('Proxy Server')),
+                ('object', _('Object Storage Servers'))]
+             )
         ],
         widget=forms.Select(attrs={
             'class': 'switchable',
@@ -80,8 +84,12 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
     execution_server_reverse = forms.ChoiceField(
         label=_('Execution Server Reverse'),
         choices=[
-            ('proxy', _('Proxy Server')),
-            ('object', _('Object Storage Servers'))
+            ('', _('Select one')),
+            ('Execution Servers', [
+                ('default', _('Default')),
+                ('proxy', _('Proxy Server')),
+                ('object', _('Object Storage Servers'))]
+             )
         ],
         widget=forms.Select(attrs={
             'class': 'switchable',
@@ -165,8 +173,11 @@ class UpdatePolicy(forms.SelfHandlingForm):
     execution_server = forms.ChoiceField(
         label=_('Execution Server'),
         choices=[
-            ('proxy', _('Proxy Server')),
-            ('object', _('Object Storage Servers'))
+            ('', _('Select one')),
+            ('Execution Servers', [
+                ('proxy', _('Proxy Server')),
+                ('object', _('Object Storage Servers'))]
+             )
         ],
         widget=forms.Select(attrs={
             'class': 'switchable',
@@ -177,8 +188,11 @@ class UpdatePolicy(forms.SelfHandlingForm):
     execution_server_reverse = forms.ChoiceField(
         label=_('Execution Server Reverse'),
         choices=[
-            ('proxy', _('Proxy Server')),
-            ('object', _('Object Storage Servers'))
+            ('', _('Select one')),
+            ('Execution Servers', [
+                ('proxy', _('Proxy Server')),
+                ('object', _('Object Storage Servers'))]
+             )
         ],
         widget=forms.Select(attrs={
             'class': 'switchable',
