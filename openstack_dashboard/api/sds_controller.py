@@ -87,6 +87,77 @@ def bw_delete_sla(request, sla_id):
     return r
 
 
+# # Swift - Controllers
+def bw_add_controller(request, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/bw/controllers"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.post(url, json.dumps(data), headers=headers)
+    return r
+
+
+def bw_get_all_controllers(request):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/bw/controllers"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def bw_update_controller(request, controller_id, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/bw/controller/" + str(controller_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
+def bw_get_controller(request, controller_id):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/bw/controller/" + str(controller_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def bw_delete_controller(request, controller_id):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/bw/controller/" + str(controller_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
 # # Swift - Sorting Methods
 def bw_add_sort_method(request, data):
     token = sds_controller_api(request)
@@ -353,6 +424,7 @@ def remove_dynamic_policy(request, policy_id):
 
     r = requests.delete(url, headers=headers)
     return r
+
 
 # # Registry - Metric Modules
 def mtr_add_metric_module_metadata(request, data, in_memory_file):
@@ -917,6 +989,7 @@ def fil_undeploy_filter(request, filter_id, account_id):
 
     r = requests.put(url, headers=headers)
     return r
+
 
 # # Filters - Dependencies
 def fil_create_dependency(request, data):
