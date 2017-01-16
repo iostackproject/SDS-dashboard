@@ -17,10 +17,9 @@ from django.conf.urls import url
 
 from openstack_dashboard.dashboards.sdscontroller.administration.nodes import views
 
-
-VIEWS_MOD = ('openstack_dashboard.dashboards.sdscontroller.administration.nodes.views')
+VIEWS_MOD = 'openstack_dashboard.dashboards.sdscontroller.administration.nodes.views'
 
 urlpatterns = patterns(
-    'VIEWS_MOD',
+    VIEWS_MOD,
     url(r'^update/(?P<node_id>[^/]+)/$', views.UpdateNodeView.as_view(), name='update'),
 )

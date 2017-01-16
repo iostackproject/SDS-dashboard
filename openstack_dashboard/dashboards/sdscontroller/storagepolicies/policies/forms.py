@@ -39,12 +39,12 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
     target_choices = []
     target_id = forms.ChoiceField(choices=target_choices,
                                   label=_("Project"),
-                                  help_text=_("The project where the rule will be apply."),
+                                  help_text=_("The project where the rule will be applied."),
                                   required=True)
 
     container_choices = [('', 'None')]
     container_id = forms.CharField(label=_("Container"),
-                                   help_text=_("The container where the rule will be apply."),
+                                   help_text=_("The container where the rule will be applied."),
                                    required=False,
                                    widget=forms.Select(choices=container_choices))
 
@@ -63,13 +63,17 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
     object_size = forms.CharField(max_length=255,
                                   label=_("Object Size"),
                                   required=False,
-                                  help_text=_("The size of object which the rule will be apply."))
+                                  help_text=_("The size of object the rule will be applied to."))
 
     execution_server = forms.ChoiceField(
         label=_('Execution Server'),
         choices=[
-            ('proxy', _('Proxy Server')),
-            ('object', _('Object Storage Servers'))
+            ('', _('Select one')),
+            ('Execution Servers', [
+                ('default', _('Default')),
+                ('proxy', _('Proxy Server')),
+                ('object', _('Object Storage Servers'))]
+             )
         ],
         widget=forms.Select(attrs={
             'class': 'switchable',
@@ -80,8 +84,12 @@ class CreateSimplePolicy(forms.SelfHandlingForm):
     execution_server_reverse = forms.ChoiceField(
         label=_('Execution Server Reverse'),
         choices=[
-            ('proxy', _('Proxy Server')),
-            ('object', _('Object Storage Servers'))
+            ('', _('Select one')),
+            ('Execution Servers', [
+                ('default', _('Default')),
+                ('proxy', _('Proxy Server')),
+                ('object', _('Object Storage Servers'))]
+             )
         ],
         widget=forms.Select(attrs={
             'class': 'switchable',
@@ -165,8 +173,11 @@ class UpdatePolicy(forms.SelfHandlingForm):
     execution_server = forms.ChoiceField(
         label=_('Execution Server'),
         choices=[
-            ('proxy', _('Proxy Server')),
-            ('object', _('Object Storage Servers'))
+            ('', _('Select one')),
+            ('Execution Servers', [
+                ('proxy', _('Proxy Server')),
+                ('object', _('Object Storage Servers'))]
+             )
         ],
         widget=forms.Select(attrs={
             'class': 'switchable',
@@ -177,8 +188,11 @@ class UpdatePolicy(forms.SelfHandlingForm):
     execution_server_reverse = forms.ChoiceField(
         label=_('Execution Server Reverse'),
         choices=[
-            ('proxy', _('Proxy Server')),
-            ('object', _('Object Storage Servers'))
+            ('', _('Select one')),
+            ('Execution Servers', [
+                ('proxy', _('Proxy Server')),
+                ('object', _('Object Storage Servers'))]
+             )
         ],
         widget=forms.Select(attrs={
             'class': 'switchable',

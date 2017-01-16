@@ -9,6 +9,28 @@ from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.api import swift
 
 
+# List Options
+# ============
+class ListOptions(object):
+    @staticmethod
+    def by_id():
+        """
+        Gets the attribute identifier
+
+        :return: attribute identifier
+        """
+        return 'id'
+
+    @staticmethod
+    def by_name():
+        """
+        Gets the attribute identifier
+
+        :return: attribute identifier
+        """
+        return 'name'
+
+
 # Filter Type
 # ===========
 def get_filter_type_choices():
@@ -199,21 +221,23 @@ def get_container_list(request):
 
 # Storage Policy
 # ==============
-def get_storage_policy_list_choices(request):
+def get_storage_policy_list_choices(request, by_attribute):
     """
     Get a tuple of storage policy choices
 
     :param request: the request which the dashboard is using
+    :param by_attribute: filter by attribute
     :return: tuple with storage policy choices
     """
-    return ('', 'Select one'), ('Storage Policies', get_storage_policy_list(request))
+    return ('', 'Select one'), ('Storage Policies', get_storage_policy_list(request, by_attribute))
 
 
-def get_storage_policy_list(request):
+def get_storage_policy_list(request, by_attribute):
     """
     Get a list of storage policies
 
     :param request: the request which the dashboard is using
+    :param by_attribute: filter by attribute
     :return: list with storage policies
     """
     try:
@@ -230,5 +254,5 @@ def get_storage_policy_list(request):
     storage_policies = json.loads(response_text)
     # Iterate storage policies
     for storage_policy in storage_policies:
-        storage_policies_list.append((storage_policy['id'], storage_policy['name']))
+        storage_policies_list.append((storage_policy[str(by_attribute)], storage_policy['name']))
     return storage_policies_list

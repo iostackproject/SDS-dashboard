@@ -33,7 +33,7 @@ class CreateSLA(forms.SelfHandlingForm):
         # Obtain list of projects
         self.project_choices = common.get_project_list_choices(request)
         # Obtain list of storage policies
-        self.storage_policy_choices = common.get_storage_policy_list_choices(request)
+        self.storage_policy_choices = common.get_storage_policy_list_choices(request, common.ListOptions.by_id())
 
         # Initialization
         super(CreateSLA, self).__init__(request, *args, **kwargs)

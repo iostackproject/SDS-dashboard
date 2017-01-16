@@ -17,17 +17,15 @@ Views for managing object types.
 """
 import json
 
+from django.core.urlresolvers import reverse
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 
+from horizon import exceptions
 from horizon import forms
 from horizon.utils import memoized
-from horizon import exceptions
-
-from openstack_dashboard.dashboards.sdscontroller.administration.nodes \
-    import forms as nodes_forms
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller.administration.nodes import forms as nodes_forms
 
 
 class UpdateNodeView(forms.ModalFormView):

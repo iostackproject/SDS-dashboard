@@ -5,7 +5,7 @@ from openstack_dashboard.dashboards.sdscontroller import dashboard
 
 
 class Administration(horizon.Panel):
-    name = _("SDS Administration")
+    name = _("Administration")
     slug = "administration"
 
 

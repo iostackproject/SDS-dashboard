@@ -6,6 +6,8 @@ from horizon import exceptions
 from horizon import tabs
 from openstack_dashboard.api import sds_controller as api
 from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
+from openstack_dashboard.dashboards.sdscontroller.bandwidth_differentiation.controllers import models as controllers_models
+from openstack_dashboard.dashboards.sdscontroller.bandwidth_differentiation.controllers import tables as controllers_tables
 from openstack_dashboard.dashboards.sdscontroller.bandwidth_differentiation.proxy_sorting import models as proxy_sorting_models
 from openstack_dashboard.dashboards.sdscontroller.bandwidth_differentiation.proxy_sorting import tables as proxy_sorting_tables
 from openstack_dashboard.dashboards.sdscontroller.bandwidth_differentiation.slas import models as slas_models
@@ -37,6 +39,72 @@ class SLAsTab(tabs.TableTab):
         return ret
 
 
+class ControllersTab(tabs.TableTab):
+    table_classes = (controllers_tables.ControllersGETTable, controllers_tables.ControllersPUTTable, controllers_tables.ControllersReplicationTable,)
+    name = _("Controllers")
+    slug = "controllers_table"
+    # template_name = "horizon/common/_detail_table.html"
+    template_name = "sdscontroller/bandwidth_differentiation/controllers/_detail.html"
+    preload = False
+
+    def get_get_controllers_data(self):
+        try:
+            response = api.bw_get_all_controllers(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get instances.'
+                raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        instances = json.loads(strobj)
+        ret = []
+        for inst in instances:
+            if inst['type'] == 'get':
+                ret.append(controllers_models.Controller(inst['id'], inst['name'], inst['enabled']))
+        return ret
+
+    def get_put_controllers_data(self):
+        try:
+            response = api.bw_get_all_controllers(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get instances.'
+                raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        instances = json.loads(strobj)
+        ret = []
+        for inst in instances:
+            if inst['type'] == 'put':
+                ret.append(controllers_models.Controller(inst['id'], inst['name'], inst['enabled']))
+        return ret
+
+    def get_replication_controllers_data(self):
+        try:
+            response = api.bw_get_all_controllers(self.request)
+            if 200 <= response.status_code < 300:
+                strobj = response.text
+            else:
+                error_message = 'Unable to get instances.'
+                raise sdsexception.SdsException(error_message)
+        except Exception as e:
+            strobj = "[]"
+            exceptions.handle(self.request, _(e.message))
+
+        instances = json.loads(strobj)
+        ret = []
+        for inst in instances:
+            if inst['type'] == 'replication':
+                ret.append(controllers_models.Controller(inst['id'], inst['name'], inst['enabled']))
+        return ret
+
+
 class ProxySortingTab(tabs.TableTab):
     table_classes = (proxy_sorting_tables.ProxySortingTable,)
     name = _("Proxy Sorting")
@@ -64,6 +132,6 @@ class ProxySortingTab(tabs.TableTab):
 
 class MypanelTabs(tabs.TabGroup):
     slug = "mypanel_tabs"
-    #tabs = (SLAsTab, ProxySortingTab,)
-    tabs = (SLAsTab, )
+    # tabs = (SLAsTab, ProxySortingTab,)
+    tabs = (SLAsTab, ControllersTab,)
     sticky = True

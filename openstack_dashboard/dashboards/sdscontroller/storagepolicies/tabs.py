@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
@@ -33,7 +34,10 @@ class Policies(tabs.TableTab):
         instances = json.loads(strobj)
         ret = []
         for inst in instances:
-            ret.append(policies_models.StaticPolicy(inst['id'], inst['target_id'], inst['target_name'], inst['filter_name'], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
+            if self.request.user.project_name == settings.IOSTACK_KEYSTONE_ADMIN_TENANT:
+                ret.append(policies_models.StaticPolicy(inst['id'], inst['target_id'], inst['target_name'], inst['filter_name'], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
+            elif self.request.user.project_name == inst['target_name']:
+                ret.append(policies_models.StaticPolicy(inst['id'], inst['target_id'], inst['target_name'], inst['filter_name'], inst['object_type'], inst['object_size'], inst['execution_server'], inst['execution_server_reverse'], inst['execution_order'], inst['params']))
         return ret
 
     def get_dynamic_policies_data(self):
@@ -64,7 +68,7 @@ class MetricTab(tabs.TableTab):
 
     def get_workload_metrics_data(self):
         try:
-            response = api.list_metrics(self.request)
+            response = api.dsl_get_all_workload_metrics(self.request)
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
