@@ -1,3 +1,4 @@
+from django.conf import settings
 from horizon import views
 
 
@@ -7,15 +8,7 @@ class IndexView(views.APIView):
     def get_data(self, request, context, *args, **kwargs):
         # Add data to the context here...
         context["ip_host"] = request.META['HTTP_HOST'].split(':')[0]
-        return context
-
-
-class SystemView(views.APIView):
-    template_name = 'sdscontroller/storagemonitoring/system/_system_plots.html'
-
-    def get_data(self, request, context, *args, **kwargs):
-        # Add data to the context here...
-        context["ip_host"] = request.META['HTTP_HOST'].split(':')[0]
+        context["projects_plot"] = settings.IOSTACK_MONITORING_PROJECTS_PLOT
         return context
 
 
@@ -25,19 +18,15 @@ class SwiftContainerView(views.APIView):
     def get_data(self, request, context, *args, **kwargs):
         # Add data to the context here...
         context["ip_host"] = request.META['HTTP_HOST'].split(':')[0]
+        context["containers_plot"] = settings.IOSTACK_MONITORING_CONTAINERS_PLOT
         return context
 
-#
-# from horizon import tabs
-#
-# from openstack_dashboard.dashboards.sdscontroller.administration \
-#     import tabs as mydashboard_tabs
-#
-#
-# class IndexView(tabs.TabbedTableView):
-#     tab_group_class = mydashboard_tabs.MypanelTabs
-#     template_name = 'sdscontroller/administration/index.html'
-#
-#     def get_data(self, request, context, *args, **kwargs):
-#         # Add data to the context here...
-#         return context
+
+class SystemView(views.APIView):
+    template_name = 'sdscontroller/storagemonitoring/system/_system_plots.html'
+
+    def get_data(self, request, context, *args, **kwargs):
+        # Add data to the context here...
+        context["ip_host"] = request.META['HTTP_HOST'].split(':')[0]
+        context["system_plot"] = settings.IOSTACK_MONITORING_SYSTEM_PLOT
+        return context
