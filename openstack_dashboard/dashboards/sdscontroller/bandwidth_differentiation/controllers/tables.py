@@ -21,10 +21,10 @@ class UpdateCell(tables.UpdateAction):
     def update_cell(self, request, datum, id, cell_name, new_cell_value):
         try:
             # updating changed value by new value
-            response = api.bw_get_controller(request, id)
+            response = api.dsl_get_global_controller(request, id)
             data = json.loads(response.text)
             data[cell_name] = new_cell_value
-            api.bw_update_controller(request, id, data)
+            api.dsl_update_global_controller(request, id, data)
         except Conflict:
             # Returning a nice error message about name conflict. The message
             # from exception is not that clear for the user
@@ -40,10 +40,10 @@ class UpdateRow(tables.Row):
     ajax = True
 
     def get_data(self, request, id):
-        response = api.bw_get_controller(request, id)
+        response = api.dsl_get_global_controller(request, id)
         data = json.loads(response.text)
 
-        controller = Controller(data["id"], data["name"], data["enabled"])
+        controller = Controller(data["id"], data["controller_name"], data["class_name"], data["enabled"])
         return controller
 
 
@@ -69,7 +69,7 @@ class DeleteController(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            response = api.bw_delete_controller(request, obj_id)
+            response = api.dsl_delete_global_controller(request, obj_id)
             if 200 <= response.status_code < 300:
                 pass
                 # messages.success(request, _("Successfully deleted controller: %s") % obj_id)
@@ -110,7 +110,7 @@ class EnableController(tables.BatchAction):
 
     def action(self, request, datum_id):
         data = {'enabled': True}
-        api.bw_update_controller(request, datum_id, data)
+        api.dsl_update_global_controller(request, datum_id, data)
 
 
 class EnableMultipleControllers(EnableController):
@@ -151,7 +151,7 @@ class DisableController(tables.BatchAction):
 
     def action(self, request, datum_id):
         data = {'enabled': False}
-        api.bw_update_controller(request, datum_id, data)
+        api.dsl_update_global_controller(request, datum_id, data)
 
 
 class DisableMultipleControllers(DisableController):
@@ -181,8 +181,10 @@ class CreateGETController(tables.LinkAction):
 
 class ControllersGETTable(tables.DataTable):
     # id = tables.Column("id", verbose_name=_("ID"))
-    name = tables.Column("name", verbose_name=_("Name"))
-    enabled = tables.Column("enabled", verbose_name=_("Enabled"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    controller_name = tables.Column("controller_name", verbose_name=_("Name"))
+    class_name = tables.Column("class_name", verbose_name=_("Class name"))
+    enabled = tables.Column("enabled", verbose_name=_("Enabled"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+                            update_action=UpdateCell)
 
     class Meta:
         name = "get_controllers"
@@ -208,8 +210,10 @@ class CreatePUTController(tables.LinkAction):
 
 class ControllersPUTTable(tables.DataTable):
     # id = tables.Column("id", verbose_name=_("ID"))
-    name = tables.Column("name", verbose_name=_("Name"))
-    enabled = tables.Column("enabled", verbose_name=_("Enabled"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    controller_name = tables.Column("controller_name", verbose_name=_("Name"))
+    class_name = tables.Column("class_name", verbose_name=_("Class name"))
+    enabled = tables.Column("enabled", verbose_name=_("Enabled"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+                            update_action=UpdateCell)
 
     class Meta:
         name = "put_controllers"
@@ -235,8 +239,10 @@ class CreateReplicationController(tables.LinkAction):
 
 class ControllersReplicationTable(tables.DataTable):
     # id = tables.Column("id", verbose_name=_("ID"))
-    name = tables.Column("name", verbose_name=_("Name"))
-    enabled = tables.Column("enabled", verbose_name=_("Enabled"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]), update_action=UpdateCell)
+    controller_name = tables.Column("controller_name", verbose_name=_("Name"))
+    class_name = tables.Column("class_name", verbose_name=_("Class name"))
+    enabled = tables.Column("enabled", verbose_name=_("Enabled"), form_field=forms.ChoiceField(choices=[('True', _('True')), ('False', _('False'))]),
+                            update_action=UpdateCell)
 
     class Meta:
         name = "replication_controllers"
