@@ -199,7 +199,7 @@ class Nodes(tabs.TableTab):
     def get_proxys_data(self):
         ret = []
         try:
-            response = api.dsl_get_all_nodes(self.request)
+            response = api.swift_get_all_nodes(self.request)
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:
@@ -218,7 +218,7 @@ class Nodes(tabs.TableTab):
     def get_storagenodes_data(self):
         ret = []
         try:
-            response = api.dsl_get_all_nodes(self.request)
+            response = api.swift_get_all_nodes(self.request)
             if 200 <= response.status_code < 300:
                 strobj = response.text
             else:

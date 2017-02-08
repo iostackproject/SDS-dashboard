@@ -9,7 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 
 from horizon import tables
+from horizon import exceptions
 from openstack_dashboard.api import sds_controller as api
+from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexception
 
 
 class MyProxyFilterAction(tables.FilterAction):
@@ -53,7 +55,43 @@ class RestartProxyAction(tables.BatchAction):
     success_url = "horizon:sdscontroller:administration:index"
 
     def action(self, request, datum_id):
-        api.dsl_restart_node(request, datum_id)
+        api.swift_restart_node(request, datum_id)
+
+
+class DeleteProxyNodeAction(tables.DeleteAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Delete Node",
+            u"Delete Nodes",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Node deleted",
+            u"Nodes deleted",
+            count
+        )
+
+    name = "delete"
+    success_url = "horizon:sdscontroller:administration:index"
+
+    def delete(self, request, node_id):
+        try:
+            response = api.swift_delete_node(request, node_id)
+            if 200 <= response.status_code < 300:
+                pass
+                # messages.success(request, _('Successfully deleted node: %s') % obj_id)
+            else:
+                raise sdsexception.SdsException(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:administration:index")
+            error_message = "Unable to delete node.\t %s" % ex.message
+            exceptions.handle(request,
+                              _(error_message),
+                              redirect=redirect)
 
 
 class ProxysTable(tables.DataTable):
@@ -67,7 +105,7 @@ class ProxysTable(tables.DataTable):
         name = "proxys"
         verbose_name = _("Proxys")
         table_actions = (MyProxyFilterAction,)
-        row_actions = (UpdateProxyAction, RestartProxyAction,)
+        row_actions = (UpdateProxyAction, RestartProxyAction, DeleteProxyNodeAction)
         hidden_title = False
 
 
@@ -117,8 +155,43 @@ class RestartStorageNodeAction(tables.BatchAction):
     success_url = "horizon:sdscontroller:administration:index"
 
     def action(self, request, datum_id):
-        api.dsl_restart_node(request, datum_id)
+        api.swift_restart_node(request, datum_id)
 
+
+class DeleteStorageNodeAction(tables.DeleteAction):
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Delete Node",
+            u"Delete Nodes",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Node deleted",
+            u"Nodes deleted",
+            count
+        )
+
+    name = "delete"
+    success_url = "horizon:sdscontroller:administration:index"
+
+    def delete(self, request, node_id):
+        try:
+            response = api.swift_delete_node(request, node_id)
+            if 200 <= response.status_code < 300:
+                pass
+                # messages.success(request, _('Successfully deleted node: %s') % obj_id)
+            else:
+                raise sdsexception.SdsException(response.text)
+        except Exception as ex:
+            redirect = reverse("horizon:sdscontroller:administration:index")
+            error_message = "Unable to delete node.\t %s" % ex.message
+            exceptions.handle(request,
+                              _(error_message),
+                              redirect=redirect)
 
 class StorageNodesTable(tables.DataTable):
     id = tables.Column('id', verbose_name=_("Hostname"))
@@ -132,5 +205,5 @@ class StorageNodesTable(tables.DataTable):
         name = "storagenodes"
         verbose_name = _("Storage Nodes")
         table_actions = (MyStorageNodeFilterAction,)
-        row_actions = (UpdateStorageNodeAction, RestartStorageNodeAction,)
+        row_actions = (UpdateStorageNodeAction, RestartStorageNodeAction, DeleteStorageNodeAction)
         hidden_title = False

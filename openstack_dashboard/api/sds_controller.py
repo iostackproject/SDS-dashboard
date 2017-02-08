@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import json
+import urllib
 
 import requests
 from django.conf import settings
@@ -14,29 +15,29 @@ def sds_controller_api(request):
     return request.user.token.id
 
 
-############################## # Swift API # ##############################
-
-# # Swift - SLAs
-def bw_add_sla(request, data):
+# # Registry - Global Controllers
+def dsl_add_global_controller(request, data, in_memory_file):
     token = sds_controller_api(request)
-
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/bw/slas"
+    url = settings.IOSTACK_CONTROLLER_URL + "/registry/global_controllers/data"
 
     headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
+    # Content-Type header will be set to multipart by django because a file is uploaded
 
-    r = requests.post(url, json.dumps(data), headers=headers)
+    files = {'file': (in_memory_file.name, in_memory_file.read())}
+    data_to_send = {'metadata': json.dumps(data)}
+
+    r = requests.post(url, data_to_send, files=files, headers=headers)
     return r
 
 
-def bw_get_all_slas(request):
+def dsl_get_all_global_controllers(request):
     token = sds_controller_api(request)
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/bw/slas"
+    url = settings.IOSTACK_CONTROLLER_URL + "/registry/global_controllers"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -45,12 +46,12 @@ def bw_get_all_slas(request):
     return r
 
 
-def bw_update_sla(request, sla_id, data):
+def dsl_update_global_controller(request, controller_id, data):
     token = sds_controller_api(request)
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/bw/sla/" + str(sla_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/registry/global_controller/" + str(controller_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -59,12 +60,12 @@ def bw_update_sla(request, sla_id, data):
     return r
 
 
-def bw_get_sla(request, sla_id):
+def dsl_get_global_controller(request, controller_id):
     token = sds_controller_api(request)
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/bw/sla/" + str(sla_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/registry/global_controller/" + str(controller_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -73,83 +74,12 @@ def bw_get_sla(request, sla_id):
     return r
 
 
-def bw_delete_sla(request, sla_id):
+def dsl_delete_global_controller(request, controller_id):
     token = sds_controller_api(request)
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/bw/sla/" + str(sla_id)
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.delete(url, headers=headers)
-    return r
-
-
-# # Swift - Controllers
-def bw_add_controller(request, data):
-    token = sds_controller_api(request)
-
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + "/bw/controllers"
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.post(url, json.dumps(data), headers=headers)
-    return r
-
-
-def bw_get_all_controllers(request):
-    token = sds_controller_api(request)
-
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + "/bw/controllers"
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.get(url, headers=headers)
-    return r
-
-
-def bw_update_controller(request, controller_id, data):
-    token = sds_controller_api(request)
-
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + "/bw/controller/" + str(controller_id)
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.put(url, json.dumps(data), headers=headers)
-    return r
-
-
-def bw_get_controller(request, controller_id):
-    token = sds_controller_api(request)
-
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + "/bw/controller/" + str(controller_id)
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.get(url, headers=headers)
-    return r
-
-
-def bw_delete_controller(request, controller_id):
-    token = sds_controller_api(request)
-
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + "/bw/controller/" + str(controller_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/registry/global_controller/" + str(controller_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -286,6 +216,71 @@ def swift_list_storage_policies(request):
     r = requests.get(url, headers=headers)
     return r
 
+
+# # Swift - Nodes
+def swift_get_all_nodes(request):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/swift/nodes"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def swift_get_node_detail(request, node_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/swift/nodes/" + str(node_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def swift_update_node(request, node_id, data):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/swift/nodes/" + str(node_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
+def swift_delete_node(request, node_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/swift/nodes/" + str(node_id)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
+    return r
+
+
+def swift_restart_node(request, node_id):
+    token = sds_controller_api(request)
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + '/swift/nodes/' + str(node_id) + '/restart'
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, headers=headers)
+    return r
 
 ############################## # Registry DSL API # ##############################
 # # Registry DSL - Storage Nodes
@@ -803,59 +798,6 @@ def dsl_delete_object_type(request, object_type_id):
     return r
 
 
-# # Registry DSL - Nodes
-def dsl_get_all_nodes(request):
-    token = sds_controller_api(request)
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/nodes"
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.get(url, headers=headers)
-    return r
-
-
-def dsl_get_node_detail(request, node_id):
-    token = sds_controller_api(request)
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/nodes/" + str(node_id)
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.get(url, headers=headers)
-    return r
-
-
-def dsl_update_node(request, node_id, data):
-    token = sds_controller_api(request)
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/nodes/" + str(node_id)
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.put(url, json.dumps(data), headers=headers)
-    return r
-
-
-def dsl_restart_node(request, node_id):
-    token = sds_controller_api(request)
-    headers = {}
-
-    url = settings.IOSTACK_CONTROLLER_URL + '/registry/nodes/' + str(node_id) + '/restart'
-
-    headers["X-Auth-Token"] = str(token)
-    headers['Content-Type'] = "application/json"
-
-    r = requests.put(url, headers=headers)
-    return r
-
-
 ############################## # Filters API # ##############################
 
 
@@ -1108,4 +1050,79 @@ def fil_list_deployed_dependencies(request, account_id):
     headers['Content-Type'] = "application/json"
 
     r = requests.get(url, headers=headers)
+    return r
+
+
+# SLOs
+
+
+def fil_add_slo(request, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/filters/slos"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.post(url, json.dumps(data), headers=headers)
+    return r
+
+
+def fil_get_all_slos(request):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/filters/slos"
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def fil_update_slo(request, dsl_filter, slo_name, target, data):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    url = settings.IOSTACK_CONTROLLER_URL + "/filters/slo/" + str(dsl_filter) + "/" + str(slo_name) + "/" + urllib.quote(target)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.put(url, json.dumps(data), headers=headers)
+    return r
+
+
+def fil_get_slo(request, dsl_filter, slo_name, target):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    # url = settings.IOSTACK_CONTROLLER_URL + "/bw/sla/" + str(sla_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/filters/slo/" + str(dsl_filter) + "/" + str(slo_name) + "/" + urllib.quote(target)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.get(url, headers=headers)
+    return r
+
+
+def fil_delete_slo(request, dsl_filter, slo_name, target):
+    token = sds_controller_api(request)
+
+    headers = {}
+
+    #url = settings.IOSTACK_CONTROLLER_URL + "/bw/sla/" + str(sla_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/filters/slo/" +  str(dsl_filter) + "/" + str(slo_name) + "/" + urllib.quote(target)
+
+    headers["X-Auth-Token"] = str(token)
+    headers['Content-Type'] = "application/json"
+
+    r = requests.delete(url, headers=headers)
     return r

@@ -52,7 +52,7 @@ class UploadMetricModule(forms.SelfHandlingForm):
         try:
             response = api.mtr_add_metric_module_metadata(request, data, metric_module_file)
             if 200 <= response.status_code < 300:
-                messages.success(request, _('Successfully metric module creation and upload.'))
+                messages.success(request, _('Metric module was created and uploaded successfully.'))
                 return data
             else:
                 raise sdsexception.SdsException(response.text)
