@@ -20,7 +20,7 @@ def dsl_add_global_controller(request, data, in_memory_file):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/global_controllers/data"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/global_controllers/data"
 
     headers["X-Auth-Token"] = str(token)
     # Content-Type header will be set to multipart by django because a file is uploaded
@@ -37,7 +37,7 @@ def dsl_get_all_global_controllers(request):
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/global_controllers"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/global_controllers"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -51,7 +51,7 @@ def dsl_update_global_controller(request, controller_id, data):
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/global_controller/" + str(controller_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/global_controller/" + str(controller_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -65,7 +65,7 @@ def dsl_get_global_controller(request, controller_id):
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/global_controller/" + str(controller_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/global_controller/" + str(controller_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -79,7 +79,7 @@ def dsl_delete_global_controller(request, controller_id):
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/global_controller/" + str(controller_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/global_controller/" + str(controller_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -289,7 +289,7 @@ def registry_storage_node(request, data):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/snode"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/snode"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
@@ -302,7 +302,7 @@ def list_storage_nodes(request):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/snode"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/snode"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
@@ -316,7 +316,7 @@ def remove_storage_nodes(request, storage_node_id):
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/snode/" + str(storage_node_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/snode/" + str(storage_node_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -330,7 +330,7 @@ def dsl_add_policy(request, policy):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/dynamic_policy"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/dynamic_policy"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "text/plain"
@@ -344,7 +344,7 @@ def dsl_get_all_static_policies(request):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/static_policy"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/static_policy"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -357,7 +357,7 @@ def dsl_update_static_policy(request, policy_id, data):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/static_policy/" + str(policy_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/static_policy/" + str(policy_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -370,7 +370,7 @@ def dsl_get_static_policy(request, policy_id):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/static_policy/" + str(policy_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/static_policy/" + str(policy_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -384,7 +384,7 @@ def dsl_delete_static_policy(request, policy_id):
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/static_policy/" + str(policy_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/static_policy/" + str(policy_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -398,7 +398,7 @@ def list_dynamic_policies(request):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/dynamic_policy"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/dynamic_policy"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -412,7 +412,7 @@ def remove_dynamic_policy(request, policy_id):
 
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/dynamic_policy/" + str(policy_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/dynamic_policy/" + str(policy_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -426,7 +426,7 @@ def mtr_add_metric_module_metadata(request, data, in_memory_file):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metric_module/data"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metric_module/data"
 
     headers["X-Auth-Token"] = str(token)
     # Content-Type header will be set to multipart by django because a file is uploaded
@@ -442,7 +442,7 @@ def mtr_get_all_metric_modules(request):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metric_module"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metric_module"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -455,7 +455,7 @@ def mtr_update_metric_module(request, metric_module_id, data):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metric_module/" + str(metric_module_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metric_module/" + str(metric_module_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -468,7 +468,7 @@ def mtr_get_metric_module(request, metric_module_id):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metric_module/" + str(metric_module_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metric_module/" + str(metric_module_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -481,7 +481,7 @@ def mtr_delete_metric_module(request, metric_module_id):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metric_module/" + str(metric_module_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metric_module/" + str(metric_module_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -494,7 +494,7 @@ def mtr_download_metric_module_data(request, metric_module_id):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metric_module/" + str(metric_module_id) + "/data"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metric_module/" + str(metric_module_id) + "/data"
 
     headers["X-Auth-Token"] = str(token)
 
@@ -507,7 +507,7 @@ def dsl_add_workload_metric(request, name, network_location, metric_type):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metrics"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metrics"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -522,7 +522,7 @@ def dsl_get_all_workload_metrics(request):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metrics"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metrics"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -535,7 +535,7 @@ def dsl_update_workload_metric(request, metric_name, network_location=None, metr
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metrics/" + str(metric_name)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metrics/" + str(metric_name)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -557,7 +557,7 @@ def dsl_get_metric_metadata(request, metric_name):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metrics/" + str(metric_name)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metrics/" + str(metric_name)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -570,7 +570,7 @@ def dsl_delete_workload_metric(request, metric_name):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/metrics/" + str(metric_name)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/metrics/" + str(metric_name)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -584,7 +584,7 @@ def dsl_add_filter(request, data):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/filters"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/filters"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -597,7 +597,7 @@ def dsl_get_all_filters(request):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/filters"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/filters"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -610,7 +610,7 @@ def dsl_update_filter(request, name, data):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/filters/" + str(name)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/filters/" + str(name)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -623,7 +623,7 @@ def dsl_get_filter_metadata(request, name):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/filters/" + str(name)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/filters/" + str(name)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -636,7 +636,7 @@ def dsl_delete_filter(request, name):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/filters/" + str(name)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/filters/" + str(name)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -650,7 +650,7 @@ def dsl_create_tenants_group(request, name, tenants_list):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/gtenants"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/gtenants"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -666,7 +666,7 @@ def dsl_get_all_tenants_groups(request):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/gtenants"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/gtenants"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -679,7 +679,7 @@ def dsl_list_tenants_group(request, group_name):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/gtenants/" + str(group_name)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/gtenants/" + str(group_name)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -692,7 +692,7 @@ def dsl_add_tenant_group_member(request, group_name, tenant_id):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/gtenants/" + str(group_name)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/gtenants/" + str(group_name)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -708,7 +708,7 @@ def dsl_delete_tenants_group(request, group_name):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/gtenants/" + str(group_name)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/gtenants/" + str(group_name)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -721,7 +721,7 @@ def dsl_delete_tenant_group_member(request, group_name, tenant_id):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/gtenants/" + str(group_name) + "/tenants/" + str(tenant_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/gtenants/" + str(group_name) + "/tenants/" + str(tenant_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -735,7 +735,7 @@ def dsl_get_all_object_types(request):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/object_type"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/object_type"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -748,7 +748,7 @@ def dsl_create_object_type(request, name, extensions):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/object_type"
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/object_type"
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -763,7 +763,7 @@ def dsl_get_object_type(request, object_type_id):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/object_type/" + str(object_type_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/object_type/" + str(object_type_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -776,7 +776,7 @@ def dsl_update_object_type(request, object_type_id, extensions):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/object_type/" + str(object_type_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/object_type/" + str(object_type_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
@@ -789,7 +789,7 @@ def dsl_delete_object_type(request, object_type_id):
     token = sds_controller_api(request)
     headers = {}
 
-    url = settings.IOSTACK_CONTROLLER_URL + "/registry/object_type/" + str(object_type_id)
+    url = settings.IOSTACK_CONTROLLER_URL + "/controller/object_type/" + str(object_type_id)
 
     headers["X-Auth-Token"] = str(token)
     headers['Content-Type'] = "application/json"
