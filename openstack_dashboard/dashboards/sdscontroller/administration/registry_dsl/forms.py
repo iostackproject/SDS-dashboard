@@ -29,7 +29,7 @@ class CreateFilter(forms.SelfHandlingForm):
     activation_url = forms.CharField(max_length=255,
                                      label=_("API Activation Url"),
                                      help_text=_("API Activation Url"),
-                                     initial= settings.IOSTACK_CONTROLLER_FILTERS_ENDPOINT
+                                     initial=settings.IOSTACK_CONTROLLER_FILTERS_ENDPOINT
                                      )
 
     valid_parameters = forms.CharField(max_length=255,

@@ -4,10 +4,10 @@
 {% block form_attrs %}enctype="multipart/form-data"{% endblock %}
 
 {% block modal-header %}
-  {% blocktrans %}Edit SLA{% endblocktrans %}
+  {% blocktrans %}Edit SLO{% endblocktrans %}
 {% endblock %}
 
 {% block modal-footer %}
-  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Update SLA" %}" />
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Update SLO" %}" />
   <a href="{% url 'horizon:sdscontroller:bandwidth_differentiation:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}

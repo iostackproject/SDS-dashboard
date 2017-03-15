@@ -10,6 +10,12 @@ from openstack_dashboard.dashboards.sdscontroller import exceptions as sdsexcept
 
 class CreateGETController(forms.SelfHandlingForm):
     controller_file = forms.FileField(label=_("File"), required=True, allow_empty_file=False)
+    class_name = forms.CharField(max_length=255,
+                                 label=_('Class Name'),
+                                 help_text=_('The class name of the controller to be created.'),
+                                 widget=forms.TextInput(
+                                     attrs={'ng-model': 'name', 'not-blank': ''}
+                                 ))
     enabled = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
@@ -18,15 +24,15 @@ class CreateGETController(forms.SelfHandlingForm):
     @staticmethod
     def handle(request, data):
 
-        file = data['controller_file']
+        controller_file = data['controller_file']
+        del data['controller_file']
 
         try:
-            data['name'] = 'test'
+            data['dsl_filter'] = 'bandwidth'
             data['type'] = 'get'
-            del data['controller_file']
-            response = api.bw_add_controller(request, data)
+            response = api.dsl_add_global_controller(request, data, controller_file)
             if 200 <= response.status_code < 300:
-                messages.success(request, _("Successfully controller creation."))
+                messages.success(request, _("Controller successfully created."))
                 return data
             else:
                 raise sdsexception.SdsException(response.text)
@@ -38,6 +44,12 @@ class CreateGETController(forms.SelfHandlingForm):
 
 class CreatePUTController(forms.SelfHandlingForm):
     controller_file = forms.FileField(label=_("File"), required=True, allow_empty_file=False)
+    class_name = forms.CharField(max_length=255,
+                                 label=_('Class Name'),
+                                 help_text=_('The class name of the controller to be created.'),
+                                 widget=forms.TextInput(
+                                     attrs={'ng-model': 'name', 'not-blank': ''}
+                                 ))
     enabled = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
@@ -46,15 +58,15 @@ class CreatePUTController(forms.SelfHandlingForm):
     @staticmethod
     def handle(request, data):
 
-        file = data['controller_file']
+        controller_file = data['controller_file']
+        del data['controller_file']
 
         try:
-            data['name'] = 'test'
+            data['dsl_filter'] = 'bandwidth'
             data['type'] = 'put'
-            del data['controller_file']
-            response = api.bw_add_controller(request, data)
+            response = api.dsl_add_global_controller(request, data, controller_file)
             if 200 <= response.status_code < 300:
-                messages.success(request, _("Successfully controller creation."))
+                messages.success(request, _("Controller successfully created."))
                 return data
             else:
                 raise sdsexception.SdsException(response.text)
@@ -66,6 +78,12 @@ class CreatePUTController(forms.SelfHandlingForm):
 
 class CreateReplicationController(forms.SelfHandlingForm):
     controller_file = forms.FileField(label=_("File"), required=True, allow_empty_file=False)
+    class_name = forms.CharField(max_length=255,
+                                 label=_('Class Name'),
+                                 help_text=_('The class name of the controller to be created.'),
+                                 widget=forms.TextInput(
+                                     attrs={'ng-model': 'name', 'not-blank': ''}
+                                 ))
     enabled = forms.BooleanField(required=False)
 
     def __init__(self, request, *args, **kwargs):
@@ -74,15 +92,15 @@ class CreateReplicationController(forms.SelfHandlingForm):
     @staticmethod
     def handle(request, data):
 
-        file = data['controller_file']
+        controller_file = data['controller_file']
+        del data['controller_file']
 
         try:
-            data['name'] = 'test'
-            data['type'] = 'replication'
-            del data['controller_file']
-            response = api.bw_add_controller(request, data)
+            data['dsl_filter'] = 'bandwidth'
+            data['type'] = 'ssync'
+            response = api.dsl_add_global_controller(request, data, controller_file)
             if 200 <= response.status_code < 300:
-                messages.success(request, _("Successfully controller creation."))
+                messages.success(request, _("Controller successfully created."))
                 return data
             else:
                 raise sdsexception.SdsException(response.text)

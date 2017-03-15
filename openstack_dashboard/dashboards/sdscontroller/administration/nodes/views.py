@@ -50,7 +50,7 @@ class UpdateNodeView(forms.ModalFormView):
     def _get_object(self, *args, **kwargs):
         name = self.kwargs['node_id']
         try:
-            object_type = api.dsl_get_node_detail(self.request, name)
+            object_type = api.swift_get_node_detail(self.request, name)
             return object_type
         except Exception:
             redirect = self.success_url

@@ -5,6 +5,5 @@
     {% include "sdscontroller/storagemonitoring/index.html" with title=_("Monitoring System") active="swift_container_plots" %}
 {% endblock page_header %}
 {% block main %}
-
-<iframe src="http://{{ ip_host }}:5601/goto/3d4ec893fe6677da75bf306a28921f0b" height="783" width="100%"></iframe>
+    <iframe src="http://{{ ip_host }}:5601/goto/{{ containers_plot }}" height="783" width="100%"></iframe>
 {% endblock %}

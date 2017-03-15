@@ -7,7 +7,7 @@
 {% block form_attrs %}enctype="multipart/form-data"{% endblock %}
 
 {% block modal-header %}
-    {% blocktrans %}Create SLA{% endblocktrans %}
+    {% blocktrans %}Create SLO{% endblocktrans %}
 {% endblock %}
 
 {% block modal-body %}
@@ -18,11 +18,11 @@
     </div>
     <div class="right">
         <h3>{% trans "Description:" %}</h3>
-        <p><strong>{% trans "SLA:" %}</strong> {% trans "Service Level Agreement." %}</p>
+        <p><strong>{% trans "SLO:" %}</strong> {% trans "Service Level Objective." %}</p>
     </div>
 {% endblock %}
 
 {% block modal-footer %}
-    <input class="btn btn-primary pull-right" type="submit" value="{% trans 'Create SLA' %}"/>
+    <input class="btn btn-primary pull-right" type="submit" value="{% trans 'Create SLO' %}"/>
     <a href="{% url 'horizon:sdscontroller:bandwidth_differentiation:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}

@@ -47,7 +47,7 @@ class UpdateNode(forms.SelfHandlingForm):
         try:
             node_id = data['id']
             data.pop('id', None)
-            response = api.dsl_update_node(request, node_id, data)
+            response = api.swift_update_node(request, node_id, data)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Successfully updated node: %s') % node_id)
                 return data
