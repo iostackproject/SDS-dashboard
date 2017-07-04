@@ -26,7 +26,7 @@ class StoragePolicies(tabs.TableTab):
                 raise ValueError(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         instances = json.loads(strobj)
         ret = []

@@ -39,7 +39,7 @@ class RegistryTab(tabs.TableTab):
                 raise ValueError(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         instances = json.loads(strobj)
         ret = []
@@ -73,7 +73,7 @@ class Filters(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         instances = json.loads(strobj)
         ret = []
@@ -96,7 +96,7 @@ class Filters(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         instances = json.loads(strobj)
         ret = []
@@ -119,7 +119,7 @@ class Filters(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         instances = json.loads(strobj)
         ret = []
@@ -152,7 +152,7 @@ class Dependencies(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         dependencies = json.loads(strobj)
         ret = []
@@ -178,7 +178,7 @@ class MetricModules(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = '[]'
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         instances = json.loads(strobj)
         ret = []
@@ -207,7 +207,7 @@ class Nodes(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = '[]'
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         nodes = json.loads(strobj)
         for node in nodes:
@@ -226,7 +226,7 @@ class Nodes(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = '[]'
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         nodes = json.loads(strobj)
         for node in nodes:
@@ -262,7 +262,7 @@ class Groups(tabs.TableTab):
                 projects = ', '.join(v)
                 ret.append(group_models.Group(k, projects))
         except Exception as e:
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
         return ret
 
 
@@ -284,7 +284,7 @@ class ObjectTypes(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         object_types = json.loads(strobj)
         for ot in object_types:

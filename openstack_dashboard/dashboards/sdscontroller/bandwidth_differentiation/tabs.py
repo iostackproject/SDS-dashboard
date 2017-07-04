@@ -31,7 +31,7 @@ class SLAsTab(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         # instances = json.loads(strobj)
         # ret = []
@@ -85,7 +85,7 @@ class ControllersTab(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         instances = json.loads(strobj)
         ret = []
@@ -104,7 +104,7 @@ class ControllersTab(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         instances = json.loads(strobj)
         ret = []
@@ -123,7 +123,7 @@ class ControllersTab(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         instances = json.loads(strobj)
         ret = []
@@ -149,7 +149,7 @@ class ProxySortingTab(tabs.TableTab):
                 raise sdsexception.SdsException(error_message)
         except Exception as e:
             strobj = "[]"
-            exceptions.handle(self.request, _(e.message))
+            exceptions.handle(self.request, e.message)
 
         instances = json.loads(strobj)
         ret = []
