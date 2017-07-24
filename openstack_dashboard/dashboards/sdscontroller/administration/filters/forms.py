@@ -289,7 +289,10 @@ class UpdateFilter(forms.SelfHandlingForm):
             filter_id = self.initial['id']
             # print "\n#################\n", request, "\n#################\n", data, "\n#################\n"
             if filter_file is not None:
-                api.fil_upload_filter_data(request, filter_id, filter_file)
+                response = api.fil_upload_filter_data(request, filter_id, filter_file)
+                if response.status_code > 300: # error
+                    raise sdsexception.SdsException(response.text)
+
             response = api.fil_update_filter_metadata(request, filter_id, data)
             if 200 <= response.status_code < 300:
                 messages.success(request, _('Filter successfully updated.'))
