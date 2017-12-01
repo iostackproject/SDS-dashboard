@@ -10,18 +10,16 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 from django.conf.urls import include
-from django.conf.urls import patterns
 from django.conf.urls import url
 
 from konnector_dashboard.dashboards.konnector.sds_storagepolicies import views
 from konnector_dashboard.dashboards.konnector.sds_storagepolicies.policies \
     import urls as policies_urls
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'policies/', include(policies_urls, namespace='policies')),
     url(r'^\?tab=policies_group_tab__policy_tab$',
         views.IndexView.as_view(),
         name='policy_tab'),
-)
+]

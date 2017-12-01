@@ -21,4 +21,4 @@ class SDS_Storagepolicies(horizon.Panel):
     name = _("Storage Policies")
     slug = "sds_storagepolicies"
 
-dashboard.SDSController.register(SDS_Storagepolicies)
+dashboard.KonnectorController.register(SDS_Storagepolicies)

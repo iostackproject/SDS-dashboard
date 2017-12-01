@@ -20,4 +20,4 @@ class SDS_Volumes(horizon.Panel):
     slug = "sds_volumes"
 
 
-dashboard.SDSController.register(SDS_Volumes)
+dashboard.KonnectorController.register(SDS_Volumes)

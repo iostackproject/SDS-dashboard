@@ -16,7 +16,7 @@ import json
 class CreateGroup(tables.LinkAction):
     name = "create"
     verbose_name = _("Create Group")
-    url = "horizon:sdscontroller:sds_storagegroups:groups:create_group"
+    url = "horizon:konnector:sds_storagegroups:groups:create_group"
     classes = ("ajax-modal",)
     icon = "plus"
     
@@ -24,10 +24,10 @@ class CreateGroup(tables.LinkAction):
 class UpdateGroup(tables.LinkAction):
     name = "update"
     verbose_name = _("Edit Storage Groups")
-    url = "horizon:sdscontroller:sds_storagegroups:groups:update"
+    url = "horizon:konnector:sds_storagegroups:groups:update"
     classes = ("ajax-modal",)
     icon = "pencil"
-    #policy_rules = (('sdscontroller', 'sdscontroller:update_project'),)    
+    #policy_rules = (('konnector', 'konnector:update_project'),)    
 
 class DeleteGroup(tables.DeleteAction):
     @staticmethod
@@ -47,7 +47,7 @@ class DeleteGroup(tables.DeleteAction):
         )
 
     name = "delete_group"
-    success_url = "horizon:sdscontroller:sds_storagegroups:index"
+    success_url = "horizon:konnector:sds_storagegroups:index"
 
     def delete(self, request, obj_id):
         try:
@@ -58,7 +58,7 @@ class DeleteGroup(tables.DeleteAction):
             else:
                 raise ValueError(resp.text)
         except Exception as ex:
-            redirect = reverse("horizon:sdscontroller:sds_storagegroups:index")
+            redirect = reverse("horizon:konnector:sds_storagegroups:index")
             error_message = "Unable to remove group.\t %s" % ex.message
             exceptions.handle(request,
                               _(error_message),

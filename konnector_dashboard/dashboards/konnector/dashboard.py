@@ -17,14 +17,14 @@ import horizon
 class Blockstorage(horizon.PanelGroup):
     slug = "blockstorage"
     name = _("Block Storage")
-    panels = ('sds_storagepolicies', 'sds_storagegroups','sds_volumes','sds_storagemonitoring')
+    panels = ('sds_storagepolicies', 'sds_storagegroups','sds_volumes','sds_storagemonitoring', )
 
-class SDSController(horizon.Dashboard):
-    name = _("SDS Controller")
+class KonnectorController(horizon.Dashboard):
+    name = _("Konnector")
     slug = "konnector"
-    panels = (Blockstorage)  # Add your panels here.
+    panels = (Blockstorage,)  # Add your panels here.
     default_panel = 'sds_storagepolicies'  # Specify the slug of the default panel.
     permissions = ('openstack.roles.admin',)
 
 
-horizon.register(SDSController)
+horizon.register(KonnectorController)

@@ -13,18 +13,16 @@
 #    under the License.
 
 from django.conf.urls import include
-from django.conf.urls import patterns
 from django.conf.urls import url
 
 from konnector_dashboard.dashboards.konnector.sds_volumes import views
 from konnector_dashboard.dashboards.konnector.sds_volumes.volumes \
     import urls as volume_urls
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'volumes/', include(volume_urls, namespace='volumes')),
     url(r'^\?tab=VolumeAndSnapshotTabs_group_tab__volumes_tab$',
         views.IndexView.as_view(),
         name='volumes_tab'),    
-)
+]

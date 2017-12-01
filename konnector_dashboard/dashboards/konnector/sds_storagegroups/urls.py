@@ -10,18 +10,16 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 from django.conf.urls import include
-from django.conf.urls import patterns
 from django.conf.urls import url
 
 from konnector_dashboard.dashboards.konnector.sds_storagegroups import views
 from konnector_dashboard.dashboards.konnector.sds_storagegroups.groups \
     import urls as groups_urls
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'groups/', include(groups_urls, namespace='groups')),
     url(r'^\?tab=groups_group_tab__group_tab$',
         views.IndexView.as_view(),
         name='group_tab'),
-)
+]

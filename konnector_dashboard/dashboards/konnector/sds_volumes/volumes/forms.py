@@ -401,7 +401,7 @@ class CreateForm(forms.SelfHandlingForm):
             self.api_error(e.messages[0])
             return False
         except Exception, e:
-            redirect = reverse("horizon:sdscontroller:sds_volumes:index")
+            redirect = reverse("horizon:konnector:sds_volumes:index")
             exceptions.handle(request,
                               _("Unable to create volume."),
                               redirect=redirect)
@@ -488,7 +488,7 @@ class AttachForm(forms.SelfHandlingForm):
             messages.info(request, message)
             return True
         except Exception:
-            redirect = reverse("horizon:sdscontroller:sds_volumes:index")
+            redirect = reverse("horizon:konnector:sds_volumes:index")
             exceptions.handle(request,
                               _('Unable to attach volume.'),
                               redirect=redirect)
@@ -528,7 +528,7 @@ class CreateSnapshotForm(forms.SelfHandlingForm):
             messages.info(request, message)
             return snapshot
         except Exception as e:
-            redirect = reverse("horizon:sdscontroller:sds_volumes:index")
+            redirect = reverse("horizon:konnector:sds_volumes:index")
             msg = _('Unable to create volume snapshot.')
             if e.code == 413:
                 msg = _('Requested snapshot would exceed the allowed quota.')
@@ -552,11 +552,11 @@ class CreateTransferForm(forms.SelfHandlingForm):
                 msg = _('Created volume transfer.')
             messages.success(request, msg)
             response = http.HttpResponseRedirect(
-                reverse("horizon:sdscontroller:sds_volumes:volumes:show_transfer",
+                reverse("horizon:konnector:sds_volumes:volumes:show_transfer",
                         args=(transfer.id, transfer.auth_key)))
             return response
         except Exception:
-            redirect = reverse("horizon:sdscontroller:sds_volumes:index")
+            redirect = reverse("horizon:konnector:sds_volumes:index")
             exceptions.handle(request, _('Unable to create volume transfer.'),
                               redirect=redirect)
 
@@ -577,7 +577,7 @@ class AcceptTransferForm(forms.SelfHandlingForm):
             messages.success(request, msg)
             return transfer
         except Exception:
-            redirect = reverse("horizon:sdscontroller:sds_volumes:index")
+            redirect = reverse("horizon:konnector:sds_volumes:index")
             exceptions.handle(request, _('Unable to accept volume transfer.'),
                               redirect=redirect)
 
@@ -619,7 +619,7 @@ class UpdateForm(forms.SelfHandlingForm):
             cinder.volume_update(request, volume_id, data['name'],
                                  data['description'])
         except Exception:
-            redirect = reverse("horizon:sdscontroller:sds_volumes:index")
+            redirect = reverse("horizon:konnector:sds_volumes:index")
             exceptions.handle(request,
                               _('Unable to update volume.'),
                               redirect=redirect)
@@ -630,7 +630,7 @@ class UpdateForm(forms.SelfHandlingForm):
             try:
                 cinder.volume_set_bootable(request, volume_id, make_bootable)
             except Exception:
-                redirect = reverse("horizon:sdscontroller:sds_volumes:index")
+                redirect = reverse("horizon:konnector:sds_volumes:index")
                 exceptions.handle(request,
                                   _('Unable to set bootable flag on volume.'),
                                   redirect=redirect)
@@ -691,7 +691,7 @@ class UploadToImageForm(forms.SelfHandlingForm):
 
             return True
         except Exception:
-            redirect = reverse("horizon:sdscontroller:sds_volumes:index")
+            redirect = reverse("horizon:konnector:sds_volumes:index")
             error_message = _(
                 'Unable to upload volume to image for volume: "%s"') \
                 % data['name']
@@ -742,7 +742,7 @@ class ExtendForm(forms.SelfHandlingForm):
             messages.info(request, message)
             return volume
         except Exception:
-            redirect = reverse("horizon:sdscontroller:sds_volumes:index")
+            redirect = reverse("horizon:konnector:sds_volumes:index")
             exceptions.handle(request,
                               _('Unable to extend volume.'),
                               redirect=redirect)
@@ -767,7 +767,7 @@ class RetypeForm(forms.SelfHandlingForm):
         try:
             volume_types = cinder.volume_type_list(request)
         except Exception:
-            redirect_url = reverse("horizon:sdscontroller:sds_volumes:index")
+            redirect_url = reverse("horizon:konnector:sds_volumes:index")
             error_message = _('Unable to retrieve the volume type list.')
             exceptions.handle(request, error_message, redirect=redirect_url)
 
@@ -800,7 +800,7 @@ class RetypeForm(forms.SelfHandlingForm):
 
             return True
         except Exception:
-            redirect = reverse("horizon:sdscontroller:sds_volumes:index")
+            redirect = reverse("horizon:konnector:sds_volumes:index")
             error_message = _(
                 'Unable to change the volume type for volume: "%s"') \
                 % data['name']

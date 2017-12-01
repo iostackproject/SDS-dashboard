@@ -15,7 +15,7 @@ import json
 class CreatePolicy(tables.LinkAction):
     name = "create"
     verbose_name = _("Create Policy")
-    url = "horizon:sdscontroller:sds_storagepolicies:policies:create_policy"
+    url = "horizon:konnector:sds_storagepolicies:policies:create_policy"
     classes = ("ajax-modal",)
     icon = "plus"
 
@@ -23,10 +23,10 @@ class CreatePolicy(tables.LinkAction):
 class UpdatePolicy(tables.LinkAction):
     name = "update"
     verbose_name = _("Edit Policy")
-    url = "horizon:sdscontroller:sds_storagepolicies:policies:update"
+    url = "horizon:konnector:sds_storagepolicies:policies:update"
     classes = ("ajax-modal",)
     icon = "pencil"
-    #policy_rules = (('sdscontroller', 'sdscontroller:update_project'),)
+    #policy_rules = (('konnector', 'konnector:update_project'),)
 
 class DeletePolicy(tables.DeleteAction):
     @staticmethod
@@ -46,7 +46,7 @@ class DeletePolicy(tables.DeleteAction):
         )
 
     name = "delete_policy"
-    success_url = "horizon:sdscontroller:sds_storagepolicies:index"
+    success_url = "horizon:konnector:sds_storagepolicies:index"
 
     def delete(self, request, obj_id):
         try:
@@ -56,7 +56,7 @@ class DeletePolicy(tables.DeleteAction):
             else:
                 raise ValueError(resp.text)
         except Exception as ex:
-            redirect = reverse("horizon:sdscontroller:sds_storagepolicies:index")
+            redirect = reverse("horizon:konnector:sds_storagepolicies:index")
             error_message = "Unable to remove policy.\t %s" % ex.message
             exceptions.handle(request,
                               _(error_message),

@@ -12,20 +12,16 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf.urls import patterns
 from django.conf.urls import url
 
 from konnector_dashboard.dashboards.konnector.sds_storagepolicies \
     .policies import views
 
 
-VIEWS_MOD = ('konnector_dashboard.dashboards.konnector.sds_storagepolicies.policies.views')
-
-urlpatterns = patterns(
-    'VIEWS_MOD',
+urlpatterns = [
     url(r'^create_policies', views.CreatePolicyView.as_view(),
         name='create_policy'),
     url(r'^(?P<id>[^/]+)/update/$', views.UpdatePolicyView.as_view(), 
         name='update'),
         #updatepolicy
-)
+]

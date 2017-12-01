@@ -19,5 +19,5 @@ from konnector_dashboard.dashboards.konnector.sds_storagegroups \
     
 class IndexView(tabs.TabbedTableView):
     tab_group_class = groups_tabs.GroupsGroupTabs
-    template_name = 'sdscontroller/sds_storagegroups/index.html'
+    template_name = 'konnector/sds_storagegroups/index.html'
     page_title = _("Groups")

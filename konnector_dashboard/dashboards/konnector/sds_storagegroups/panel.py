@@ -21,4 +21,4 @@ class SDS_Storagegroups(horizon.Panel):
     name = _("Storage Groups")
     slug = "sds_storagegroups"
 
-dashboard.SDSController.register(SDS_Storagegroups)
+dashboard.KonnectorController.register(SDS_Storagegroups)

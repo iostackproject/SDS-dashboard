@@ -33,8 +33,8 @@ from openstack_dashboard.test import helpers as test
 from openstack_dashboard.usage import quotas
 
 
-VOLUME_INDEX_URL = reverse('horizon:sdscontroller:sds_volumes:index')
-VOLUME_VOLUMES_TAB_URL = reverse('horizon:sdscontroller:sds_volumes:volumes_tab')
+VOLUME_INDEX_URL = reverse('horizon:konnector:sds_volumes:index')
+VOLUME_VOLUMES_TAB_URL = reverse('horizon:konnector:sds_volumes:volumes_tab')
 SEARCH_OPTS = dict(status=api.cinder.VOLUME_STATE_AVAILABLE)
 
 
@@ -105,7 +105,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post(url, formData)
         self.assertNoFormErrors(res)
 
@@ -178,7 +178,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post(url, formData)
 
         redirect_url = VOLUME_VOLUMES_TAB_URL
@@ -248,7 +248,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post(url, formData)
 
         redirect_url = VOLUME_VOLUMES_TAB_URL
@@ -298,7 +298,7 @@ class VolumeViewTests(test.TestCase):
         self.mox.ReplayAll()
 
         # get snapshot from url
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post("?".join([url,
                                          "snapshot_id=" + str(snapshot.id)]),
                                formData)
@@ -372,7 +372,7 @@ class VolumeViewTests(test.TestCase):
                              source_volid=volume.id).AndReturn(volume)
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         redirect_url = VOLUME_VOLUMES_TAB_URL
         res = self.client.post(url, formData)
         self.assertNoFormErrors(res)
@@ -448,7 +448,7 @@ class VolumeViewTests(test.TestCase):
         self.mox.ReplayAll()
 
         # get snapshot from dropdown list
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post(url, formData)
 
         redirect_url = VOLUME_VOLUMES_TAB_URL
@@ -489,7 +489,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post("?".join([url,
                                          "snapshot_id=" + str(snapshot.id)]),
                                formData, follow=True)
@@ -547,7 +547,7 @@ class VolumeViewTests(test.TestCase):
         self.mox.ReplayAll()
 
         # get image from url
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post("?".join([url,
                                          "image_id=" + str(image.id)]),
                                formData)
@@ -624,7 +624,7 @@ class VolumeViewTests(test.TestCase):
         self.mox.ReplayAll()
 
         # get image from dropdown list
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post(url, formData)
 
         redirect_url = VOLUME_VOLUMES_TAB_URL
@@ -667,7 +667,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post("?".join([url,
                                          "image_id=" + str(image.id)]),
                                formData, follow=True)
@@ -720,7 +720,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post("?".join([url,
                                          "image_id=" + str(image.id)]),
                                formData, follow=True)
@@ -790,7 +790,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post(url, formData)
 
         expected_error = [u'A volume of 5000GB cannot be created as you only'
@@ -847,7 +847,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create')
+        url = reverse('horizon:konnector:sds_volumes:volumes:create')
         res = self.client.post(url, formData)
 
         expected_error = [u'You are already using all of your available'
@@ -934,7 +934,7 @@ class VolumeViewTests(test.TestCase):
         api.nova.server_list(IsA(http.HttpRequest)).AndReturn([servers, False])
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:attach',
+        url = reverse('horizon:konnector:sds_volumes:volumes:attach',
                       args=[volume.id])
         res = self.client.get(url)
         msg = 'Volume %s on instance %s' % (volume.name, servers[0].name)
@@ -967,7 +967,7 @@ class VolumeViewTests(test.TestCase):
         api.nova.server_list(IsA(http.HttpRequest)).AndReturn([servers, False])
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:attach',
+        url = reverse('horizon:konnector:sds_volumes:volumes:attach',
                       args=[volume.id])
         res = self.client.get(url)
         form = res.context['form']
@@ -986,7 +986,7 @@ class VolumeViewTests(test.TestCase):
         api.nova.server_list(IsA(http.HttpRequest)).AndReturn([servers, False])
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:attach',
+        url = reverse('horizon:konnector:sds_volumes:volumes:attach',
                       args=[volume.id])
         res = self.client.get(url)
         # Assert the device field is hidden.
@@ -1009,7 +1009,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:attach',
+        url = reverse('horizon:konnector:sds_volumes:volumes:attach',
                       args=[volume.id])
         res = self.client.get(url)
 
@@ -1111,7 +1111,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:detail',
+        url = reverse('horizon:konnector:sds_volumes:volumes:detail',
                       args=[volume.id])
         res = self.client.get(url)
 
@@ -1131,7 +1131,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:encryption_detail',
+        url = reverse('horizon:konnector:sds_volumes:volumes:encryption_detail',
                       args=[volume.id])
         res = self.client.get(url)
 
@@ -1160,7 +1160,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:encryption_detail',
+        url = reverse('horizon:konnector:sds_volumes:volumes:encryption_detail',
                       args=[volume.id])
         res = self.client.get(url)
 
@@ -1206,7 +1206,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:detail',
+        url = reverse('horizon:konnector:sds_volumes:volumes:detail',
                       args=[volume.id])
         res = self.client.get(url)
 
@@ -1234,7 +1234,7 @@ class VolumeViewTests(test.TestCase):
                     'description': volume.description,
                     'bootable': False}
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:update',
+        url = reverse('horizon:konnector:sds_volumes:volumes:update',
                       args=[volume.id])
         res = self.client.post(url, formData)
         self.assertRedirectsNoFollow(res, VOLUME_INDEX_URL)
@@ -1261,7 +1261,7 @@ class VolumeViewTests(test.TestCase):
                     'description': volume.description,
                     'bootable': False}
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:update',
+        url = reverse('horizon:konnector:sds_volumes:volumes:update',
                       args=[volume.id])
         res = self.client.post(url, formData)
         self.assertRedirectsNoFollow(res, VOLUME_INDEX_URL)
@@ -1288,7 +1288,7 @@ class VolumeViewTests(test.TestCase):
                     'description': 'update bootable flag',
                     'bootable': True}
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:update',
+        url = reverse('horizon:konnector:sds_volumes:volumes:update',
                       args=[volume.id])
         res = self.client.post(url, formData)
         self.assertRedirectsNoFollow(res, VOLUME_INDEX_URL)
@@ -1324,7 +1324,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:upload_to_image',
+        url = reverse('horizon:konnector:sds_volumes:volumes:upload_to_image',
                       args=[volume.id])
         res = self.client.post(url, form_data)
 
@@ -1357,7 +1357,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:extend',
+        url = reverse('horizon:konnector:sds_volumes:volumes:extend',
                       args=[volume.id])
         res = self.client.post(url, formData)
 
@@ -1383,7 +1383,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:extend',
+        url = reverse('horizon:konnector:sds_volumes:volumes:extend',
                       args=[volume.id])
         res = self.client.post(url, formData)
         self.assertFormErrors(res, 1,
@@ -1438,7 +1438,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:retype',
+        url = reverse('horizon:konnector:sds_volumes:volumes:retype',
                       args=[volume.id])
         res = self.client.post(url, form_data)
 
@@ -1510,7 +1510,7 @@ class VolumeViewTests(test.TestCase):
 
         self.mox.ReplayAll()
 
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:extend',
+        url = reverse('horizon:konnector:sds_volumes:volumes:extend',
                       args=[volume.id])
         res = self.client.post(url, formData)
         self.assertFormError(res, "form", "new_size",
@@ -1564,7 +1564,7 @@ class VolumeViewTests(test.TestCase):
         self.mox.ReplayAll()
 
         # Create a transfer for the first available volume
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:create_transfer',
+        url = reverse('horizon:konnector:sds_volumes:volumes:create_transfer',
                       args=[volToTransfer.id])
         res = self.client.post(url, formData)
         self.assertNoFormErrors(res)
@@ -1618,6 +1618,6 @@ class VolumeViewTests(test.TestCase):
         self.mox.ReplayAll()
 
         formData = {'transfer_id': transfer.id, 'auth_key': transfer.auth_key}
-        url = reverse('horizon:sdscontroller:sds_volumes:volumes:accept_transfer')
+        url = reverse('horizon:konnector:sds_volumes:volumes:accept_transfer')
         res = self.client.post(url, formData, follow=True)
         self.assertNoFormErrors(res)

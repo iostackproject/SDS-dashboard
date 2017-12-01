@@ -19,5 +19,5 @@ from konnector_dashboard.dashboards.konnector.sds_storagepolicies \
     
 class IndexView(tabs.TabbedTableView):
     tab_group_class = policies_tabs.PoliciesGroupTabs
-    template_name = 'sdscontroller/sds_storagepolicies/index.html'
+    template_name = 'konnector/sds_storagepolicies/index.html'
     page_title = _("Policies")

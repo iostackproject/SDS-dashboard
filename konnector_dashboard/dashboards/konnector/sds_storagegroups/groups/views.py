@@ -33,21 +33,21 @@ class CreateGroupView(forms.ModalFormView):
     form_class = groups_forms.CreateGroup
     modal_header = _("Create Group")
     modal_id = "create_group_modal"
-    template_name = 'sdscontroller/sds_storagegroups/groups/create_group.html'
-    success_url = reverse_lazy('horizon:sdscontroller:sds_storagegroups:group_tab')
+    template_name = 'konnector/sds_storagegroups/groups/create_group.html'
+    success_url = reverse_lazy('horizon:konnector:sds_storagegroups:group_tab')
     page_title = _("Create a Group")
     submit_label = _("Create")
     submit_url = reverse_lazy(
-        "horizon:sdscontroller:sds_storagegroups:groups:create_group")
+        "horizon:konnector:sds_storagegroups:groups:create_group")
         
 #updategroup        
 class UpdateGroupView(forms.ModalFormView):
     form_class = groups_forms.UpdateForm
     modal_header = _("Edit Group")
     modal_id = "update_volume_modal"
-    template_name = 'sdscontroller/sds_storagegroups/groups/update_group.html'
-    submit_url = "horizon:sdscontroller:sds_storagegroups:groups:update"
-    success_url = reverse_lazy("horizon:sdscontroller:sds_storagegroups:group_tab")
+    template_name = 'konnector/sds_storagegroups/groups/update_group.html'
+    submit_url = "horizon:konnector:sds_storagegroups:groups:update"
+    success_url = reverse_lazy("horizon:konnector:sds_storagegroups:group_tab")
     page_title = _("Edit Group")
 
     def get_object(self):
@@ -62,7 +62,7 @@ class UpdateGroupView(forms.ModalFormView):
                     raise ValueError(error_message)            
             except Exception as e:
                 msg = _('Unable to retrieve storage group.')
-                url = reverse('horizon:sdscontroller:sds_storagegroups:index')
+                url = reverse('horizon:konnector:sds_storagegroups:index')
                 exceptions.handle(self.request, msg, redirect=url)
             return data            
 

@@ -71,7 +71,7 @@ class DeleteVolume(VolumePolicyTargetMixin, tables.DeleteAction):
 class CreateVolume(tables.LinkAction):
     name = "create"
     verbose_name = _("Create Volume")
-    url = "horizon:sdscontroller:sds_volumes:volumes:create_volume"
+    url = "horizon:konnector:sds_volumes:volumes:create_volume"
     classes = ("ajax-modal", "btn-create")
     icon = "plus"
     policy_rules = (("volume", "volume:create"),)
@@ -233,7 +233,7 @@ class VolumesFilterAction(tables.FilterAction):
 class VolumesTable(VolumesTableBase):
     name = tables.Column("name",
                          verbose_name=_("Name"),
-                         link="horizon:sdscontroller:sds_volumes:volumes:detail")
+                         link="horizon:konnector:sds_volumes:volumes:detail")
     volume_type = tables.Column(get_volume_type,
                                 verbose_name=_("Type"))
     attachments = AttachmentColumn("attachments",

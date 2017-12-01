@@ -75,7 +75,7 @@ class DetailView(tabs.TabView):
         return volume
 
     def get_redirect_url(self):
-        return reverse('horizon:sdscontroller:sds_volumes:index')
+        return reverse('horizon:konnector:sds_volumes:index')
 
     def get_tabs(self, request, *args, **kwargs):
         volume = self.get_data()
@@ -85,10 +85,10 @@ class DetailView(tabs.TabView):
 class CreateView(forms.ModalFormView):
     form_class = project_forms.CreateForm
     modal_header = _("Create Volume")
-    template_name = 'sdscontroller/sds_volumes/volumes/create.html'
+    template_name = 'konnector/sds_volumes/volumes/create.html'
     submit_label = _("Create Volume")
-    submit_url = reverse_lazy("horizon:sdscontroller:sds_volumes:volumes:create_volume")
-    success_url = reverse_lazy("horizon:sdscontroller:sds_volumes:volumes_tab")
+    submit_url = reverse_lazy("horizon:konnector:sds_volumes:volumes:create_volume")
+    success_url = reverse_lazy("horizon:konnector:sds_volumes:volumes_tab")
     page_title = _("Create a Volume")
 
     def get_initial(self):

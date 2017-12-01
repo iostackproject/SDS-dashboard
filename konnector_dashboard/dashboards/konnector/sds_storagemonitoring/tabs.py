@@ -6,19 +6,19 @@ from horizon import tabs
 class ProxyTab(tabs.TableTab):
     name = _("Proxy System")
     slug = "proxy_plots"
-    template_name = "horizon/sdscontroller/sds_storagemonitoring/system/_system_plots2.html"
+    template_name = "horizon/konnector/sds_storagemonitoring/system/_system_plots2.html"
 
 
 class SwiftTab(tabs.TableTab):
     name = _("Swift")
     slug = "swift_plots"
-    template_name = "horizon/sdscontroller/sds_storagemonitoring/system/_swift_plots.html"
+    template_name = "horizon/konnector/sds_storagemonitoring/system/_swift_plots.html"
 
 
 # class PlotEditor(tabs.TableTab):
 #     name = _("Grafana Plot Editor")
 #     slug = "grafana_plot_editor"
-#     template_name = "horizon/dashboards/sdscontroller/system/_grafana_admin.html"
+#     template_name = "horizon/dashboards/konnector/system/_grafana_admin.html"
 
 from konnector_dashboard.dashboards.konnector.sds_storagemonitoring import tables as registry_tables
 
@@ -45,12 +45,12 @@ class MypanelTabs(tabs.TabGroup):
 # from horizon import tabs
 # import json
 #
-# from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import tables as registry_tables
-# from openstack_dashboard.dashboards.sdscontroller.administration.filters import tables as filter_tables
-# from openstack_dashboard.dashboards.sdscontroller.administration.filters import models as filters_models
-# from openstack_dashboard.dashboards.sdscontroller.administration.registry_dsl import models as registry_models
+# from openstack_dashboard.dashboards.konnector.administration.registry_dsl import tables as registry_tables
+# from openstack_dashboard.dashboards.konnector.administration.filters import tables as filter_tables
+# from openstack_dashboard.dashboards.konnector.administration.filters import models as filters_models
+# from openstack_dashboard.dashboards.konnector.administration.registry_dsl import models as registry_models
 #
-# from openstack_dashboard.dashboards.sdscontroller import api_sds_controller as api
+# from openstack_dashboard.dashboards.konnector import api_sds_controller as api
 #
 #
 # class RegistryTab(tabs.TableTab):

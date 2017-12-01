@@ -22,5 +22,5 @@ from konnector_dashboard.dashboards.konnector.sds_volumes \
 
 class IndexView(tabs.TabbedTableView):
     tab_group_class = project_tabs.VolumeAndSnapshotTabs
-    template_name = 'sdscontroller/sds_volumes/index.html'
+    template_name = 'konnector/sds_volumes/index.html'
     page_title = _("Volumes")

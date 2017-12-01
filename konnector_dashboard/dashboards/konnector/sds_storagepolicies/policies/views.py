@@ -34,21 +34,21 @@ class CreatePolicyView(forms.ModalFormView):
     form_class = policies_forms.CreatePolicy
     modal_header = _("Create Policy")
     modal_id = "create_policy_modal"
-    template_name = 'sdscontroller/sds_storagepolicies/policies/create_policy.html'
-    success_url = reverse_lazy('horizon:sdscontroller:sds_storagepolicies:policy_tab')
+    template_name = 'konnector/sds_storagepolicies/policies/create_policy.html'
+    success_url = reverse_lazy('horizon:konnector:sds_storagepolicies:policy_tab')
     page_title = _("Create a Policy")
     submit_label = _("Create")
     submit_url = reverse_lazy(
-        "horizon:sdscontroller:sds_storagepolicies:policies:create_policy")
+        "horizon:konnector:sds_storagepolicies:policies:create_policy")
 
 #updatepolicy        
 class UpdatePolicyView(forms.ModalFormView):
     form_class = policies_forms.UpdateForm
     modal_header = _("Edit Policy")
     modal_id = "update_volume_modal"
-    template_name = 'sdscontroller/sds_storagepolicies/policies/update_policy.html'
-    submit_url = "horizon:sdscontroller:sds_storagepolicies:policies:update"
-    success_url = reverse_lazy("horizon:sdscontroller:sds_storagepolicies:policy_tab")
+    template_name = 'konnector/sds_storagepolicies/policies/update_policy.html'
+    submit_url = "horizon:konnector:sds_storagepolicies:policies:update"
+    success_url = reverse_lazy("horizon:konnector:sds_storagepolicies:policy_tab")
     page_title = _("Edit Policy")
 
     def get_object(self):
@@ -63,7 +63,7 @@ class UpdatePolicyView(forms.ModalFormView):
                     raise ValueError(error_message)            
             except Exception as e:
                 msg = _('Unable to retrieve policy.')
-                url = reverse('horizon:sdscontroller:sds_storagepolicies:index')
+                url = reverse('horizon:konnector:sds_storagepolicies:index')
                 exceptions.handle(self.request, msg, redirect=url)
             return data            
 

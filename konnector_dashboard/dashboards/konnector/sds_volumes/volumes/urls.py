@@ -12,19 +12,15 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf.urls import patterns
 from django.conf.urls import url
 
 from konnector_dashboard.dashboards.konnector.sds_volumes \
     .volumes import views
 
-VIEWS_MOD = ('konnector_dashboard.dashboards.konnector.sds_volumes.volumes.views')
-
-urlpatterns = patterns(
-    'VIEWS_MOD', 
+urlpatterns = [
     url(r'^create_volumes', views.CreateView.as_view(), 
         name='create_volume'),
     url(r'^(?P<volume_id>[^/]+)/$',
         views.DetailView.as_view(),
         name='detail'),        
-)
+]

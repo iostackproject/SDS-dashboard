@@ -21,4 +21,4 @@ class Sds_Storagemonitoring(horizon.Panel):
     slug = "sds_storagemonitoring"
 
 
-dashboard.SDSController.register(Sds_Storagemonitoring)
+dashboard.KonnectorController.register(Sds_Storagemonitoring)

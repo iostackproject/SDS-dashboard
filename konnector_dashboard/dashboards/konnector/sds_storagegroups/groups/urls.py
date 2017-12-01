@@ -12,19 +12,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf.urls import patterns
 from django.conf.urls import url
 
 from konnector_dashboard.dashboards.konnector.sds_storagegroups \
     .groups import views
 
-
-VIEWS_MOD = ('konnector_dashboard.dashboards.konnector.sds_storagegroups.groups.views')
-
-urlpatterns = patterns(
-    'VIEWS_MOD',
-    url(r'^create_groups', views.CreateGroupView.as_view(),
-        name='create_group'),
-    url(r'^(?P<id>[^/]+)/update/$', views.UpdateGroupView.as_view(), 
-        name='update'),
-)
+urlpatterns = [
+    url(r'^create_groups', views.CreateGroupView.as_view(), name='create_group'),
+    url(r'^(?P<id>[^/]+)/update/$', views.UpdateGroupView.as_view(), name='update'),
+]

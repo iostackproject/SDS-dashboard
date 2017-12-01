@@ -25,7 +25,7 @@ from konnector_dashboard.dashboards.konnector.sds_storagemonitoring \
 class IndexView(FormView):
     tab_group_class = mydashboard_tabs.MypanelTabs
     form_class = monitoring_forms.SelectVolume
-    template_name = 'sdscontroller/sds_storagemonitoring/index.html'
+    template_name = 'konnector/sds_storagemonitoring/index.html'
 
     def get(self, request, *args, **kwargs):       
         form = self.form_class(request, *args, **kwargs)
